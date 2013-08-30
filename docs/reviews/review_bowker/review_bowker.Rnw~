@@ -1,0 +1,166 @@
+\documentclass[12pt]{article}
+\usepackage{color}
+\usepackage{cite}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+%\usepackage{pdflscape}        %single page landscape
+%mode \begin{landscape} \end{landscape}
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{multicol} % \begin{multicols}{number of columns} \end{multicols}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{Sweave}
+\newcommand{\etal}{\textit{et al.}}
+\usepackage{hyperref}  %\hyperref[label_name]{''link text''}
+%\hyperlink{label}{anchor caption}
+%\hypertarget{label}{link caption}
+\linespread{1.5}
+
+\title{Review: Bowker's Topics}
+\author{M.K. Lau}
+%\date{}                                           % Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+
+%\setcounter{tocdepth}{3}  %%activate to number sections
+%\tableofcontents
+
+\begin{itemize}
+\item I think that in addition to mastering a subject area and becoming a
+  leading expert,  a doctor of biology should have a curious mind and a
+  wide knowledge base, critical thinking skills, and solid communication
+  skills.
+\item My approach to comps is to gauge your knowledge of key concepts, and
+  demonstrate your critical thinking ability by asking you to think
+  about them in a possibly new direction. Because I think you should
+  have a wide knowledge base, I think anything from science is fair game
+  (there will be a wildcard), but obviously we will mostly talk about
+  \textit{community ecology}, and mostly about \textit{species interactions}. 
+\item Statistical questions may come up, more philosophical than quantitative. Also
+  there will be at least one demonstration of your communication
+  skills.  
+\item I don't like the reading list approach, I prefer to list
+  themes.  You can call, write or meet me if your want clarification,
+  but I will withhold some details otherwise its not a test.
+\item Judging from many conversation with you I'm not terribly worried about
+  your ability to think on your feet. 
+\item Here's some things to think about:
+  \begin{enumerate}
+  \item Explain ecological networks and what their properties tell you in a
+    way that anyone with an undergraduate education can
+    understand. Explain why some network structures can promote community
+    stability in an easy way. You might use analogy or examples from
+    everyday life. Any visual aid must be drawn on a board, no power
+    point.
+  \item Explain any links your work might have to practical
+    applications. Can you link the network structure and species
+    interactions of endophyte communities, corticolous lichens, alpine
+    plants to ecosystem function? Should Conservation Biologists,
+    Ecological Restorationists, or land managers pay attention to your
+    work?
+  \end{enumerate}
+\item Concepts to review:
+  \begin{enumerate}
+  \item Roles of facilitation in community structure and function. 
+    \begin{itemize}
+    \item Stress gradient hypothesis = competition at low levels and
+      facilitation at high levels (along with tolerators)
+    \item When times get tough, help each other out as long as the
+      cost is not too high.
+    \item Cardinales = enhanced ecosystem function through
+      facilitation = diversity shifts alter the probability of
+      positive interactions and therefore ecosystem function (in this
+      case energy flow)
+    \end{itemize}
+  \item Bayesian vs. frequentist vs. information theory vs. data mining
+    approaches to statistical inference.
+    \begin{itemize}
+    \item Bayesian = posterior probability, uses prior knowledge,
+      more flexible framework
+    \item Frequentist = uses likelihood, long-run frequency, primarily Null Hypothesis based
+    \item Information theory = AIC, model comparison
+    \item Data mining = exploring large amounts of data for patterns
+    \end{itemize}
+  \item Community stability and resilience (In the sense of Buzz Holling)
+    \begin{itemize}
+    \item Resilience = time to return to equilibrium/steady-state =
+      engineering resilience
+    \item Ecological resilience = buffering against change
+    \item Interlinked systems = panarchy
+    \item Systems are in a continual state of flux
+    \item There is an interplay between the predictable and the
+      chaotic
+    \item Stability = a basin of attraction for the system and how
+      deep that basin is (i.e. how difficult it is to push it into
+      another system state or basin)
+    \end{itemize}
+  \item Species interactions and ecological niches. You don't need to cite
+    any specific papers, but know the authors of key concepts. 
+    \begin{itemize}
+    \item Darwin's tangled bank and coevolution
+    \item Competition
+      \begin{itemize} 
+      \item Lotka-Volterra = competition equations
+      \item N-dimensional Niche = Hutchinson
+      \item Fundamental vs Realized Niche = Hutchinson
+      \item Broken Stick = MacArthur
+      \item Competitive exclusion = Paine (Pisaster and Mytilus;
+        Cthamalus and Balanus)
+      \item Intermediate disturbance = Connell
+      \item Ghosts of Competition = Connell
+      \item Tilman = R-star
+      \end{itemize}
+    \item Mutualism
+      \begin{itemize}
+      \item Hamilton = extension of LV equations to mutualisms
+      \item Albert Bernard Frank = coined the term mycorrhiza
+      \item Thompson = Geographic theory of co-evolution
+      \item Judy Bronstein = wasp-fig mutualism
+      \item Mutualistic networks = Jordano, Bascompte
+      \end{itemize}
+    \item Co-occurrence Patterns
+      \begin{itemize}
+      \item Diamond
+      \item Simberloff
+      \item Stone and Roberts
+      \item Gotelli
+      \item Keddy and Weiher = assembly rules
+      \item Maestre = crusts
+      \end{itemize}
+    \end{itemize}
+  \item Alternative ecosystem states and possible interfaces with network
+    theory
+    \begin{itemize}
+    \item Rapid, sudden transitions between states
+    \item Historically have focused on single populations (groups)
+    \item Inter-connectedness of systems can cause percolations and
+      waves through the system
+    \item What network structures promote stable states?
+      \begin{itemize}
+      \item Centrality (dependency)
+      \item Nestedness (i.e. redundancy and niche space)
+      \end{itemize}
+    \end{itemize}
+  \item Intransitive competition and possible interfaces with network theory
+    \begin{itemize}
+    \item intransitivity and biodiversity maintenance at global scale
+      \begin{itemize}
+      \item Rock-Paper-Scissors (Laird and Schamp)
+      \item Allesina = network representation with analytical solution
+      \end{itemize}
+    \end{itemize}
+  \end{enumerate}
+\end{itemize}
+
+
+
+%% %%Activate for bibtex vibliography
+%% \cite{goossens93}
+%% \bibliographystyle{plain}
+%% \bibliography{/Users/Aeolus/Documents/bibtex/biblib}
+
+
+\end{document}  
+
+
