@@ -1,0 +1,46 @@
+This is BibTeX, Version 0.99d (TeX Live 2011)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: prospectus_2012.aux
+The style file: apa.bst
+Database file #1: /Users/Aeolus/Documents/biblib/biblib.bib
+You've used 17 entries,
+            2804 wiz_defined-function locations,
+            688 strings with 7033 characters,
+and the built_in function-call counts, 10167 in all, are:
+= -- 805
+> -- 414
+< -- 10
++ -- 163
+- -- 138
+* -- 793
+:= -- 1587
+add.period$ -- 51
+call.type$ -- 17
+change.case$ -- 130
+chr.to.int$ -- 17
+cite$ -- 17
+duplicate$ -- 737
+empty$ -- 771
+format.name$ -- 189
+if$ -- 1982
+int.to.chr$ -- 1
+int.to.str$ -- 1
+missing$ -- 164
+newline$ -- 92
+num.names$ -- 68
+pop$ -- 272
+preamble$ -- 1
+purify$ -- 114
+quote$ -- 0
+skip$ -- 249
+stack$ -- 0
+substring$ -- 540
+swap$ -- 398
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 150
+warning$ -- 0
+while$ -- 70
+width$ -- 0
+write$ -- 226

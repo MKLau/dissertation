@@ -1,0 +1,162 @@
+\documentclass[12pt]{article}
+\usepackage{color}
+\usepackage{cite}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+%\usepackage{pdflscape}        %single page landscape
+                                %mode \begin{landscape} \end{landscape}
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{multicol} % \begin{multicols}{number of columns} \end{multicols}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{Sweave}
+\newcommand{\etal}{\textit{et al.}}
+\usepackage{hyperref}  %\hyperref[label_name]{''link text''}
+                       %\hyperlink{label}{anchor caption}
+                       %\hypertarget{label}{link caption}
+\linespread{1.5}
+
+\title{Review: Ecolgical Genetics}
+\author{M.K. Lau}
+%\date{}                                           % Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+
+\begin{enumerate}
+\item Ecological Genetics
+  \begin{enumerate}
+  \item The genetics of traits important to survival and reporduction
+  \item The study of phenotypic evolution in present-day populations
+  \end{enumerate}
+\item Evolutionary Processes
+  \begin{enumerate}
+  \item mutation
+  \item genetic drift
+  \item migration
+  \item natural selection
+  \end{enumerate}
+\item Adaptation = a trait that has evolved to help an organism deal
+  with something in its environment
+\item Population Genetics
+  \begin{itemize}
+  \item inbreeding
+  \item mutation
+  \item drift
+  \item selection
+  \end{itemize}
+  \begin{enumerate}
+  \item Genetic Variation
+    \begin{itemize}
+    \item p + q = 1
+    \item Hardy-Weinberg
+      \begin{itemize}
+      \item diploid
+      \item sexual
+      \item discrete generations
+      \item allele freq same in both sexes
+      \item Mendellian segregation
+      \item Random mating
+      \item No mutation, migration, drift or selection
+      \item Proportions of AA, Aa and aa = $p^2$, $pq+pq$, $q^2$
+      \item $\chi^2=\sum\frac{(O-E)^2}{E}$
+      \end{itemize}
+    \end{itemize}
+  \item Random Mating
+  \item Nonrandom Mating
+    \begin{itemize}
+    \item assortative mating = phenotype
+    \item Inbreeding and inbreeding coefficient ($F=\frac{H_0-H}{H_0}$)
+    \end{itemize}
+  \item Changes in allele frequency
+    \begin{itemize}
+    \item mutation
+    \item migration
+    \item genetic drift
+    \end{itemize}
+  \item fitness = success
+    \begin{itemize}
+    \item gene action = genotype influences phenotype
+    \item dominance = one gene masks another
+    \item additivity = no trait masking and traits sum (AA = high, Aa
+      = intermediate and aa = low)
+    \item frequency dependence = fitness of a trait depends on
+      frequency of that trait in the population
+    \end{itemize}
+  \end{enumerate}
+\item Quantitative Genetics
+  \begin{itemize}
+  \item statistical abstractions for complex phenotypes
+  \item variance
+  \item correlation
+  \item heritability
+  \end{itemize}
+  \begin{enumerate}
+  \item Mendelian Basis
+  \item Additive Variance
+  \item ANOVA
+    \begin{itemize}
+    \item SS = $\sum(x_i-\bar{x})^2$
+    \item MS = $\frac{\sum(x_i-\bar{x})^2}{n-1}$
+    \item F = MSG / MSE
+    \item $V_P = V_G + V_E$
+    \end{itemize}
+  \item Heritability
+    \begin{itemize}
+    \item $h^2_B = \frac{V_G}{V_P}$
+    \item $h^2_N = \frac{V_A}{V_P}$
+    \item $h^2_N = \frac{V_A}{V_A + V_D + V_I + V_E}$ 
+    \item Parent Offspring regression = y=a+bx
+    \end{itemize}
+  \item Genetic Variation
+  \item Breeding Value = effect of an individual's genes on the value
+    of the trait in its offspring (i.e. additivitity)
+  \item Phenotypic Plasticity
+    \begin{itemize}
+    \item reaction norms = phenotype in different environments
+    \item quantitative trait differentiation = Qst = Fst (in common garden)
+    \end{itemize}
+  \item Multiple Subpopulations
+  \item Correlated Traits
+    \begin{itemize}
+    \item phenotypic correlation = degree of correlation between two
+      traits
+    \item Cov = $\frac{\sum(X_i-\bar{X})(Y_i-\bar{Y})}{n-1}$
+    \item $r_{x,y} = \frac{Cov_{x,y}}{\sqrt{V_XV_Y}}$
+    \end{itemize}
+  \item Artificial Selection
+    \begin{itemize}
+    \item $R=h^2S$
+    \end{itemize}
+  \item QTL Mapping
+  \end{enumerate}
+\item Natural Selection on Phenotypes
+  \begin{enumerate}
+  \item Chicago School
+    \begin{itemize}
+    \item phenotype-fitness regression
+    \item directional (linear)
+    \item stabilizing (quadratic)
+    \item disruptive (quadratic)
+    \end{itemize}
+  \item Selective Agents and Targets = physical traits that selection
+    acts on directly
+  \item Direct vs indirect selection 
+  \item Correlational selection = trait x trait interaction and selection
+  \item Adaptation 
+    \begin{itemize}
+    \item multivariate breeder's equation = $\delta\bar{z}=G\beta$
+    \end{itemize}
+  \end{enumerate}
+\item The Future of Ecological Genetics
+  \begin{itemize}
+  \item rapid evolution of invasive species
+  \item antibiotic resistance
+  \item endangered species small population sizes
+  \end{itemize}
+\end{enumerate}
+
+
+\end{document}  
+
+
