@@ -1,0 +1,516 @@
+\documentclass[12pt]{article}
+\usepackage{color}
+\usepackage{cite}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+%\usepackage{pdflscape}        %single page landscape
+                                %mode \begin{landscape} \end{landscape}
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{/Library/Frameworks/R.framework/Resources/share/texmf/Sweave}
+\newcommand{\etal}{\textit{et al.}}
+\usepackage{hyperref}  %\hyperref[label_name]{''link text''}
+                       %\hyperlink{label}{anchor caption}
+                       %\hypertarget{label}{link caption}
+\linespread{1.0}
+
+\title{Dissertation Notes}
+\author{M.K. Lau}
+%\date{}                                           % Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+
+%Tom has suggested possibly doing your orals this spring, it would
+%have to be before May 12. What is the benefit of doing them then and
+%what would you need to do them by then?
+
+%It's more important to get out pubs then to finish, unless you need
+%to advance to candidacy, e.g. DDIG.
+
+\section*{Dissertation Requirements Timeline}
+
+\begin{itemize}
+\item \textbf{April 2012} Assessment, prospectus review and course plan approval
+  \subitem Bio form 5 - PhD Program Form
+  \subitem Bio form 10 - Progress/Funding Assessment
+  \subitem Bio form 13 - Teaching requirement documentation
+  \subitem Bio form 14 - Scientific paper presentation documentation
+%\item \textbf{Oct 2012} Grant and written exam approval
+\item \textbf{Feb 2013} Prospectus defense and oral exam
+  \subitem Bio form 7 - Written exam results
+  \subitem Bio form 10 - Progress/Funding Assessment
+  \subitem Bio form 8 - Oral exam results REPORT
+  \subitem Bio form 8.11a - Oral exam assessment/questionaire
+  \subitem Bio form 9 - Prospectus approval form
+  \subitem Bio form 11 - Oral exam results
+  \subitem Bio form 10 - Progress/Funding Assessment
+\item \textbf{May 2014} Final dissertation defense
+  \subitem Dissertation draft
+  \subitem Dissertation Defense Scheduling Form
+  \subitem Graduate college final oral exam form (can only be accessed
+  by advisor)
+\end{itemize}
+
+\section*{Committee}
+\subsection{Requirements}
+\begin{enumerate}
+\item At least four members
+\item At least one external member
+\item Majority from within the department (must have voting status;
+  this includes emeritus faculty)
+\item 
+\end{enumerate}
+
+\section{The Evolution of Interaction Networks}
+
+\subsection{Stability of Communities and Evolution}
+MacArthur 1955
+
+\begin{enumerate}
+\item Assuming that:
+  \begin{enumerate}
+  \item the ammount of energy entering the community does not vary
+    with time
+  \item the length of time that energy is retained by a species
+    doesnt' change with time
+  \item the population of each species varies directly with available
+    food energy
+  \end{enumerate}
+\item These assumptions imply that the population of each species
+  tends to a specific constant (example Linderman 1942)
+\item $p_{ij}$ = the proportion of energy transfered from species $i$
+  to $j$
+\item As long as all energy transfers are shown/quantified, then
+  $\sum_j p_{ij} = 1$
+\item \quote{``This equation shows that the food web considered as an
+  energy transformer is what is known in probability theory as a
+  Markov chain (Feller 1950).''}
+\item Given the assumptions, the species' populations should tend
+  toward a constant.
+\item However, since populations fluctuate in nature, at least one of
+  the assumptions must not hold.
+\item Community Stability = the constancy of species' abundances over
+  time
+\item Stability can arise in two ways:
+  \begin{enumerate}
+  \item Patterns of interactions among species
+  \item Properties intrinsic to each species
+  \end{enumerate}
+\item Stability ($S$) increases with the number of pathways ($p_i$), as $S =
+  -\sum p_i log(p_i)$
+\item There are several interesting properties of stability:
+  \begin{enumerate}
+  \item stability increases with the total number of links
+  \item stability will increase with richness (given the number of
+    prey per species remaincs constant)
+  \item Given 1 and 2, stability can be achieved by a large number of
+    species with a restricted diet or a few species with a large
+    number of prey
+  \item Maximum stability for $m$ species is achieved by $m$ trophic
+    levels with every species eating all species in lower trophic
+    levels
+  \item Minimum stability would arise with one species eating all
+    others in a single lower trophic level
+  \end{enumerate}
+\end{enumerate}
+
+<<>>=
+
+pMinMax <- function(n,e=0.5,unit=TRUE){
+                                        #construct the min and max stability food webs given a constant energy transfer
+                                        #energy flows as row -> column
+  p.min <- array(0,dim=c(n,n)) #min stability
+  p.min[1:(n-1),n] <- e #make the highest species the highest trophic level
+  p.max <- array(0,dim=c(n,n)) #max stability
+  p.max[upper.tri(p.max)] <- e #species are ordered lowest to highest trophic level
+  p.out <- list(p.min,p.max) #pack for export
+  if (unit==TRUE){p.out <- lapply(p.out,function(x) x/sum(x))}else{}
+  return(p.out)
+}
+                                        #calculate the stability
+stability <- function(x,base=4){
+  if (sum(x) == 0){return(0)}else{return(-sum(x[x!=0]*log(x[x!=0],base=base)))}
+}
+
+base <- 2
+P <- sapply(3:16,function(x) c(stability(pMinMax(x)[[1]],base),stability(pMinMax(x)[[2]]),base))
+plot(I(3:16),P[2,],pch=4)
+points(I(3:16),P[1,],pch=19,cex=0.25)
+
+@ 
+
+
+\section{How does genetic variation influence ecological network
+  structure?}
+\begin{itemize}
+\item Does genetic variation within a foundation species lead to
+  modularity in co-occurrence patterns of associated species?
+\item Approach:
+  \begin{enumerate}
+  \item Use Lonsdorf's simulation to generate communities
+  \item Model communities as bipartite graphs using relative
+    abundances
+  \item Generate structural statistics (including modularity and
+    nestedness)
+  \item Look for relationship with genetic variability
+  \item Add layers to simulation, such as interactions among
+    arthropods (e.g. intransitivity)
+  \end{enumerate}
+\end{itemize}
+
+\section{How does genetic variability contribute to the structure of
+  plant-herbivore (and predator) networks?}
+\begin{itemize}
+\item Does the modular structure of plant-herbivore interaction
+  networks arise from crosstype or genotype variability?
+\item Approach:
+  \begin{enumerate}
+  \item Gina's, Art's, Sharon's and Dave's arthropod data
+  \item Reduce to just known herbivores (and maybe omnivores) and
+    analyze for modularity
+  \item Use herbivore and predator co-occurrences to generate
+    herbivore-predator (and maybe parasite) networks and analyze for
+    network structural similarity among crosstypes/genotypes
+  \end{enumerate}
+\end{itemize}
+
+\section{How does genotypic variability influence the structure of
+  lichen species interactions?}
+\begin{itemize}
+\item How do lichen co-occurrence patterns vary among genotypes?
+\item Approach:
+  \begin{enumerate}
+  \item Collect co-occurrence data for bark lichen associated with
+    cottonwood individuals of known genotype
+  \item Model co-occurrence patterns using standard co-occurrence
+    methods and network modeling algorithms
+  \item Test for the effect or similarity of genotypes with respect to
+    lichen co-occurrence structure
+  \item Analyze the structural patterns that are changing among
+    genotypes
+  \item Analyze the individual species responses
+  \end{enumerate}
+\end{itemize}
+
+\section{How does genotypic variation influence the structure of
+  modifier-inquiline interactions?}
+\begin{itemize}
+\item How does host genotype directly and indirectly influence the
+  interaction between leaf-modifiers and inquilines associated with
+  their modification structures?
+\item Approach:
+  \begin{enumerate}
+  \item Survey the abundance of leaf-modifiers in the wild along a
+    hybridizing system
+  \item Survey leaf-modifiers and their inquilines in the common garden
+  \item Create artificial leaf-modifications that mimic the
+    leaf-modifier species (i.e. paper clip method used in Martinsen et
+    al. 2000)
+  \item Survey leaf modifications for inquilines
+  \item Build networks for each tree using the inquiline abundance
+    data (possibly separate out known herbivores from predators)
+  \item Analyze networks for structural similarity among genotypes
+  \item Analyze for individual species responses (locations in
+    networks)
+  \end{enumerate}
+\end{itemize}
+
+\section{How does plant facilitation influence the co-occurrence patterns
+of associated plant species?}
+
+\begin{itemize}
+\item Are there phylogenetic patterns in the effect of nurse plant on
+  associated species co-occurrences?
+\item Approach:
+  \begin{enumerate}
+  \item Cleanup Alpine Pals' global community dataset
+  \item Get phylo-stats from Brad
+  \item Model co-occurrence networks using distance based method
+  \item Look for correlation between phylo-stats and co-occurrence
+    network structure
+  \item Explore to find the source of the phylogenetic patterns
+  \end{enumerate}
+\end{itemize}
+
+\begin{itemize}
+\item How does intraspecific variation influence inter-plant interactions?
+\item Approach:
+  \begin{enumerate}
+  \item Get Lamit's plant data
+  \item Model as a bipartite graph
+  \item Analyze for modularity
+  \end{enumerate}
+\end{itemize}
+
+
+%% \section{23July2009}
+%% \begin{description}
+%% \item{Are ecological interaction networks constrained by evolutionary processes?}
+%%   \begin{description}
+%%   \item{Multi-level selection theory suggests that organisms can
+%%     evolve due to evolutionary forces from other organisms in the
+%%     community. They do not even have to directly interact in order to
+%%     be linked evolutionarily, because indirect interactions can also
+%%     produce significant evolutionary pressures. Selection at the group
+%%   }
+%%   \end{description}
+  
+%% \end{description}
+
+%% \section{19July2009}
+%% \begin{description}
+%% \item{At any level, biological organization arises via a
+%%   \textit{process} of development. It does not arise spontaneously
+%%   formed in its entirety. For example, individual organisms are formed
+%%   by a process of cellular replication, growth and
+%%   differentiation. The outcome is determined in part by genes,
+%%   environment and chance. Genes are not a blue-print, specifying the
+%%   exact details of an organism, but more like an algorithm comprised
+%%   of a set simple instructions (i.e. information on how to respond to
+%%   a given environmental condition). How this information is passed on
+%%   is inheritance, and the results of changes to this information is
+%%   evolution.}
+
+%% \item{"If genes change in evolution, the environment of the organism
+%%   will change too." - Richard Lewontin (1992)}
+
+%% \item{Biological evolution is a response of problem solving organisms
+%%   to changing environments.}
+
+%% \end{description}
+
+%% \section{13 July 2009}
+%% \subsection{Questions}
+%% \begin{enumerate}
+%% \item{Is the path from genes to communities unilateral (i.e. genes
+%%   -$>$ classical traits -$>$ species abundances), interactive
+%%   (i.e. genes -$>$ classical traits -$>$ species interactions -$>$
+%%   species abundances) or both?}
+%% \item{How do you quantify the Minimum Viable Interacting Population
+%%   (MVIP)?}
+%% \end{enumerate}
+
+%% \subsection{Projects}
+%% \begin{enumerate}
+%% \item{Develop an improved community simulator that incorporates:}
+%% 	\begin{enumerate}
+%% 	\item{Communities (i.e. multiple species that can interact)}
+%% 	\item{Multiple loci (to model epistasis)}
+%% 	\item{More Traits}
+%% 	\item{More alleles}
+%% 	\item{Dominance}
+%% 	\end{enumerate}
+%% \end{enumerate}
+
+%% \section{Summary -- A framework for community and ecosystem genetics:
+%%   from genes to ecosystems}
+
+%% Since heritable, genetically-determined traits have predictable
+%% effects on community structure and ecosystem processes, principles of
+%% quantitative population and quantitative genetics can be applied to
+%% studies of communities and ecosystems within an evolutionary
+%% framework.
+
+%% HOT QUESTION: What are the effects of climate change and transgenic
+%% organisms on entire communities and/or ecosystems?
+
+%% \begin{itemize}
+%% \item{Only recently has broader community and ecosystem evolution
+%%   beyond the evolution and ecology of two-species interactions
+%%   (Ehrlich and Raven)}
+%% \item{Although, multi-level selection theory has advanced, it has not
+%%   been incorporated into models of community organization and
+%%   ecosystem dynamics}
+%% \item{Overwhelming species numbers and the complexity of species
+%%   interactions are a major deterrent to advancing community and
+%%   ecosystem genetics}
+%% \item{Studying poplars as a model taxon has allowed three conceptual
+%%   advances:}
+
+%%   \begin{enumerate}
+%%   \item{Genetic analysis of foundation species can tell us much about
+%%     an ecosystem}
+%%   \item{The predictable effects of genes in foundation species extend
+%%     to higher levels, which can be quantified (i.e. higher level
+%%     phenotypes)}
+%%   \item{The community and ecosystem heritability of these phenotypes
+%%     can be quantified using standard community statistical tools,
+%%     which can then be analyzed using established population and
+%%     quantitative genetics analyses}
+%%   \end{enumerate}
+%% \item{HOT QUESTION: Do higher level phenotypes feed back to affect
+%%   fitness of the individual expressing the trait?}
+%% \item{HOT QUESTION: Do communities and ecosystems evolve?}
+%% \item{HOT QUESTION: Will higher level phenotypes of genetically
+%%   modified organisms negatively affect the environment?}
+%% \item{HOT QUESTION: Is it important to conserve genetic variation in
+%%   foundation species that are common?}
+%% \item{The C-wood model of higher-level evolution does not require or
+%%   imply higher-level fitness or evolution analogous to population
+%%   level fitness and evolution. However, because individual heritable
+%%   phenotypes can influence the fitness and phenotypes of other
+%%   species, selection occurs within a community context.}
+%% \end{itemize}
+
+%% \paragraph{From community genetics perspective, the community
+%%   associated with a cottonwood forest is like a blanket of inter-woven
+%%   threads formed by species interactions. Localized interactions
+%%   between individual trees other trees and the organisms on those
+%%   trees percolate through the blanket. The blanket itself changes in
+%%   form as a result of these interactions as well as the effects of
+%%   abiotic environmental factors (e.g. climate, nutrient flow,
+%%   sun-light).}
+
+%% \paragraph{The term foundation species is mentioned 37 times, with
+%%   only one reference.}
+
+%% \section{Perspective}
+
+%% \begin{enumerate}
+%% \item{The behavior (i.e. future states) of complex systems cannot be
+%%   deduced from the behaviors of the component parts of the system.}
+%% \item{Investigations of species interactions in natural systems and
+%%   food-webs have shown that communities are complex systems in that
+%%   the ecological interactions amongst species result in emergent
+%%   properties that are not wholly predictable from pairwise
+%%   interactions. To improve our ability to understand and potentially
+%%   predict community dynamics, we need an analytical approach that can
+%%   use information about the entire system.}
+%% \item{Network Theory provides a useful approach for studying
+%%   ecological systems with many interacting components, such as
+%%   communities.}
+%% \end{enumerate}
+
+%% \section{Network Theory and Community Evolution}
+%% Both theoretical and empirical studies have shown that genetically
+%% based, phenotypic variation amongst individuals in a population can
+%% result in variation in their associated communities (Shuster et
+%% al. 2006, Whitham et al. 2006 and Whitham et al. 2008). This provides
+%% a very useful framework for using genetic information of a species to
+%% predict variation in the community, when applied to a species that has
+%% a strong influence within an ecosystem (i.e. a foundation species).
+
+%% \paragraph{Questions:}
+%% \begin{itemize}
+%% \item{What is a foundation species?}
+%% \item{More specifically, how do we distinguish a foundation species
+%%   from other species?}
+%% \item{Is it a species who's removal will cause large fluctuations?}
+%% \end{itemize}
+%% The current methodology uses an ordination based approach that
+%% summarizes the variation in species abundances, usually with
+%% non-metric multidimensional scaling (NMS). This approach, although
+%% good for quantifying the important components of the community that
+%% are responding to variation in genetics, it does not incorporate any
+%% information about the structure of the interactions amongst
+%% species. We know from studies of ecological networks that the
+%% structure of the network (i.e. how interactions amongst species are
+%% distributed) can have large consequences for the behavior of the
+%% network (reviewed in Montoya et al. 2005). It follows that
+%% incorporating network information into the theory, models or analyses
+%% of communities will improve our understanding of the process and
+%% outcomes of community evolution (see Fig. 1). 
+%% \paragraph{Questions:}
+
+%% \begin{itemize}
+%% \item{Can we determine foundation species by analyzing the
+%%   species-interaction network?}
+%% \item{How can we incorporate network theory into the current theory,
+%%   models and analyses of community evolution?}
+%% \item{Can we infer network structure from covariance or correlation
+%%   matrixes of species abundances?}
+%% \end{itemize}
+
+%% \begin{center}
+%%   \begin{figure}[h]
+    
+%%     %<<fig=true,echo=false,width=6,height=6>>=
+%%     %library(sna)
+%%     %ns = 3000 #number of species 
+%%     %no = 100 #number of observations
+%%     %svr = c(1,1000) #species vector range
+%%     %spv = c(round(runif(ns,svr[1],svr[2]))) #shape parameter vector
+%%     %sam = array(NA,c(no,ns)) #species abundance matrix
+    
+%%     %for (i in 1:ns){sam[,i]<-rpois(no,spv[i])}
+    
+%%     %sam.cor<-cov2cor(cov(sam[1:100,1:100]))
+%%     %for (i in 1:ncol(sam.cor)){
+%%     %	for(k in 1:nrow(sam.cor)){
+%%     %	if (abs(sam.cor[k,i])>=0.19){sam.cor[k,i]<-1}else{sam.cor[k,i]<-0}}}
+%%     %gplot(sam.cor,gmode="graph")
+%%     %@
+%%     \caption{Example of a potential graph of species interactions
+%%       generated through simulation by random number draws. Each
+%%       species is represented by a node (dots) and the interactions
+%%       between species are represented by edges (lines). This sort of
+%%       information is not typically incorporated into community models
+%%       or analyses.}
+%%   \end{figure}
+%% \end{center}
+
+%% \subsection{Network Statistics}
+%% One way that Network Theory could be useful in this context is that it
+%% provides statistics (e.g. connectedness, degree and clustering) that
+%% describe the whole system. For instance, by looking at the frequency
+%% distribution of the number of interactions among species, we would
+%% have some indication of the overall structure of the
+%% species-interaction network (i.e. whether it follows a gaussian or
+%% power-law distribution). 
+
+
+%% \subsection{Network Models}
+%% The current model of community evolution on a foundation species
+%% (Shuster et al. 2006) does not incorporate interactions among the
+%% species in the community. It may be possible to incorporate
+%% interspecific interactions into this model in order to theoretically
+%% evaluate the role that the structure of the species-ineraction network
+%% has on how traits of a foundation species shape their associated
+%% community and increase the robustness of these models for use in
+%% testing for patterns in community data.
+
+
+%% \subsection{Species-Interaction Network Data}
+%% One important problem with working with ecological networks in
+%% general, is obtaining the data. First, there is a problem with
+%% defining the network itself. This is straightforward in some
+%% situations. For instance, food-webs have a very simple
+%% definintion. One thing eats another, and this is an interaction
+%% (i.e. an edge). Other species-interaction networks are not so easily
+%% defined. Of course the network can be defined in anyway that fits with
+%% our knowledge of biology, but this definition will need to be
+%% supported with valid arguments and the assumptions of the definition
+%% will need to be acknowledged. 
+
+%% \paragraph{}
+%% Second, the networks typically used in network analyses are easily
+%% observed (e.g. road networks, the internet and the
+%% world-wide-web). That is to say, either the "graph" information
+%% (i.e. the nodes and edges) is readily available or it can be easily
+%% obtained via some automated process (e.g. web crawlers in the case of
+%% the internet). Ecological networks are to not lend themselves so
+%% easily to observation.  There are several possible ways to address
+%% this problem:
+
+%% \begin{enumerate}
+%% \item{Exhaustively sample edges}
+%% \item{Subsample the network (randomly or systematically)}
+%% \item{Infer network structure from species abundance data}
+%% \end{enumerate}
+
+%% \section{Dissertation Chapters}
+%% \begin{itemize}
+%% \item{Chapter 1 - Review: Network Theory and Community Ecology}
+%% \item{Chapter 2 - (Theory) Detecting Foundation Species Using Network
+%%   Theory}
+%% \item{Chapter 3 - (Modeling) Modeling Communities as Ecological
+%%   Networks}
+%% \item{Chapter 4 - (Data) Empirical Validation of Community Network
+%%   Models}
+
+%% \end{itemize}
+
+\end{document}
+

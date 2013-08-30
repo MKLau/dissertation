@@ -1,0 +1,256 @@
+\documentclass[12pt]{article}
+\usepackage{color}
+\usepackage{cite}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+%\usepackage{pdflscape}        %single page landscape
+                                %mode \begin{landscape} \end{landscape}
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{multicol} % \begin{multicols}{number of columns} \end{multicols}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{Sweave}
+\newcommand{\etal}{\textit{et al.}}
+\usepackage{hyperref}  %\hyperref[label_name]{''link text''}
+                       %\hyperlink{label}{anchor caption}
+                       %\hypertarget{label}{link caption}
+\linespread{1.5}
+
+\title{}
+\author{M.K. Lau}
+%\date{}                                           % Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+
+%\setcounter{tocdepth}{3}  %%activate to number sections
+%\tableofcontents
+
+%\thispagestyle{empty}
+%\setcounter{page}{0}
+%\setcounter{secnumdepth}{-1}  %activate to start numbering from one
+%on the second page
+
+\begin{itemize}
+\item Behavioral 
+  \begin{itemize}
+  \item How does behavior influence survival and reproduction?
+  \item Genetics
+    \begin{itemize}
+    \item Mutation
+    \item Genetic Variation
+    \item Inbreeding
+    \item Genetic Drift
+    \item Neighborhoods
+    \item Effective population size
+    \end{itemize}
+  \item Extinction
+    \begin{itemize}
+    \item Sixth mass extinction
+    \item Patterns of extinction
+    \item Endangered species
+    \item Characteristics of extinction
+    \end{itemize}
+  \item Selection
+    \begin{itemize}
+    \item Individual selection
+    \item Group selection (Self-regultation)
+    \item Altruism
+    \item Coefficient of relatedness 
+    \item Inclusive fitness
+    \item Kin selection
+    \item Reciprocal altruism
+    \item Haplo-diploidy and eusociality
+    \item Group living
+      \begin{itemize}
+      \item Many eyes
+      \item selfish herd
+      \end{itemize}
+    \end{itemize}
+  \item Life History
+    \begin{itemize}
+    \item reproductive strategies
+    \item age structure
+    \item mating systems
+      \begin{itemize}
+      \item monogamy
+      \item polygamy
+      \item polygyny
+      \item polyandry
+      \end{itemize}
+    \item strategies (r vs K)
+    \end{itemize}
+  \end{itemize}
+\item Population
+  \begin{itemize}
+  \item What determines the size of populations?
+  \item Population Dynamics
+    \begin{itemize}
+    \item life tables
+    \item reproductive rates
+    \item deterministic models 
+    \item stochastic models
+    \end{itemize}
+  \item Physical Environment
+    \begin{itemize}
+    \item phyisical variables
+      \begin{itemize}
+      \item temperature 
+      \item fire
+      \item wind
+      \item salt
+      \item pH
+      \item water
+      \end{itemize}
+    \item Influences on:
+      \begin{itemize}
+      \item species abundance
+      \item species richness
+      \end{itemize}
+    \end{itemize}
+  \item Interactions
+    \begin{itemize}
+    \item Competition
+      \begin{itemize}
+      \item Tribolium (Park 1954)
+      \item Lotka-Volterra
+      \item $dN = rN \frac{K-N}{K}$
+      \item $\frac{dN_1}{dt} = r_1N_1\frac{K_1-N_1-\alpha N_2}{K_1}$
+      \item $\frac{dN_2}{dt} = r_2N_2\frac{K_2-N_2-\alpha N_1}{K_2}$
+      \item Yeast, flies
+      \item R star = growth rate at resource levels at which lead to
+        extinction
+      \end{itemize}
+    \item Coexistence
+      \begin{itemize}
+      \item allopatry
+      \item sympatry
+      \end{itemize}
+    \item Mutualism
+    \item Predation
+    \item Herbivory
+      \begin{itemize}
+      \item qauntitiative
+      \item qualitative
+      \item constituative
+      \item induced
+      \item mechanical
+      \item repellnets
+      \item reproduction inhibition
+      \item associative defense
+      \item mutualism
+      \item beneficial berbivory
+      \end{itemize}
+    \item Parasitism
+    \end{itemize}
+  \end{itemize}
+\item Community
+  \begin{itemize}
+  \item What determines the numbers and composition of species?
+  \item Organization
+    \begin{itemize}
+    \item Clements = superorganism
+    \item Gleason (+ Whitaker)  = individualistic
+    \item Climate
+    \item Polar - Ferrell - Hadley Cells
+    \item Adiabatic cooling 1C for 100m
+    \item Life Zones
+    \item Eutrophication = aging and dying
+    \end{itemize}
+  \item Species Richness
+    \begin{itemize}
+    \item Latitudinal
+      \begin{itemize}
+      \item Spatial Heterogeneity
+      \item Competition
+      \item Predation
+      \item Pollinators
+      \item Time
+      \item Area
+      \item Productivity
+      \item Evolutionary Speed
+      \end{itemize}
+    \end{itemize}
+  \item Diversity
+    \begin{itemize}
+    \item Indices (alpha)
+      \begin{itemize}
+      \item Dominance weighted (Simpson's)
+      \item Infromation (Shannon's, Brillouin, Evenness)
+      \end{itemize}
+    \item Similarity (beta)
+      \begin{itemize}
+      \item Jaccard 
+      \item Sorenson-BC = $\frac{2a}{2a+b+c}$
+      \end{itemize}
+    \end{itemize}
+  \item Dynamics (equilibrium vs. non-equilibrium)
+    \begin{itemize}
+    \item Resistance (change) vs. Resilience (recovery)
+    \item Diversity-Stability (Elton, MacArthur, May, Pimm)
+    \item May's equation $\beta*(SC)^{\frac{1}{2}} < 1$
+    \item Intermediate disturbance
+    \item Succession = Celemnts
+    \end{itemize}
+  \item Island Biogeography
+    \begin{itemize}
+    \item Area
+    \item Distance
+    \item Immigration
+    \item Extinction
+    \item Target Effect = area + immigration
+    \item Rescue effect = Distance + extinction
+    \end{itemize}
+  \end{itemize}
+\item Ecosystem
+  \begin{itemize}
+  \item What determines the influences the flux of nutrients?
+  \item Trophic Structure
+    \begin{itemize}
+    \item Food web complexity
+      \begin{itemize}
+      \item Chain length = avg links between trophic levels
+      \item Connectance = actual links / potential links
+      \item Linkage density = number of links per species
+      \end{itemize}
+    \item Patterns
+      \begin{itemize}
+      \item Pyramids (Elton, Cohen)
+      \end{itemize}
+    \item Guilds
+    \item Keystones et al.
+      \begin{itemize}
+      \item Dominants = large effect, large abundance/biomass
+      \item Keystone = large effect, small
+      \item Ecosystem engineers = modify
+      \end{itemize}
+    \end{itemize}
+  \item Energy
+    \begin{itemize}
+    \item Gross = all productivity
+    \item Net = Gross - loss to respiration
+    \item Limits = resources and temperature
+    \item Efficiency
+    \item Global Distribution
+    \item Secondary Production (limited by primary)
+    \item ClORPT
+    \end{itemize}
+  \item Nutrients
+    \begin{itemize}
+    \item soils
+    \item SPONCH
+    \end{itemize}
+  \item Light
+  \end{itemize}
+
+\end{itemize}
+
+%% %%Activate for bibtex vibliography
+%% \cite{goossens93}
+%% \bibliographystyle{plain}
+%% \bibliography{/Users/Aeolus/Documents/bibtex/biblib}
+
+
+\end{document}  
+
+

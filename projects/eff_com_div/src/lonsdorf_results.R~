@@ -1,0 +1,11 @@
+###Plot the trajectory of each arthropod on each tree over the course of the simulation
+library(abind)
+AP. <- do.call(abind,c(AP,along=3))
+my.pal <- rainbow(dim(AP.)[2])
+par(mfrow=c(5,5))
+for (i in 1:dim(AP.)[2]){ #Insects
+  plot(AP.[1,i,],type='l',col=my.pal[1],xlab='Sim #',ylab='Art. Abundance',ylim=c(0,max(AP.)))
+  for (j in 2:dim(AP.)[1]){ #Trees
+    lines(AP.[j,i,],type='l',col=my.pal[j])
+  }
+}
