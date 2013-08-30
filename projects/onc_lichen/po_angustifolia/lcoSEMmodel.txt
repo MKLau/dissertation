@@ -1,0 +1,17 @@
+Roughness -> Richness, g.1.2, NA
+Roughness -> net.pc1, g.1.6, NA
+Richness -> net.pc1, g.2.6, NA
+Richness -> Size, g.2.3, NA
+Richness -> Links, g.2.4, NA
+Richness -> Centrality, g.2.5, NA
+Size -> net.pc1, g.3.6, NA
+Size -> Links, g.3.4, NA
+Size -> Centrality, g.3.5, NA
+Links -> net.pc1, g.4.6, NA
+Centrality -> net.pc1, g.5.6, NA
+Roughness <-> Roughness, e.1.1, NA
+Richness <-> Richness, e.2.2, NA
+Size <-> Size, e.3.3, NA
+Links <-> Links, e.4.4, NA
+Centrality <-> Centrality, e.5.5, NA
+net.pc1 <-> net.pc1, e.6.6, NA

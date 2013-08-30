@@ -57,10 +57,19 @@
   \end{enumerate}
 \end{enumerate}
 
+To Do List
+\begin{enumerate}
+\item Move other project folders into dissertation/projects
+\item Find lonsdorf paper and move into eff_com_div folder
+\end{enumerate}
 
 \section{2013 Aug 30}
+
 Dissertation folder is now on git. Use the git_stage to work with it
 for now.
+
+Note: Consider the data storage limitations of github. For example,
+huge data or image files would not be able to be stored there
 
 Reorganizing projects to use git.
 

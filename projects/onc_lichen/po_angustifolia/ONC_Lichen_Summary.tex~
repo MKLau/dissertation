@@ -1,0 +1,524 @@
+\documentclass[11pt]{amsart}
+\usepackage{geometry}                % See geometry.pdf to learn the                                                                                                                                                                                                                      
+                                % layout options. There are lots.                                                                                                                                                                                                                         
+\geometry{letterpaper}                   % ... or a4paper or a5paper                                                                                                                                                                                                                      
+                                % or ...                                                                                                                                                                                                                                                  
+%\geometry{landscape}                % Activate for for rotated page                                                                                                                                                                                                                      
+%geometry                                                                                                                                                                                                                                                                                 
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with                                                                                                                                                                                                                     
+%an empty line rather than an indent                                                                                                                                                                                                                                                      
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{epstopdf}
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname
+  #1`/`basename #1 .tif`.png}
+\usepackage{hyperref}
+\usepackage{/Library/Frameworks/R.framework/Resources/share/texmf/Sweave}
+
+\title{Foundation species genetics structures lichen community
+  interaction networks}
+\author{M.K. Lau, L.J. Lamit, T.G. Whitham}
+%\date{}                                           % Activate to                                                                                                                                                                                                                          
+%display a given date or no date                                                                                                                                                                                                                                                          
+
+\begin{document}
+\maketitle
+
+
+\setcounter{tocdepth}{1}
+\tableofcontents
+
+\textbf{Take-Home:} Foundation species genetics influences the structure of
+  interactions among bark lichen species most likely by altering the
+  trajectory of community assembly.
+
+\section{Abstract}
+\begin{itemize}
+\item Understanding the complexities of community dynamics requires a
+  greater understanding of the interactions among species and the
+  forces that influence the structure of these interactions. 
+\item We present a study of bark lichen communities associated with
+  \textit{Populus angustifolia} (narrowleaf cottonwood), where we
+  applied quantitative network modeling to investigate the genetic
+  effects of a foundation tree species on bark-lichen community
+  interactions networks.
+\item There were three main findings:
+  \begin{enumerate}
+  \item Genotype significantly predicted the similarity of lichen
+    interactions networks. Species richness explained additional
+    variation in network similarity.
+  \item Both genotype and richness significantly predicted the
+    variation in three network structural metrics (size, degree and
+    centralization). 
+  \item All network metrics were highly correlated with each other and
+    lichen species richness. Thus, after controlling for the variation explained by lichen
+    species richness, all three network metrics significantly
+    predicted variation in the similarity of networks but only
+    network size explained a biologically relevant amount of variation
+    in network similarity. 
+  \end{enumerate}
+\item These results strongly support the hypothesis that there is a
+  genetic component to the structure of species interactions. Our
+  quantative network modeling and network analyses show that this
+  genetic effect is not due to variation in lichen species richness
+  arising from genotype, but by some other causal pathway. These
+  results indicate that the variation in network structure among
+  genotypes arises from the communities being at different levels of
+  community assembly, as both species richness and the size of the
+  network independently explained the most variation in network similarity.
+\item These findings are particularly important as they suggest that
+  quantitative modeling of community-wide interaction networks can aid
+  our understanding of community dynamics and that we need to place
+  interactions among species within an evolutionary framework.
+\end{itemize}
+
+\section{Introduction}
+\begin{itemize}
+\item Understanding complex species interactions is important for
+  ecology (reviewed in Bascompte 2009, and others...). 
+\item A substantial body of evidence provides support for the value in
+  putting communities and ecosystems into an evolutionary framework
+  (reviewed in PRS-B 2011, Johnson and Agrawal 200?, Whitham et
+  al. 2008 and Whitham et al. 2007). However, there is still little
+  known about how genetic variation in a foundation species affects
+  the interactions among multiple species in complex communities (but
+  see Bailey et al 2005).
+\item Defining species interactions and obtaining quantitative data
+  for interactions in complex communities presents a challenge to
+  ecologists.
+\item Newly developed quantitative network modeling methods provide
+  one means to not only obtain estimates of species interactions but
+  also circumvent the need to limit interactions to one or few
+  categories (e.g. trophic, mutualistic or host-parasite
+  interactions).
+\item Here, we present the results of a study of how foundation
+  species genetics influences variation in interactions among multiple
+  species.
+\end{itemize}
+
+\section{Methods}
+\begin{itemize}
+\item Garden description. 
+\item Samling description. The presence of bark lichen species were
+  assessed within 50 replicate 1 cm$^2$ grid cells of 10 cm$^2$
+  quadrats on replicate clones of known genotype in a  common garden
+  at the Ogden Nature Center (Utah, USA). 50 out of the  100 cells in
+  each quadrat were sampled in a checker-board pattern in  order to
+  minimize the probability of individuals overlapping between
+  cells. 122 trees sampled, 13 genotypes, 5800 grid cells.
+\item Network modeling. Network models were generated using a
+  correlation based algorithm to detect species interactions on each
+  individual tree. Thus, we produced a quantitative, undirected model
+  of species interactions on each individual tree.
+\item Statistical methods for network similarity. We then applied
+  network analyses and mutlivariate statistical methods to test for
+  the effect of genotype on lichen community interaction network
+  structure. In order to compare networks, we measured the similarity
+  between networks as the sum of the Euclidean distance for all edges
+  between each network pair for all networks. This formed a distance
+  matrix that we then used in PerMANOVA analyses of the factors
+  influencing network similarity. We used ANOVA to analyze the effect
+  of genotype and richness on the network structural metrics. To
+  visualize the similarity of network genotypes, we applied prinicipal
+  components analysis to the network distances and used ordination
+  vector fitting methods to explore the possible sources of similarity
+  among netowrks. 
+\end{itemize}
+
+\section{Results}
+
+\begin{enumerate}
+\item We found significant variation in network structure among tree
+  genotypes (Fig. 1). Genotype and lichen species richness were both
+  significant predictors of the structural similarity of the lichen community networks with genotype
+  and richness explaining
+  32\% and
+  22\% of the
+  variation in lichen network similarity (Table 1). 
+\item We investigated several network statistics to explore the
+  structural variation responsible for the variation in network
+  similarity and found that genotype and richness significantly
+  predicted the variation in all three network metrics (Fig. 2 and
+  Tables 2-4). Note that bark roughness was not a significant
+  predictor of network similarity ($p = $ 0.983).
+\item  All network metrics were highly correlated with each other and
+  lichen species richness (Fig. 3). Thus, after controlling for the variation explained by lichen
+  species richness, all three network metrics significantly
+  predicted variation in the similarity of networks but only
+  network size explained a biologically relevant amount of variation
+  in network similarity.  ($r^2 = $
+  0.48) after
+  controlling for the variation explained by lichen species richness
+  (Table 5).
+\end{enumerate}
+
+
+\section{Conclusion}
+
+
+
+\begin{itemize}
+\item Genotype influences the size, degree and centralization of
+  lichen community interaction networks. It is important to note
+  that none of these network metrics were significantly predicted by
+  the number of trees sampled for a given genotype (i.e. variation in
+  the number of observations did not produce these patterns). 
+\item This pattern does not seem to be related to the bark roughness,
+  as richness and community composition seem to be. This is
+  intriguing since roughness seems to be an important
+  factor in lichen establishment and a good predictor of the genotype
+  effect on the distribution of the dominant lichen species (Lamit et
+  al. 2010).
+\item These results are particularly striking given that lichen
+  species are very slow growing and that our communities are all
+  likely to be in the early stages of establishment.
+\item These findings are important as they present a
+  step toward putting complex, community-wide
+  interactions in an evolutionary framework.
+\end{itemize}
+
+
+
+%%%chunk0
+
+%%%chunk1
+
+
+%%%chunk2
+
+
+%%%chunk3
+
+
+%%%chunk4
+
+
+%%%chunk5
+
+
+%%%chunk6
+
+%%%chunk7
+
+
+
+%%%chunk8
+
+
+%%%chunk9
+
+
+
+%%%chunk10
+
+
+%%%chunk11
+
+%%%chunk12
+
+
+\pagebreak
+
+%Table 1. PerMANOVA table for genotype x richness model
+%%%chunk13
+\begin{center} 
+% latex table generated in R 2.12.1 by xtable 1.5-6 package
+% Sat Sep 24 23:49:41 2011
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{lrrrrrr}
+  \hline
+ & Df & SumsOfSqs & MeanSqs & F.Model & R2 & Pr($>$F) \\ 
+  \hline
+Genotype & 12 & 1.14 & 0.10 & 2.16 & 0.32 & 0.0266 \\ 
+  Richness & 1 & 0.79 & 0.79 & 17.93 & 0.22 & 0.0002 \\ 
+  Genotype:Richness & 11 & 0.22 & 0.02 & 0.45 & 0.06 & 0.9509 \\ 
+  Residuals & 33 & 1.46 & 0.04 &  & 0.40 &  \\ 
+  Total & 57 & 3.61 &  &  & 1.00 &  \\ 
+   \hline
+\end{tabular}
+\caption{ANOVA table for the PerMANOVA test of the effect of genotype and lichen species richness on the similarity of the lichen interaction networks.}
+\end{center}
+\end{table}\end{center} 
+
+\pagebreak
+
+%Table 2-4. ANOVA tables for the effect of genotype and richness on the
+%structural statistics.
+%%%chunk14
+\begin{center} 
+% latex table generated in R 2.12.1 by xtable 1.5-6 package
+% Sat Sep 24 23:49:41 2011
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{lrrrrr}
+  \hline
+ & Df & Sum Sq & Mean Sq & F value & Pr($>$F) \\ 
+  \hline
+Genotype          & 12 & 42.85 & 3.57 & 3.52 & 0.0020 \\ 
+  Richness          & 1 & 36.66 & 36.66 & 36.17 & 0.0000 \\ 
+  Genotype:Richness & 11 & 7.94 & 0.72 & 0.71 & 0.7183 \\ 
+  Residuals         & 33 & 33.45 & 1.01 &  &  \\ 
+   \hline
+\end{tabular}
+\caption{ANOVA table for the tests of the effects of genotype and richness on network size (i.e. the number of species in the network).}
+\end{center}
+\end{table}\end{center} 
+
+%%%chunk15
+\begin{center} 
+% latex table generated in R 2.12.1 by xtable 1.5-6 package
+% Sat Sep 24 23:49:41 2011
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{lrrrrr}
+  \hline
+ & Df & Sum Sq & Mean Sq & F value & Pr($>$F) \\ 
+  \hline
+Genotype          & 12 & 10.84 & 0.90 & 3.25 & 0.0036 \\ 
+  Richness          & 1 & 8.72 & 8.72 & 31.34 & 0.0000 \\ 
+  Genotype:Richness & 11 & 1.80 & 0.16 & 0.59 & 0.8245 \\ 
+  Residuals         & 33 & 9.18 & 0.28 &  &  \\ 
+   \hline
+\end{tabular}
+\caption{ANOVA table for the tests of the effects of genotype and richness on network degree (i.e. the number of connections).}
+\end{center}
+\end{table}\end{center} 
+
+%%%chunk16
+\begin{center} 
+% latex table generated in R 2.12.1 by xtable 1.5-6 package
+% Sat Sep 24 23:49:41 2011
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{lrrrrr}
+  \hline
+ & Df & Sum Sq & Mean Sq & F value & Pr($>$F) \\ 
+  \hline
+Genotype          & 12 & 0.48 & 0.04 & 2.80 & 0.0096 \\ 
+  Richness          & 1 & 0.34 & 0.34 & 23.87 & 0.0000 \\ 
+  Genotype:Richness & 11 & 0.05 & 0.00 & 0.32 & 0.9759 \\ 
+  Residuals         & 33 & 0.48 & 0.01 &  &  \\ 
+   \hline
+\end{tabular}
+\caption{ANOVA table for the tests of the effects of genotype and richness on network centralization (i.e. the degree to which the network is dominated by one species).}
+\end{center}
+\end{table}\end{center} 
+
+\pagebreak
+
+%Table 3. PerMANOVA of the effect of the three metrics after removing
+%the variance explained by richness.
+%%%chunk17
+\begin{center} 
+% latex table generated in R 2.12.1 by xtable 1.5-6 package
+% Sat Sep 24 23:49:41 2011
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{lrrrrrr}
+  \hline
+ & Df & SumsOfSqs & MeanSqs & F.Model & R2 & Pr($>$F) \\ 
+  \hline
+Richness & 1 & 1.13 & 1.13 & 232.43 & 0.31 & 0.0001 \\ 
+  Size & 1 & 1.74 & 1.74 & 356.67 & 0.48 & 0.0001 \\ 
+  Degree & 1 & 0.24 & 0.24 & 49.15 & 0.07 & 0.0001 \\ 
+  Centralization & 1 & 0.24 & 0.24 & 49.84 & 0.07 & 0.0001 \\ 
+  Residuals & 53 & 0.26 & 0.00 &  & 0.07 &  \\ 
+  Total & 57 & 3.61 &  &  & 1.00 &  \\ 
+   \hline
+\end{tabular}
+\caption{ANOVA table for the PerMANOVA test of the effects of the network metrics (size, degree and centralization) on network similarity after removing the variance explained by richness.}
+\end{center}
+\end{table}\end{center} 
+
+\pagebreak
+
+%Figure 1 is the mean network graphs for each genotype.
+%%%chunk18
+\begin{figure} 
+\begin{center} 
+\includegraphics{ONC_Lichen_Summary-gplots}
+\end{center} 
+\caption{Network graphs for each genotype. Points represent species scaled by
+the log of there total frequency of occurrence and lines show the
+means of significant connections between species across genotype
+replicates scaled by their magnitudes. Species points that had zero
+frequencies are colored white.}
+
+\label{fig:one}
+\end{figure}
+
+
+%Figure 2 is the ordination plot with the vectors.
+%%%chunk19
+
+\begin{figure} 
+\begin{center} 
+\includegraphics{ONC_Lichen_Summary-ordinet}
+\end{center} 
+\caption{Principle components ordination plot of the similarity
+  between networks. Points represent the genotype means for the
+  ordinated scores and bars show the spread (1 S.E.). Vectors show the
+strength (vector length) and the direction of spread networks (vector
+direction) of the correlation between roughness, the network metrics
+(size, degree and centralization) and richness and the ordinated
+networks.}
+\label{fig:two}
+\end{figure}
+
+
+%Figure 3 is the pairs plot of the relationship between richness and
+%the three network structural variables.
+%%%chunk20
+\begin{figure} 
+\begin{center} 
+\includegraphics{ONC_Lichen_Summary-pairsplot}
+\end{center} 
+\caption{Matrix of bivariate plots for the network structure
+  statistics (size = number of species in the network, degree = number
+of connections and centralization = dominance of the network by one
+species) and species richness (measured as the number of species
+present in the quadrat). Note that although a species may have been
+present in a quadrat, it may not have a significant connection to
+any other species in the community.}
+\label{fig:three}
+\end{figure}
+
+
+
+
+
+\end{document}
+
+
+
+
+
+%%%Un-used code:
+%% <<echo=false,results=hide>>=
+
+%%                                         #Is quadrat location important?
+%%                                         #YES, longitude is a factor (i.e. east to west positioning)
+%% adonis(net.dist~net.quad)
+%% adonis(net.dist~net.quad*net.lat*net.lon)
+
+%%                                         #Is roughness correlated to quadrat position?
+%%                                         #Apparently YES. Upper quadrats are smoother.
+%% par(mfrow=c(1,2))
+%% plot(factor(net.quad),net.rough,ylab='Roughness')
+%% plot(density(net.rough[net.quad == unique(net.quad)[2]]),main='',xlab='')
+%% lines(density(net.rough[net.quad == unique(net.quad)[1]]))
+%% summary(aov(net.rough~net.quad))
+
+%%                                         #Does genotype predict roughness?
+%%                                         #Yes.
+%% plot(net.rough~factor(net.geno),las=2)
+%% summary(aov(net.rough~net.geno))
+
+%%                                         #Does roughness alone predict network distance?
+%%                                         #NO.
+%% adonis(net.dist~net.rough)
+
+%%                                         #Does genotype predict network distance?
+%%                                         #Almost (Not when we removed RL6)
+%% adonis(net.dist~net.geno)
+
+%%                                         #Does quadrat combined with genotype predict network distance?
+%%                                         #YES. (Not when RL6 is removed)
+%% plot(princomp(net.dist)$scores[,1:2],col=rainbow(max(as.numeric(factor(net.geno))))[as.numeric(factor(net.geno))],pch=as.numeric(factor(net.quad)))
+%% adonis(net.dist~net.geno*net.quad,permutations=999)
+%% adonis(net.dist~net.quad*net.geno,permutations=999)
+
+%%                                         #What about building lat and/or long into the model?
+%%                                         #NO.
+%% adonis(net.dist~net.geno)
+%% adonis(net.dist~net.geno*net.lon)
+%% adonis(net.dist~net.lon*net.geno)
+
+
+%% net.dist80 <- netDist(lco.nets[net.quad == 'n80.90'])
+%% net.geno80 <- net.geno[net.quad == 'n80.90']
+%% net.rough80 <- net.rough[net.quad == 'n80.90']
+%% net.lon80 <- net.lon[net.quad == 'n80.90']
+%% adonis(net.dist80~net.geno80)
+%% adonis(net.dist80~net.geno80*net.rough80)
+%% adonis(net.dist80~net.geno80*net.lon80)
+
+%% @ 
+
+
+%% <<echo=false,results=hide>>=
+%% adonis(net.dist45~net.rich45)
+%% adonis(net.dist45~net.rich45*net.S45*net.L45)
+
+%% @ 
+
+%% <<echo=false,results=hide>>=
+%% ##Effect of roughness
+%% summary(lm(net.S45~net.rough45))
+%% summary(lm(net.L45~net.rough45))
+%% summary(lm(net.C45~net.rough45))
+%% summary(lm(net.rich45~net.rough45))
+
+%% @ 
+
+
+%% <<echo=false>>=
+%% ###Analysis Summary###
+%%                                         #Genotype predicts the similarity of interaction networks when longitude (east-west) location of the tree in the garden is taken into account as a covariate.
+%% adonis(net.dist45~net.geno45*net.lon45,permutations=9999)
+
+%%                                         #Genotype also predicts structural differences between networks in terms of their size, degree (continuing to use longitude as a covariate).
+
+%% summary(aov(net.S45~net.geno45*net.lon45))
+%% summary(aov(net.L45~net.geno45*net.lon45))
+%% summary(aov(sqrt(asin(net.C45))~net.geno45*net.lon45))
+
+%%                                         #Species richness is correlated with all structural statistics
+%% pairs(cbind(net.rich45,net.S45,net.L45,net.C45),pch=19)
+%% cor(cbind(net.rich45,net.S45,net.L45,net.C45))
+
+%%                                         #Thus, species richness is also a predictor of network similarity, explaining additional variation after genotype and in addition to the other structural statistics
+%% adonis(net.dist45~net.geno45*net.rich45*net.S45*net.L45)
+
+%%                                         #However, genotype is a poor predictor of species richness (residuals were checked for normality)
+%% summary(aov(net.rich45~net.geno45*net.lon45))
+
+%%                                         #The main drivers of structural variation were centrality, size and degree of networks and species richness. Roughness was a very poor predictor of network structure.
+%% vfit45
+  
+%% @ 
+
+
+%% ###CONCLUSION###
+%% ###TAKE-HOME: Foundation species genetics influences the structure of interactions among bark lichen species beyond an assembly affect of the number of species. 
+%% ##Lichen community network structure varies significantly in response to tree genotype. This pattern does not seem to be related to the bark roughness, as richness and community composition seem to be. This is particularly intriguing since roughness seems to be an important factor in lichen establishment. It is possible that there is a threshold effect of roughness that we are not detecting. The main structural drivers of network variation were the size (i.e. the number of nodes), centralization and degree (i.e. the number of connections). Thus, beyond the affect of community assembly, which would have the signature of species richness being the primary driver of network structure, community networks of bark lichen species associated with narrowleaf cottonwood are structure by the genetics of the individual tree that they occur on. This suggests that the structure of complex (i.e. multi-species) interaction networks in ecosystems have a genetic basis. These results are particularly striking given that lichen species are very slow growing and that our communities are all likely to be in the early stages of establishment.
+
+
+%% %Table 1. PerMANOVA table for genotype x longitude model
+%% \begin{center} 
+%% %%%chunk16
+%% <<echo=false,results=tex,fig=false>>=
+%%   xtable(adonis.genoXlon$aov.tab,caption='ANOVA table for the PerMANOVA test of the effect of genotype on
+%%   lichen interaction network similarity using tree longitude as a covariate.')
+%% @ 
+%% \end{center} 
+
+
+%% %Table 2. PerANOVA table for the whole model of network similarity
+%% %predicted by the network metrics and richness and roughness
+%% \begin{center} 
+%% %%%chunk17
+%% <<echo=false,results=tex,fig=false>>=
+%%   xtable(adonis.netD.all$aov.tab,caption='ANOVA table for the PerMANOVA test of the effects of lichen species richness and the network structure metrics (size, degree and centralization) on lichen interaction network similarity.')
+%% @ 
+%% \end{center} 
+
+%% %Table 3. ANOVA table for the test of genotype on richness.
+%% \begin{center} 
+%% %%%chunk18
+%% <<echo=false,results=tex,fig=false>>=
+
+%%   xtable(aov.rich.genoXlon,caption='ANOVA table of the test for the effect of genotype on lichen species richness using longitude as a covariate.')
+%% @ 
+%% \end{center} 
