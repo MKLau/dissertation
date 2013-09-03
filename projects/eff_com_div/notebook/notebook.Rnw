@@ -28,12 +28,43 @@
 
 \section{03 Sep 2013}
 
-Theory Summary
+\textbf{Theory Summary}
 \begin{itemize}
-\item High diversity ecosystems can still have community genetics
-  effects
-\item 
+\item The important conceptual advance and practical implication of
+  defining a species’ effective community diversity is that the
+  genetic analyses of relative few species may tell us much about the
+  structure and evolution of much larger communities.  
+\item Thus, even in a species-rich community, strong and/or frequent
+  interactions between species can greatly reduce the effective
+  diversity of the community.  
+\item We conclude that a community genetics approach is evolutionarily
+  and ecologically important whenever the effective community size for
+  interacting species is small.
 \end{itemize}
+
+\textbf{Approach:}
+
+\begin{enumerate}
+\item assess the frequency of interactions among species as well as
+  the consequences of these interactions from a fitness standpoint,
+  and then, 
+\item identify the relative contribution of selection acting within
+  and among species to the total opportunity for selection acting
+  within a community context and finally, 
+\item introduce “effective community diversity” as a measure of the
+diversity of selective agents one species faces.  
+\end{enumerate}
+
+\textbf{Math Summary}
+
+
+\textbf{NOTE:} '...and even ecosystem processes such as nutrient cycling
+(Whitham et al. 2003; Wade 2003; Schweitzer et al. 2004, 2008).' 
+
+This seems to suggest that Ulanowicz's inkling that evolution plays an
+important role in ecosystem flow networks is true and warrants
+investigation.
+
 
 
 \section{30 Aug 2013}
