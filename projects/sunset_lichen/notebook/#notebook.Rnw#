@@ -1,0 +1,785 @@
+\documentclass[12pt]{article}
+\usepackage{color}
+\usepackage{cite}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+%\usepackage{pdflscape}        %single page landscape
+                                %mode \begin{landscape} \end{landscape}
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{Sweave}
+\newcommand{\etal}{\textit{et al.}}
+\usepackage{hyperref}  %\hyperref[label_name]{''link text''}
+                       %\hyperlink{label}{anchor caption}
+                       %\hypertarget{label}{link caption}
+\linespread{1.5}
+
+\title{Sunset Crater Rock Lichen Community Composition}
+\author{M.K. Lau}
+%\date{}                                           % Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+
+\section{Tasks}
+\begin{enumerate}
+\item Add figure references
+\item Double check figures and legends
+\item Begin discussion
+\end{enumerate}
+
+\section{Tom's Project Ideas}
+
+\begin{itemize}
+\item Selection on lichen community succession:
+  \begin{enumerate}
+  \item Take samples for genetics of the lichen along the
+    chronosequence and parent vs juvenile ramets
+  \item Genotype individuals
+  \item Look at genotype frequency differences
+  \end{enumerate}
+\item Add Classen paper on Litter Accumulation
+\item Genetic basis to succession
+\item Check Resistance vs Susceptible in barplots
+\item Chekc on bird preference
+\item Compile trait data from database
+\item Check on co-occurrence
+\item Do indicator species sems or summed species sems
+\item multiple resgresion for variables on community
+\end{itemize}
+
+
+\section{Do rock lichen communities respond to phenotypic variation in
+a foundation species?}
+
+\subsection{Load and Pre-Process Data}
+
+<<>>=
+key <- read.csv('/Users/Aeolus/projects/Sunset_Crater_Lichens/data/2012jul30/Key.csv')
+x <- read.csv('/Users/Aeolus/projects/Sunset_Crater_Lichens/data/2012jul30/spp_env_combined.csv')
+                                        #remove dead
+x <- x[x$Live.Dead == 1,]
+com <- x[,((1:ncol(x))[colnames(x) == 'Acacon']):((1:ncol(x))[colnames(x) == 'Xanele'])]
+env <- x[,1:12]
+                                        #remove N and S light
+env <- env[,-10:-11]
+                                        #flip R and 
+## env$Moth[env$Moth==0] <- 2
+## env$Moth[env$Moth==1] <- 0
+## env$Moth[env$Moth==2] <- 1
+                                        #fix colnames
+colnames(env) <- sub('\\.\\.','',colnames(env))
+colnames(env)
+
+@ 
+
+\subsection{Analysis of Moth Affects on "Env" Variables}
+
+<<>>=
+library(vegan)
+library(ecodist)
+
+head(env)
+env. <- as.matrix(env[,c(4,5,7,8,9,10)])
+#env. <- apply(env.,2,function(x) x/max(x))
+adonis(env.~env$Moth)
+##                                         #scree
+## e.ord <- nmds(vegdist(env.),1,5)
+## plot(e.ord$stress)
+                                        #final
+e.ord <- nmds(vegdist(env.),2,2)
+v <- env.[,c(1,2,6)]
+vectors <- envfit(nmds.min(e.ord)~v,display='sites')
+plot(nmds.min(e.ord),col=(c('red','black'))[(env$Moth+1)],pch=19)
+ordiellipse(nmds.min(e.ord)[env$Moth==1,],group=(env$Moth)[env$Moth==1],col='black',lwd=3)
+ordiellipse(nmds.min(e.ord)[env$Moth==0,],group=(env$Moth)[env$Moth==0],col='red',lwd=3)
+plot(vectors,labels=c("Litter","Rocks","Light"),col='black')
+legend('topright',legend=c('Susceptible','Resistant'),pch=19,col=unique(env$Moth+1),cex=1)
+
+                                        #Mantel
+com.d <- array(NA,dim=c(nrow(com)/2,ncol(com)))
+colnames(com.d) <- colnames(com)
+k <- 1
+for (i in 1:length(unique(env$Tree.pairs))){
+  com.d[k,] <- apply(com[env$Tree.pairs==i,],2,dist)
+  k <- k + 1
+}
+com.d <- data.frame(com.d,ds=rep(min(com.d[com.d!=0]),nrow(com.d)))
+com.d <- vegdist(com.d)
+env.d <- array(NA,dim=c(nrow(env)/2,ncol(env)))
+colnames(env.d) <- colnames(env)
+k <- 1
+for (i in 1:length(unique(env$Tree.pairs))){
+  env.d[k,] <- apply(env[env$Tree.pairs==i,],2,dist)
+  k <- k + 1
+}
+env.d <- vegdist(env.d)
+plot(com.d~env.d)
+abline(lm(com.d~env.d))
+mantel(com.d~env.d)
+
+
+@ 
+
+%% <<>>=
+
+%% library(vegan)
+%% library(mvabund)
+%% library(tweedie)
+%% library(statmod)
+%% library(xtable)
+%%                                         #the response of light
+%% env. <- env[,c(4:10)]
+%% env. <- apply(env.,2,sqrt)
+%% mva.env <- mvabund(env.)
+%% fit.env <- manyglm(mva.env~env$Moth:env$Tree.pairs,family='gaussian')
+%% summary(fit.env,p.uni='unadjusted')
+%% p.adjust(summary(fit.env,p.uni='unadjusted')$uni.p[,2],method='fdr')
+
+%% @ 
+
+<<fig=true>>=
+shapiro.test(fit.env$residuals)
+par(mfrow=c(1,2))
+plot(fit.env$residuals~fit.env$fitted)
+abline(h=0)
+hist(fit.env$residuals)
+
+@ 
+
+<<fig=true,results=hide>>=
+library(gplots)
+par(mfrow=c(2,4))
+for (i in 4:ncol(env)){
+  mu <- tapply(env[,i],env$Moth,mean)
+  se <- tapply(env[,i],env$Moth,function(x)sd(x)/sqrt(length(x)))
+  x.names <- unique(env$Moth)
+  x.names[x.names==1] <- 'R'
+  x.names[x.names==0] <- 'S'
+  barplot2(mu,plot.ci=TRUE,ci.l=mu-se,ci.u=mu+se,ylab=colnames(env)[i],names=x.names)
+}
+
+my.col='white'
+par(col.axis=my.col,col.lab=my.col,mai=rep(0.1,4),mar=c(4,4.5,1,1),cex.lab=2)
+i=4
+mu <- tapply(env[,i],env$Moth,mean)
+se <- tapply(env[,i],env$Moth,function(x)sd(x)/sqrt(length(x)))
+barplot2(mu,plot.ci=TRUE,ci.l=mu-se,ci.u=mu+se,ylab='Litter Cover',names=c('S','R'),yaxt='n',ci.col='white',border='white')
+axis(2,col=my.col,col.ticks=my.col)
+
+i=5
+mu <- tapply(env[,i],env$Moth,mean)
+se <- tapply(env[,i],env$Moth,function(x)sd(x)/sqrt(length(x)))
+barplot2(mu,plot.ci=TRUE,ci.l=mu-se,ci.u=mu+se,ylab='Rock Cover',names=c('S','R'),yaxt='n',ci.col='white',border='white')
+axis(2,col=my.col,col.ticks=my.col)
+
+i=ncol(env)
+mu <- tapply(env[,i],env$Moth,mean)
+se <- tapply(env[,i],env$Moth,function(x)sd(x)/sqrt(length(x)))
+barplot2(mu,plot.ci=TRUE,ci.l=mu-se,ci.u=mu+se,ylab='Light Intensity',names=c('S','R'),yaxt='n',ci.col='white',border='white')
+axis(2,col=my.col,col.ticks=my.col)
+
+@ 
+
+<<>>=
+summary(lm(env$Light.average~env$Moth))
+summary(lm(env$Litter~env$Moth))
+@ 
+
+<<echo=false,results=hide>>=
+panel.cor <- function(x, y, digits=2, prefix="", cex.cor, ...)
+  {
+    usr <- par("usr"); on.exit(par(usr))
+    par(usr = c(0, 1, 0, 1))
+    r. <- (cor(x, y))
+    r <- abs(cor(x, y))
+    txt <- format(c(r., 0.123456789), digits=digits)[1]
+    txt <- paste(prefix, txt, sep="")
+    if(missing(cex.cor)) cex.cor <- 0.8/strwidth(txt)
+    text(0.5, 0.5, txt, cex = cex.cor * r)
+  }
+
+@ 
+
+<<fig=true>>=
+  pairs(env[,c(-2:-3,-8:-11)],lower.panel=panel.cor)
+
+@ 
+
+\section{Community Response to Moth}
+
+\subsection{Sampling}
+
+<<>>=
+library(vegan)
+spac <- specaccum(com)
+plot(spac,xlab='Number of Trees',ylab='Number of Lichen Species')
+
+@ 
+
+\subsection{Abundance, Richness and Diversity}
+
+<<>>=
+                                        #abundance
+A <- apply(com,1,sum)
+A.fit <- glm(log(A+1)~Moth:Tree.pairs,data=env)
+                                        #richness
+R <- apply(com,1,function(x) length(x[x!=0]))
+R.fit <- glm(R~Moth:Tree.pairs,data=env,family='poisson')
+                                        #Shannon's diversity
+H <- apply(com,1,diversity)
+H.fit <- glm(H~Moth:Tree.pairs,data=env)
+
+@ 
+
+<<results=tex>>=
+library(xtable)
+xtable(summary(A.fit))
+xtable(summary(R.fit))
+xtable(summary(H.fit))
+
+summary(A.fit)
+summary(R.fit)
+summary(H.fit)
+
+@ 
+
+\subsection{Composition}
+<<>>=
+                                        #paired test of composition
+ds <- rep(min(com[com!=0]),nrow(com))
+com <- com[,apply(com,2,sum)!=0]
+com. <- cbind(com,ds)
+adonis(com.~env$Moth:env$Tree.pairs)
+                                        #relativize by species max
+com.. <- apply(com.,2,function(x) x/max(x))
+com..[,colnames(com..)=='ds'] <- rep(min(com..[com..!=0]),nrow(com..))
+adonis(com..~env$Moth:env$Tree.pairs)
+
+@ 
+
+%% <<results=tex>>=
+%% p.uni <- summary(glm.fit,p.uni='unadjusted')$uni.p
+%% xtable(apply(p.uni,2,p.adjust,method='fdr'))
+
+%% @ 
+
+%% <<>>=
+%% attach(env)
+%% com.mglm <- manyglm(mva.com~Light.average*Litter*Big.rocks,family='gaussian')
+%% detach(env)
+%% summary(com.mglm)
+
+%% @ 
+
+<<>>=
+                                        #paired distance based
+d. <- as.matrix(vegdist(com.))
+pd <- 0
+for (i in 1:(nrow(d.)-1)){
+  pd[i] <- d.[(i+1),i]
+}
+pd. <- pd[(1:length(pd)) %% 2 == 1]
+wilcox.test(pd.,exact=FALSE)
+env.. <- env[(1:nrow(env)) %% 2 == 1,]
+library(tweedie)
+glm. <- glm(pd.~Light.average*Litter*Big.rocks,data=env..,family=tweedie(2))
+
+@ 
+
+<<results=tex>>=
+xtable(summary(glm.))
+
+@ 
+
+\subsection{Indicator Species Analysis}
+
+<<>>=
+                                        #indicator species
+## library(labdsv)
+## ind.spp <- indval(com,env$Moth)
+## summary(ind.spp)
+## detach(package:labdsv)
+
+@ 
+
+\paragraph{} Indicator Species Analysis Results using Moth as the grouping factor
+\paragraph{} species cluster indicator.value probability
+\paragraph{} Canros       2          0.6397       0.006
+\paragraph{} Acasup       2          0.6295       0.002
+\paragraph{} Acacon       2          0.4769       0.001
+\paragraph{} Acaobp       2          0.4241       0.008
+\paragraph{} Phydub       2          0.4125       0.018
+\paragraph{} Calare       2          0.2966       0.036
+
+
+<<fig=true>>=
+                                        #NMDS
+library(vegan)
+library(ecodist)
+d <- vegdist(com.)
+if (any(ls()=='my.nmds')){}else{my.nmds <- nmds(d,3,3,100)}
+env.nms <- env.[,c(1,2,6)]
+par(mfrow=c(3,3))
+for (i in 1:3){
+  for (j in 1:3){
+    if (i!=j){
+      par(mar=c(5.1, 4.1, 4.1, 2.1)-0.75)
+      vectors <- envfit(nmds.min(my.nmds)[,c(i,j)]~env.nms)
+      plot(nmds.min(my.nmds)[,c(j,i)],pch=19,col=grey(c(0.75,0))[(env$Moth+1)],xlab='',ylab='')
+      plot(vectors,col='black')
+    }else{
+      par(mar=c(5.1, 4.1, 4.1, 2.1)-2)
+      plot(1,1,axes=FALSE,xlab='',ylab='',type='n')
+      text(1,1,labels=paste('X',i,sep=''),cex=10)
+    }
+  }
+}
+
+
+i=2
+j=3
+my.col <- 'black'
+plot(nmds.min(my.nmds)[,c(j,i)],pch=19,col=(env$Moth+1),cex=1,xlab='',ylab='')
+colnames(env.nms) <- c('Litter','Rocks','Light')
+v <- env.nms
+vectors <- envfit(nmds.min(my.nmds)[,c(i,j)]~v,display='sites')
+title(xlab='X1',ylab='X2',col=my.col)
+ordiellipse(nmds.min(my.nmds)[env$Moth==0,c(j,i)],group=(env$Moth)[env$Moth==0],col='black',lwd=3)
+ordiellipse(nmds.min(my.nmds)[env$Moth==1,c(j,i)],group=(env$Moth)[env$Moth==1],col='red',lwd=3)
+legend('topright',legend=c('Susceptible','Resistant'),pch=19,col=unique(env$Moth+1),cex=1)
+plot(vectors,col='black',cex=1,lwd=2,labels=c("Litter", "Rocks", "Light"))
+
+@ 
+
+%% <<>>=
+
+%% attach(env)
+%% com.mglm <- manyglm(mva.com~factor(Moth)*Light.average*Litter*Big.rocks,family='gaussian')
+%% detach(env)
+%% summary(com.mglm)
+
+%% @ 
+
+\pagebreak
+
+\subsection{SEM}
+
+%%SEM
+
+<<echo=false>>=
+  library(sem)
+###Abundance
+Abundance <- A
+model.sem <- specifyModel(file='~/projects/sunset_crater_lichens/results/2012aug01/scrl_semA.txt')
+   sem.data <- cbind(env,Abundance)
+                                        #transforms
+   sem.data$Light.average <- sqrt(sem.data$Light.average)
+   sem.data$Litter <- sqrt(sem.data$Litter)
+   sem.data$Big.rocks <- sqrt(sem.data$Big.rocks)
+                                        #sem fitting and analysis
+                                        #colnames(sem.data)
+   Sigma <- var(sem.data[,c(-1,-3,-6:-9)])
+   sem.fit <- sem(model.sem,S=Sigma,N=nrow(sem.data))
+   summary(sem.fit)
+   modIndices(sem.fit)
+                                        #effects(sem.fit)
+                                        #hist(residuals(sem.fit))
+                                        #stdCoef(sem.fit)
+   pathDiagram(sem.fit,file='semPathA',edge.labels='values',standardize=TRUE
+               ,ignore.double=TRUE,size=c(12,12),edge.font=c("Arial", 10),
+               graphics.fmt='png') #export to graphviz
+
+@ 
+
+\includegraphics{semPathA.png}
+\pagebreak
+
+<<echo=false>>=
+###Richness
+Richness <- R
+model.sem <- specifyModel(file='~/projects/sunset_crater_lichens/results/2012aug01/scrl_semR.txt')
+   sem.data <- cbind(env,Richness)
+                                        #transforms
+   sem.data$Light.average <- sqrt(sem.data$Light.average)
+   sem.data$Litter <- sqrt(sem.data$Litter)
+   sem.data$Big.rocks <- sqrt(sem.data$Big.rocks)
+                                        #sem fitting and analysis
+                                        #colnames(sem.data)
+   Sigma <- var(sem.data[,c(-1,-3,-6:-9)])
+   sem.fit <- sem(model.sem,S=Sigma,N=nrow(sem.data))
+   summary(sem.fit)
+   modIndices(sem.fit)
+                                        #effects(sem.fit)
+                                        #hist(residuals(sem.fit))
+                                        #stdCoef(sem.fit)
+   pathDiagram(sem.fit,file='semPathR',edge.labels='values',standardize=TRUE
+               ,ignore.double=TRUE,size=c(12,12),edge.font=c("Arial", 10),
+               graphics.fmt='png') #export to graphviz
+
+@ 
+
+\includegraphics{semPathR.png}
+
+\pagebreak
+
+<<echo=false>>=
+###Diversity
+Diversity <- H
+model.sem <- specifyModel(file='~/projects/sunset_crater_lichens/results/2012aug01/scrl_semD.txt')
+   sem.data <- cbind(env,Diversity)
+                                        #transforms
+   sem.data$Light.average <- sqrt(sem.data$Light.average)
+   sem.data$Litter <- sqrt(sem.data$Litter)
+   sem.data$Big.rocks <- sqrt(sem.data$Big.rocks)
+                                        #sem fitting and analysis
+                                        #colnames(sem.data)
+   Sigma <- var(sem.data[,c(-1,-3,-6:-9)])
+   sem.fit <- sem(model.sem,S=Sigma,N=nrow(sem.data))
+   summary(sem.fit)
+   modIndices(sem.fit)
+                                        #effects(sem.fit)
+                                        #hist(residuals(sem.fit))
+                                        #stdCoef(sem.fit)
+   pathDiagram(sem.fit,file='semPathD',edge.labels='values',standardize=TRUE
+               ,ignore.double=TRUE,size=c(12,12),edge.font=c("Arial", 10),
+               graphics.fmt='png') #export to graphviz
+
+@ 
+
+\includegraphics{semPathD.png}
+
+\pagebreak
+
+<<echo=false>>=
+###Composition
+my.nmds <- dget('~/projects/sunset_crater_lichens/results/2012aug01/nmds_2Jul2013.Rdata')
+model.sem <- specifyModel(file='~/projects/sunset_crater_lichens/results/2012aug01/scrl_sem1.txt')
+   sem.data <- cbind(env,nmds.min(my.nmds))
+                                        #transforms
+   sem.data$Light.average <- sqrt(sem.data$Light.average)
+   sem.data$Litter <- sqrt(sem.data$Litter)
+   sem.data$Big.rocks <- sqrt(sem.data$Big.rocks)
+                                        #sem fitting and analysis
+                                        #colnames(sem.data)
+   Sigma <- var(sem.data[,c(-1,-3,-6:-9)])
+   sem.fit <- sem(model.sem,S=Sigma,N=nrow(sem.data))
+   summary(sem.fit)
+   modIndices(sem.fit)
+                                        #effects(sem.fit)
+                                        #hist(residuals(sem.fit))
+                                        #stdCoef(sem.fit)
+   pathDiagram(sem.fit,file='semPath1',edge.labels='values',standardize=TRUE
+               ,ignore.double=TRUE,size=c(12,12),edge.font=c("Arial", 10),
+               graphics.fmt='png') #export to graphviz
+@ 
+
+\includegraphics{semPath1.png}
+
+<<echo=false>>=
+###Species - Acacon
+Acacon <- com$Acacon
+model.sem <- specifyModel(file='~/scrl/scrl_semAcacon.txt')
+   sem.data <- cbind(env,Acacon)
+                                        #transforms
+   sem.data$Light.average <- sqrt(sem.data$Light.average)
+   sem.data$Litter <- sqrt(sem.data$Litter)
+   sem.data$Big.rocks <- sqrt(sem.data$Big.rocks)
+                                        #sem fitting and analysis
+                                        #colnames(sem.data)
+   Sigma <- var(sem.data[,c(-1,-3,-6:-9)])
+   sem.fit <- sem(model.sem,S=Sigma,N=nrow(sem.data))
+   summary(sem.fit)
+   modIndices(sem.fit)
+                                        #effects(sem.fit)
+                                        #hist(residuals(sem.fit))
+                                        #stdCoef(sem.fit)
+   pathDiagram(sem.fit,file='semPathAcacon',edge.labels='values',standardize=TRUE
+               ,ignore.double=FALSE,size=c(12,12),edge.font=c("Arial", 10),
+               graphics.fmt='png') #export to graphviz
+
+@ 
+
+\includegraphics{semPathAcacon.png}
+
+\pagebreak
+
+<<echo=false>>=
+###Acasup
+Acasup <- com$Acasup
+model.sem <- specifyModel(file='~/scrl/scrl_semAcasup.txt')
+   sem.data <- cbind(env,Acasup)
+                                        #transforms
+   sem.data$Light.average <- sqrt(sem.data$Light.average)
+   sem.data$Litter <- sqrt(sem.data$Litter)
+   sem.data$Big.rocks <- sqrt(sem.data$Big.rocks)
+                                        #sem fitting and analysis
+                                        #colnames(sem.data)
+   Sigma <- var(sem.data[,c(-1,-3,-6:-9)])
+   sem.fit <- sem(model.sem,S=Sigma,N=nrow(sem.data))
+   summary(sem.fit)
+   modIndices(sem.fit)
+                                        #effects(sem.fit)
+                                        #hist(residuals(sem.fit))
+                                        #stdCoef(sem.fit)
+   pathDiagram(sem.fit,file='semPathAcasup',edge.labels='values',standardize=TRUE
+               ,ignore.double=FALSE,size=c(12,12),edge.font=c("Arial", 10),
+               graphics.fmt='png') #export to graphviz
+
+@ 
+
+\includegraphics{semPathAcasup.png}
+
+\pagebreak
+
+<<echo=false>>=
+###Acaobp
+Acaobp <- com$Acaobp
+model.sem <- specifyModel(file='~/scrl/scrl_semAcaobp.txt')
+   sem.data <- cbind(env,Acaobp)
+                                        #transforms
+   sem.data$Light.average <- sqrt(sem.data$Light.average)
+   sem.data$Litter <- sqrt(sem.data$Litter)
+   sem.data$Big.rocks <- sqrt(sem.data$Big.rocks)
+                                        #sem fitting and analysis
+                                        #colnames(sem.data)
+   Sigma <- var(sem.data[,c(-1,-3,-6:-9)])
+   sem.fit <- sem(model.sem,S=Sigma,N=nrow(sem.data))
+   summary(sem.fit)
+   modIndices(sem.fit)
+                                        #effects(sem.fit)
+                                        #hist(residuals(sem.fit))
+                                        #stdCoef(sem.fit)
+   pathDiagram(sem.fit,file='semPathAcaobp',edge.labels='values',standardize=TRUE
+               ,ignore.double=FALSE,size=c(12,12),edge.font=c("Arial", 10),
+               graphics.fmt='png') #export to graphviz
+
+@ 
+
+\includegraphics{semPathAcaobp.png}
+\pagebreak
+
+<<echo=false>>=
+###Canros
+Canros <- com$Canros
+model.sem <- specifyModel(file='~/scrl/scrl_semCanros.txt')
+   sem.data <- cbind(env,Canros)
+                                        #transforms
+   sem.data$Light.average <- sqrt(sem.data$Light.average)
+   sem.data$Litter <- sqrt(sem.data$Litter)
+   sem.data$Big.rocks <- sqrt(sem.data$Big.rocks)
+                                        #sem fitting and analysis
+                                        #colnames(sem.data)
+   Sigma <- var(sem.data[,c(-1,-3,-6:-9)])
+   sem.fit <- sem(model.sem,S=Sigma,N=nrow(sem.data))
+   summary(sem.fit)
+   modIndices(sem.fit)
+                                        #effects(sem.fit)
+                                        #hist(residuals(sem.fit))
+                                        #stdCoef(sem.fit)
+   pathDiagram(sem.fit,file='semPathCanros',edge.labels='values',standardize=TRUE
+               ,ignore.double=FALSE,size=c(12,12),edge.font=c("Arial", 10),
+               graphics.fmt='png') #export to graphviz
+
+@ 
+
+
+\includegraphics{semPathCanros.png}
+\pagebreak
+
+<<echo=false>>=
+###Calare
+Calare <- com$Calare
+model.sem <- specifyModel(file='~/scrl/scrl_semCalare.txt')
+   sem.data <- cbind(env,Calare)
+                                        #transforms
+   sem.data$Light.average <- sqrt(sem.data$Light.average)
+   sem.data$Litter <- sqrt(sem.data$Litter)
+   sem.data$Big.rocks <- sqrt(sem.data$Big.rocks)
+                                        #sem fitting and analysis
+                                        #colnames(sem.data)
+   Sigma <- var(sem.data[,c(-1,-3,-6:-9)])
+   sem.fit <- sem(model.sem,S=Sigma,N=nrow(sem.data))
+   summary(sem.fit)
+   modIndices(sem.fit)
+                                        #effects(sem.fit)
+                                        #hist(residuals(sem.fit))
+                                        #stdCoef(sem.fit)
+   pathDiagram(sem.fit,file='semPathCalare',edge.labels='values',standardize=TRUE
+               ,ignore.double=FALSE,size=c(12,12),edge.font=c("Arial", 10),
+               graphics.fmt='png') #export to graphviz
+
+@ 
+
+
+\includegraphics{semPathCalare.png}
+\pagebreak
+
+<<echo=false>>=
+
+###Phydub
+Phydub <- com$Phydub
+model.sem <- specifyModel(file='~/scrl/scrl_semPhydub.txt')
+   sem.data <- cbind(env,Phydub)
+                                        #transforms
+   sem.data$Light.average <- sqrt(sem.data$Light.average)
+   sem.data$Litter <- sqrt(sem.data$Litter)
+   sem.data$Big.rocks <- sqrt(sem.data$Big.rocks)
+                                        #sem fitting and analysis
+                                        #colnames(sem.data)
+   Sigma <- var(sem.data[,c(-1,-3,-6:-9)])
+   sem.fit <- sem(model.sem,S=Sigma,N=nrow(sem.data))
+   summary(sem.fit)
+   modIndices(sem.fit)
+                                        #effects(sem.fit)
+                                        #hist(residuals(sem.fit))
+                                        #stdCoef(sem.fit)
+   pathDiagram(sem.fit,file='semPathPhydub',edge.labels='values',standardize=TRUE
+               ,ignore.double=FALSE,size=c(12,12),edge.font=c("Arial", 10),
+               graphics.fmt='png') #export to graphviz
+                                        
+@ 
+
+\includegraphics{semPathPhydub.png}
+\pagebreak
+
+<<>>=
+                                        #co-occurrence null models
+library(bipartite)
+source('~/Dropbox/Active_Projects/cor_nets/CorNets.R')
+library(audio)
+library(pbapply)
+                                        #all
+x <- com[,apply(com,2,sum)!=0]
+if (any(ls()=='null')){}else{null <- nullSim(x,10000)}
+if (any(ls()=='null.all')){}else{sim <- pblapply(null,function(x) C.score(x[,apply(x,2,sum)!=0]));null.all <- unlist(sim)}
+p.all <- min(c(length(null.all[null.all>=C.score(x)])/length(null.all),length(null.all[null.all<=C.score(x)])/length(null.all)))
+ses.all <- (C.score(x[,apply(x,2,sum)>0]) - mean(null.all)) / sd(null.all)
+c(p.all,1-p.all,ses.all)
+                                        #moth susceptible
+x <- com[env$Moth==0,]
+x <- x[,apply(x,2,sum)!=0]
+if (any(ls()=='null.moth')){}else{null.moth <- nullSim(x,10000)}
+if (any(ls()=='null.0')){}else{sim <- pblapply(null.moth,function(x) C.score(x[,apply(x,2,sum)!=0]));null.0 <- unlist(sim)}
+p.0 <- min(c(length(null.0[null.0>=C.score(x)])/length(null.0),length(null.0[null.0<=C.score(x)])/length(null.0)))
+ses.0 <- (C.score(x) - mean(null.0)) / sd(null.0)
+c(p.0,ses.0)
+                                        #moth resistant
+x <- com[env$Moth==1,]
+x <- x[,apply(x,2,sum)!=0]
+if (any(ls()=='null.res')){}else{null.res <- nullSim(x,10000)}
+length(null)
+if (any(ls()=='null.1')){}else{sim <- pblapply(null.res,function(x) C.score(x[,apply(x,2,sum)!=0]));null.1 <- unlist(sim)}
+p.1 <- min(c(length(null.1[null.1>=C.score(x)])/length(null.1),length(null.1[null.1<=C.score(x)])/length(null.1)))
+ses.1 <- (C.score(x) - mean(null.1)) / sd(null.1)
+c(p.1,ses.1)
+
+                                        #compare co-occurrence patterns
+cooc <- cbind(c(p.0,ses.0),c(p.1,ses.1),c(p.all,ses.all))
+colnames(cooc) <- c('S','R','ALL')
+rownames(cooc) <- c('p.min','SES')
+cooc
+
+@ 
+
+<<results=tex>>=
+library(xtable)
+xtable(cooc)
+
+@ 
+
+\subsection{Higher Resolution Data (Quadrat Data)}
+
+<<>>=
+###NOTES
+##1 Try restricting the analyses to a single side of the tree (both overall and per tree)
+##2 Look at the effect of side
+##3 Try other co-occurrence modeling (fix-equ, cornets, also double check null modeling code)
+                                        #dependencies
+library(pbapply)
+source('~/Projects/cor_nets/CorNets.R')
+coaSumStat <- function(x,nit=5000){
+                                        #NOTE: function removes "deprecated" matrices
+  x <- x[,apply(x,2,sum)!=0]
+  null.res <- nullSim(x,nit)
+  sim <- pblapply(null.res,function(x) C.score(x[,apply(x,2,sum)!=0]))
+  null.1 <- unlist(sim)
+  p.1 <- min(c(length(null.1[null.1>=C.score(x)])/length(null.1),length(null.1[null.1<=C.score(x)])/length(null.1)))
+  ses.1 <- (C.score(x) - mean(null.1)) / sd(null.1)
+  return(c(p.1,ses.1))
+}
+
+x <- read.csv('/Users/Aeolus/data/sunset_crater/rawdata Sunset Crater for Matt.csv')
+                                        #remove annotation
+x <- x[x$Q!='',]
+                                        #remove dead!!!
+da <- sapply(as.character(x$Tree.ID),function(x) substr(x,nchar(x),nchar(x)))
+x <- x[da=='A',]
+                                        #isolate tree data
+xt <- split(x,factor(x$Tree.ID),drop=TRUE)
+                                        #isolate community data
+comt <- pblapply(xt,function(x) x[,4:20])
+names(comt) <- names(xt)
+rm.t <- unlist(pblapply(comt,function(x) length((1:ncol(x))[apply(x,2,sum)!=0])>=2))
+comt <- comt[rm.t]
+rmt.names <- names(xt)[rm.t==FALSE]
+length(comt)/length(xt)*100
+                                        #conduct co-occurrence analyses
+if (any(dir('./')=='coa_trees.Rdata')){
+  coa.t <- dget('./coa_trees.Rdata')
+}else{
+  coa.t <- pblapply(comt,coaSumStat)
+  dput(coa.t,file='./coa_trees.Rdata')
+}
+                                        #data processing
+out <- do.call(rbind,coa.t)
+out[is.na(out)] <- 0
+out.rmt <- cbind(p=rep(1,length(rmt.names)),ses=rep(0,length(rmt.names)))
+out <- rbind(out,out.rmt)
+out <- data.frame(out,names=c(names(comt),rmt.names))
+moth <- sapply(as.character(out$names),function(x) substr(x,(nchar(x)-1),(nchar(x)-1)))
+out <- data.frame(out,moth)
+
+plot(ses~moth,data=out)
+library(gplots)
+
+bp3 <- function(x,f,col=grey(c(0.25,0.75)),xlab='',ylab=''){
+  require(gplots,quietly=TRUE)
+  mu <- tapply(x,f,mean)
+  se <- tapply(x,f,function(x) sd(x)/length(x))
+  barplot2(mu,plot.ci=TRUE,ci.u=mu+se,ci.l=mu-se,col=col,xlab=xlab,ylab=ylab)
+}
+
+                                        #test of difference in SES values
+summary(aov(ses~moth,data=out))
+
+bp3(out$ses,out$moth,xlab='Moth Susceptibility',ylab='SES',col=grey(c(0.25,0.75)))
+                                        #
+out. <- out[out$names%in%rmt.names==FALSE,] #remove rmt's values
+summary(aov(ses~moth,data=out.))
+                                        #paired
+out.p <- out[order(out$names),]
+trees <- as.numeric(sapply(as.character(out.p$names),function(x) substr(x,1,(nchar(x)-2))))
+hist(tapply(out.p$ses,trees,function(x) x[1]-x[2]))
+
+@ 
+
+
+%% %%Activate for bibtex vibliography
+\bibliographystyle{plain}
+\bibliography{/Users/Aeolus/Documents/bibtex/biblib}
+
+
+\end{document}  
+
+
+%’¥Þ
+%’¥Ä
+%’¥È
+% 
+%’¤Ç
+%’¤¹
+%’¡£
+
+%%%C-\ japanese

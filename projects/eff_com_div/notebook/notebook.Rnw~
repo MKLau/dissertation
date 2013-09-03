@@ -26,37 +26,16 @@
 %\setcounter{tocdepth}{3}  %%activate to number sections
 %\tableofcontents
 
-%\thispagestyle{empty}
-%\setcounter{page}{0}
-%\setcounter{secnumdepth}{-1}  %activate to start numbering from one
-%on the second page
+\section{30 Aug 2013}
 
-
-%\section{}
-%\subsection{}
-
-%% %%Figure construction
-%% <<echo=false,results=hide,label=fig1,include=false>>=
-%% @ 
-
-
-%% %%Figure plotting
-%% \begin{figure} 
-%% \begin{center} 
-%% <<label=fig1,fig=TRUE,echo=false>>=
-%% <<fig1>> 
-%% @ 
-%% \end{center} 
-%% \caption{}
-%% \label{fig:one}
-%% \end{figure}
-
-
-%% %%Activate for bibtex vibliography
-%% \cite{goossens93}
-%% \bibliographystyle{plain}
-%% \bibliography{/Users/Aeolus/Documents/bibtex/biblib}
-
+\begin{enumerate}
+\item Review for potential use in dissertation
+\item Go over math and understand
+\item Compare to ENA math
+\item Try to re-phrase in terms of information theory
+\item Talk with Stuart about using in enaR
+\item Program formulae into enaR and publish as v2.\?
+\end{enumerate}
 
 \end{document}  
 

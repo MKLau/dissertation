@@ -26,6 +26,12 @@
 %\setcounter{tocdepth}{3}  %%activate to number sections
 %\tableofcontents
 
+\section{03 Sep 2013}
+
+Math Summary
+
+
+
 \section{30 Aug 2013}
 
 \begin{enumerate}
