@@ -30,6 +30,8 @@
 
 Theory Summary
 \begin{itemize}
+\item High diversity ecosystems can still have community genetics
+  effects
 \item 
 \end{itemize}
 
