@@ -28,8 +28,10 @@
 
 \section{03 Sep 2013}
 
-Math Summary
-
+Theory Summary
+\begin{itemize}
+\item 
+\end{itemize}
 
 
 \section{30 Aug 2013}
