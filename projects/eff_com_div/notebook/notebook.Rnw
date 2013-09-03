@@ -1,0 +1,42 @@
+\documentclass[12pt]{article}
+\usepackage{color}
+\usepackage{cite}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+%\usepackage{pdflscape}        %single page landscape
+                                %mode \begin{landscape} \end{landscape}
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{multicol} % \begin{multicols}{number of columns} \end{multicols}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{Sweave}
+\newcommand{\etal}{\textit{et al.}}
+\usepackage{hyperref}  %\hyperref[label_name]{''link text''}
+                       %\hyperlink{label}{anchor caption}
+                       %\hypertarget{label}{link caption}
+\linespread{1.5}
+
+\title{Effective Community Diversity}
+\author{M.K. Lau}
+%\date{}                                           % Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+
+%\setcounter{tocdepth}{3}  %%activate to number sections
+%\tableofcontents
+
+\section{30 Aug 2013}
+
+\begin{enumerate}
+\item Review for potential use in dissertation
+\item Go over math and understand
+\item Compare to ENA math
+\item Try to re-phrase in terms of information theory
+\item Talk with Stuart about using in enaR
+\item Program formulae into enaR and publish as v2.\?
+\end{enumerate}
+
+\end{document}  
+
+
