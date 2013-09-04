@@ -27,6 +27,8 @@
 \item Add figure references
 \item Double check figures and legends
 \item Begin discussion
+\item Do a read through
+\item send to rikke
 \end{enumerate}
 
 \section{Tom's Project Ideas}
