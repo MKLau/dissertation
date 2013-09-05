@@ -24,12 +24,35 @@
 
 \section{Tasks}
 \begin{enumerate}
-\item Add figure references
-\item Double check figures and legends
-\item Begin discussion
+\item Write SEM methods
 \item Do a read through
-\item send to rikke
+
+\item DONE send to rikke
+\item DONE Begin discussion
+\item DONE Add figure references into text
+\item DONE Write SEM results
+\item DONE Combine Barplots and NMDS community results
 \end{enumerate}
+
+%%%Deleted from manuscript on 5Sep2013
+Outline
+Lichen community varies with tree phenotype
+-GLM table (Table 2)
+-Barplots of community summary statistics (Figure 3a-c)
+-PerMANOVA (Table 3)
+-NMDS of community composition (Figure 3d)
+-Indicator species analysis (Table 4 )
+Tree phenotype influences local environmental variation
+-PerMANOVA (Table 1 )
+-NMDS with vectors and points colored by susceptibility (Figure 1)
+Indirect effects of tree phenotype on light and substrate availability
+determines community composition
+-Mantel 
+or = 0.23 P = 0.005 
+-Environmental X Community distance plot (Figure 2)
+-Path diagram with fit statistics (Figure 4)
+-SEM path significances (Appendix 1)
+
 
 \section{Tom's Project Ideas}
 
@@ -58,8 +81,8 @@ a foundation species?}
 \subsection{Load and Pre-Process Data}
 
 <<>>=
-key <- read.csv('/Users/Aeolus/projects/Sunset_Crater_Lichens/data/2012jul30/Key.csv')
-x <- read.csv('/Users/Aeolus/projects/Sunset_Crater_Lichens/data/2012jul30/spp_env_combined.csv')
+key <- read.csv('data/2012jul30/Key.csv')
+x <- read.csv('/Users/Aeolus/projects/dissertation/projects/sunset_lichen/data/2012jul30/spp_env_combined.csv')
                                         #remove dead
 x <- x[x$Live.Dead == 1,]
 com <- x[,((1:ncol(x))[colnames(x) == 'Acacon']):((1:ncol(x))[colnames(x) == 'Xanele'])]
@@ -232,6 +255,16 @@ R.fit <- glm(R~Moth:Tree.pairs,data=env,family='poisson')
                                         #Shannon's diversity
 H <- apply(com,1,diversity)
 H.fit <- glm(H~Moth:Tree.pairs,data=env)
+
+@ 
+
+<<>>=
+#Barplots for community response variables
+M <- env$Moth
+M[M==1] <- 'R'
+M[M==0] <- 'S'
+bp3(A,M,xlab='Moth',ylab='Total Abundance')
+bp3(R,M,xlab='Moth',ylab='Species Richness')
 
 @ 
 
