@@ -24,16 +24,14 @@
 
 \section{Tasks}
 \begin{enumerate}
-\item Finalize analyses
-\item Write methods summary
-\item Write results summary
-<<>>=
-@ 
-\item Make figures
-\item Integrate figures into text
+\item Add figure references
+\item Double check figures and legends
+\item Begin discussion
+\item Do a read through
+\item send to rikke
 \end{enumerate}
 
-\section{Things to Do from Tom}
+\section{Tom's Project Ideas}
 
 \begin{itemize}
 \item Selection on lichen community succession:
