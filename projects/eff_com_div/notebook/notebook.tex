@@ -1,4 +1,5 @@
 \documentclass[12pt]{article}
+\usepackage[utf8]{inputenc} 
 \usepackage{color}
 \usepackage{cite}
 \usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
@@ -26,9 +27,69 @@
 %\setcounter{tocdepth}{3}  %%activate to number sections
 %\tableofcontents
 
-\section{06 Sep 2013}
-Emailed Stuart about including in Indicator Species Special Issue. 
+\section{13 Sep 2013}
 
+Understanding the math.
+
+Cik is correct but the notation is confusing. Try:
+
+$\Pr(C_k)=\prod_{i=1}^{n}\Pr(x_i)$
+
+$C_k=\{x_1,x_2,...,x_n\}$, where, 
+
+$x_i$ = \left\{ \begin{array}{ll}
+  x = 0 & \mbox{if species \textit{i} is NOT in context \textit{k}}\\
+  x = 1 & \mbox{if species \textit{i} is IN context \textit{k}}\end{array} \right.
+
+$\Pr(x_i)=x_i\Pr(x_i) + (1-x_i)(1-\Pr(x_i))$
+
+$\Pr(x_i)=\frac{a_i}{\sum_{i=1}^{n}a_i}$, where $a_i$ = species \textit{i}'s abundance
+
+
+NOTE: the terms $x_i\Pr(x_i)$ and $(1-x_i)(1-\Pr(x_i))$ use $x_i$ as
+an index that removes the first term if the species is not in context
+$k$ and the second term if the species is in context $k$. Thus, the
+product vector includes either the probability that a species is
+present or that a species is absent depending on whether or not that
+species is in the given community context, $k$.
+
+
+Understanding the logarithm in entropy.
+
+Where $b^y=x$ $log_bx=y$, in other words the logarithm yields the
+length of the product vector of the base that yields x.
+
+\begin{Schunk}
+\begin{Sinput}
+> x10 <- c(1,10,100,1000,10000,100000)
+> x2 <- c(1,2,4,8,16,32)
+> log(x10,base=10)
+\end{Sinput}
+\begin{Soutput}
+[1] 0 1 2 3 4 5
+\end{Soutput}
+\begin{Sinput}
+> log(x10,base=2)
+\end{Sinput}
+\begin{Soutput}
+[1]  0.000000  3.321928  6.643856  9.965784 13.287712 16.609640
+\end{Soutput}
+\begin{Sinput}
+> log(x2,base=10)
+\end{Sinput}
+\begin{Soutput}
+[1] 0.00000 0.30103 0.60206 0.90309 1.20412 1.50515
+\end{Soutput}
+\begin{Sinput}
+> log(x2,base=2)
+\end{Sinput}
+\begin{Soutput}
+[1] 0 1 2 3 4 5
+\end{Soutput}
+\begin{Sinput}
+> 
+\end{Sinput}
+\end{Schunk}
 
 
 \section{03 Sep 2013}

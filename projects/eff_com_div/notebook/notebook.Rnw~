@@ -26,6 +26,32 @@
 %\setcounter{tocdepth}{3}  %%activate to number sections
 %\tableofcontents
 
+\section{13 Sep 2013}
+
+Understanding the math.
+
+
+
+<<>>=
+###Cik
+
+                                        #x <- sample(c(0,1),3,replace=TRUE) #presence = 0, absence = 1
+##x = (presence = 0, absence = 1)
+##x is length = k
+x <- list(c(0,0,0),c(1,0,0),c(0,1,0),c(0,0,1),c(1,1,0),c(1,0,1),c(0,1,1),c(1,1,1))
+p <- round(runif(3,0,100),0) #frequency of species
+p <- p/sum(p)
+Cik <- list()
+C <- list()
+for (k in 1:length(x)){
+  Cik[[k]] <- prod(((1-x[[k]])*(1-p)+(x[[k]]*p)))
+}
+
+sum(unlist(Cik))
+
+@ 
+
+
 \section{03 Sep 2013}
 
 \textbf{Theory Summary}
@@ -56,7 +82,9 @@ diversity of selective agents one species faces.
 \end{enumerate}
 
 \textbf{Math Summary}
-
+\begin{itemize}
+\item 
+\end{itemize}
 
 \textbf{NOTE:} '...and even ecosystem processes such as nutrient cycling
 (Whitham et al. 2003; Wade 2003; Schweitzer et al. 2004, 2008).' 
