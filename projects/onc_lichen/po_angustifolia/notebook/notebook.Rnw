@@ -1,0 +1,708 @@
+%%%NOTE: for help with latex symbols look here http://mirror.unl.edu/ctan/info/symbols/comprehensive/symbols-a4.pdf.
+\documentclass[12pt]{article}
+\usepackage{color}
+\usepackage{cite}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+%\usepackage{pdflscape}        %single page landscape
+                                %mode \begin{landscape} \end{landscape}
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{multicol} % \begin{multicols}{number of columns} \end{multicols}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{Sweave}
+\newcommand{\etal}{\textit{et al.}}
+\usepackage{hyperref}  %\hyperref[label_name]{''link text''}
+                       %\hyperlink{label}{anchor caption}
+                       %\hypertarget{label}{link caption}
+\linespread{1.5}
+
+
+\title{Foundation species genetics structures lichen community
+  interaction networks}
+\author{M.K. Lau, L.J. Lamit, T.G. Whitham}
+\begin{document}
+\maketitle
+
+
+\setcounter{tocdepth}{1}
+\tableofcontents
+
+\section{16 Sep 2013}
+
+\begin{itemize}
+\item Re-organized files to conform with current best practices for
+  projects
+\item Now on github
+\item 
+\end{itemize}
+
+
+\end{document}
+
+
+%%%%%OLD CODE
+%%%%%Moved out of document on 16 Sep 2013
+%%%%%Pull out necessary analyses
+
+%%%chunk0
+<<echo=false,results=hide>>=
+  ###Turn off the PerMANOVA's
+  ###Make sure to turn this on when starting a new session in R.
+  ###NOTE! You turned off the PerMANOVA for genotype alone
+  if (any(ls() == adonis.on)){}else{adonis.on <- TRUE}
+
+@ 
+
+%%%chunk1
+<<echo=false,results=hide>>=
+  ##Package dependencies
+  library(xtable)
+library(ecodist)
+library(vegan)
+library(gdata)
+library(gplots)
+library(sna)
+library(lme4)
+library(RLRsim)
+library(fossil)
+source('/Users/Aeolus/Documents/Active_Projects/CorNets/CorNets.R')
+source('/Users/Aeolus/Documents/R_Docs/Scripts/Functions/pairs.R')
+source('~/Documents/Active_Projects/New_Functions/New_Functions.R')
+source('~/Documents/Inactive_Projects/GeneticNetworks/Genetic_Networks/ind_net.R')
+
+@ 
+
+
+%%%chunk2
+<<echo=false,results=hide>>=
+##Load data
+
+##ONC
+  LCO <- read.csv('/Users/Aeolus/Documents/Active_Projects/ONC_Lichen/ONC_LCO_data/ONCLichenCooc_12May2011.csv')
+##Pit
+                                        #LCO <- read.csv('/Users/Aeolus/Documents/Active_Projects/ONC_Lichen/ONC_LCO_data/PITLichenCooccurrenceMay2011.csv')
+
+
+##Remove genotypes
+#LCO <- LCO[LCO$Geno != 'T6',]
+                                        #LCO <- LCO[LCO$Geno != 'RL6',]
+#LCO <- LCO[LCO$Geno != 'H10',]
+#LCO <- LCO[LCO$Geno != '999',]
+#LCO <- LCO[LCO$Geno != '1007',]
+
+##Model networks for each quadrat
+attach(LCO)
+names(LCO)
+tree.info <- paste(Tree,Geno,Quadrat,Year,sep='_') #integrate tree information
+detach(LCO)
+
+##Separate species observations
+lco.com <- LCO[,7:15]
+
+@ 
+
+
+%%%chunk3
+<<echo=false,results=hide>>=
+##model networks
+lco.nets <- list() #initiate tree network object
+lco.com.all <- list()
+
+for (i in (1:length(unique(tree.info)))){
+  lco.com.all[[i]] <- lco.com[tree.info == unique(tree.info)[i],]
+  x <- kendall.pairs(lco.com[tree.info == unique(tree.info)[i],],p.adj=FALSE)
+  x[is.na(x)] <- 0#make NA values zero
+  lco.nets[[i]] <- x
+}
+
+names(lco.nets) <- unique(tree.info) #name networks
+names(lco.com.all) <- unique(tree.info) #name com.all
+
+##Independence networks
+Inet <- list()
+                                        #cut.off for species' observation frequencies
+cut.off <- 3
+                                        #loop through to generate network for all trees
+for (i in 1:length(lco.com.all)){
+  x <- lco.com.all[[i]]
+  x <- x[,apply(x,2,sum) >= cut.off]
+  if (class(x) == 'integer'){x <- matrix(x,ncol=1);colnames(x)[1] <- colnames(lco.com.all[[i]])[1]}
+  if (length(apply(x,2,sum)[apply(x,2,sum) != 0]) <= 1){
+    Inet[[i]] <- array(0,dim=c(ncol(lco.com.all[[i]]),ncol(lco.com.all[[i]])))
+    colnames(Inet[[i]]) <- rownames(Inet[[i]]) <- colnames(lco.com.all[[i]])
+  }else{
+    Inet[[i]] <- ind.net(as.matrix(vegdist(t(x))),nrow(x),fix.na=TRUE)
+  }
+}
+
+conform.array <- array(0,dim=c(ncol(lco.com.all[[1]]),ncol(lco.com.all[[1]])))
+colnames(conform.array) <- rownames(conform.array) <- colnames(lco.com.all[[1]])
+Inet <- lapply(Inet,function(x) conform(x,conform.array)[[1]])
+
+@ 
+
+%%%chunk4
+<<echo=false,results=hide>>=
+##Separate network factor information (tree, genotype, quadrat, year of sampling)
+net.info <- unique(tree.info)
+info.info <- rep(paste('tree','geno','quad','year',sep='_'),length(net.info))
+tree.factor <- unlist(strsplit(net.info,split='_')) #tree-level information for each network
+info.factor <- unlist(strsplit(info.info,split='_')) #sep information for tree information
+
+net.tree <- tree.factor[info.factor == 'tree'] #tree number information for each network
+net.geno <- tree.factor[info.factor == 'geno'] #genotype information for each network
+net.quad <- tree.factor[info.factor == 'quad'] #quadrat information for each network
+net.year <- tree.factor[info.factor == 'year'] #year of sampling for each network
+
+@ 
+
+
+%%%chunk5
+<<echo=false,results=hide>>=
+##Import roughness data
+rough <- read.csv('data/ONC_raw_roughness.csv')
+rough[is.na(rough)] <- 0 #replace NA values with zeros
+rough[rough == ' '] <- 0 #replace empty spots with zeros
+rough <- rough[rough[,1] != '',] #remove empty/place holder rows
+names(rough)[1] <- 'Tree' #re-name the Tree column
+names(rough)[2] <- 'Geno' #re-name the Genotype column
+names(rough)[3] <- 'Quadrat' #re-name Quadrat column
+                                        #coerce the Tree names
+rough$Tree <- as.character(rough$Tree)
+rough$Tree <- as.mytree(rough$Tree)
+                                        #re-name quadrat locations
+rough$Quadrat <- as.character(rough$Quadrat)
+rough$Quadrat[rough$Quadrat == 'North 45-55'] <- 'n45.55' #north 45 - 55
+rough$Quadrat[rough$Quadrat == 'North 80-90'] <- 'n80.90' #north 80 - 90
+rough$Quadrat[rough$Quadrat == 'South 45-55'] <- 's45.55' #south 45 - 55
+rough$Quadrat[rough$Quadrat == 'South 80-90'] <- 's80.90' #south 80 - 90
+
+                                        #for each quadrat on each tree, separate the roughness information
+names(rough)
+attach(rough)
+net.rough <- numeric()
+rough.TQ <- paste(Tree,Quadrat) #create a vector for coalescing the roughness data
+net.TQ <- paste(net.tree,net.quad)
+
+for (i in (1:length(net.TQ))){
+  net.rough[i] <- Roughness.[rough.TQ == net.TQ[i]]
+}
+
+detach(rough)
+
+@ 
+
+
+%%%chunk6
+<<echo=false,results=hide>>=
+##Import tree position data
+gps <- read.csv('data/NONC_gps_data.csv')[,1:3]
+gps$Location <- as.mytree(as.character(gps$Location))
+                                        #add missing trees
+                                        #check with Jamie to make sure these data are correct
+gps <- rbind(gps,c('N1.5', -111.9995,  41.24699))
+gps <- rbind(gps,c('N1.7', -111.9995, 41.24709))
+gps <- rbind(gps,c('N2.31', -111.9995823, 41.248322))
+gps <- rbind(gps,c('N1.24', -111.999534, 41.247919))
+
+                                        #initiate the lat and log vectors for the network locations
+net.lat <- numeric() #lat
+net.lon <- numeric() #lon
+
+for (i in (1:length(net.tree))){
+  net.lat[i] <- gps$Latitude[gps$Location == net.tree[i]]
+  net.lon[i] <- gps$Longitude[gps$Location == net.tree[i]]
+}
+
+                                        #coerce into numeric
+net.lat <- as.numeric(net.lat)
+net.lon <- as.numeric(net.lon)
+
+##Calculate species richness
+net.rich <- numeric()
+for (i in (1:length(unique(tree.info)))){
+  x <- lco.com[tree.info == unique(tree.info)[i],]
+  net.rich[i] <- sum(apply(x,2,function(x) if (any(x) > 0){1}else{0}))
+}
+
+@ 
+
+%%%chunk7
+<<echo=false,results=hide>>=
+##PerMANOVA for networks
+net.dist <- as.dist(netDist(lco.nets)) #calculate the network distances
+Inet.dist <- as.dist(netDist(Inet))
+
+                                        #Is space an important co-variate?
+                                        #Probably NOT.
+geo.dist <- earth.dist(cbind(net.lon,net.lat))
+#mantel(geo.dist~net.dist)
+###Mantel of community, network and geo distances
+
+
+@ 
+
+
+
+%%%chunk8
+<<echo=false,results=hide>>=
+                                        #What about analyzing the quadrats separately?
+                                        #YES, when we remove T6.
+net.dist45 <- netDist(lco.nets[net.quad == 'n45.55'])
+Inet.d45 <- netDist(Inet[net.quad == 'n45.55'])
+net.geno45 <- net.geno[net.quad == 'n45.55']
+net.rough45 <- net.rough[net.quad == 'n45.55']
+net.lon45 <- net.lon[net.quad == 'n45.55']
+net.lat45 <- net.lat[net.quad == 'n45.55']
+#adonis(net.dist45~net.geno45)
+#adonis(net.dist45~net.geno45*net.rough45)
+#adonis(net.dist45~net.geno45*net.lon45,permutations=9999)
+Genotype <- factor(net.geno45)
+Longitude <- net.lon45
+#if (adonis.on == TRUE){adonis.genoXlon <- adonis(net.dist45~Genotype*Longitude,permutations=9999)}
+
+@ 
+
+
+%%%chunk9
+<<echo=false,results=hide>>=
+##Analyze structural statistics
+
+##Only using the lower quadrats
+lco.nets45 <- lco.nets[net.quad == 'n45.55']
+
+
+##Degree
+net.L45 <- unlist(lapply(lco.nets45,function(x) length(x[x!=0])/2)) #undirected, so only count one link per pair
+#plot(net.L45~factor(net.geno45))
+#summary(aov(net.L45~net.geno45*net.lon45))
+
+##Size (i.e. number of nodes)
+net.S45 <- unlist(lapply(lco.nets45,netSize))
+#plot(net.S45~factor(net.geno45))
+#plot(net.L45~net.S45)
+#summary(aov(net.S45~net.geno45*net.lon45))
+
+##Centralization
+net.C45 <- unlist(lapply(lco.nets45,function(x) centralization(x,degree,mode='undirected')))
+
+#hist(net.C45)
+#hist(sqrt(asin(net.C45)))
+#plot(net.C45~factor(net.geno45))
+#summary(aov(sqrt(asin(net.C45))~net.geno45*net.lon45))
+
+
+##Correlations with richness
+net.rich45 <- net.rich[net.quad == 'n45.55']
+Genotype <- factor(net.geno45)
+Longitude <- net.lon45
+aov.rich.genoXlon <- summary(aov(net.rich45~Genotype*Longitude))
+
+#summary(aov(net.rich45~net.geno45*net.rough45))
+#summary(aov(net.rich45~net.geno45*net.rough45))
+#summary(aov(net.rich45~net.lat45))
+#pairs(cbind(net.rich45,net.S45,net.L45,net.C45),pch=19)
+
+##Whole model:
+Richness <- net.rich45
+Size <- net.S45
+Degree <- net.L45
+Centralization <- net.C45
+
+if (adonis.on == TRUE){adonis.genoXrich <- adonis(Inet.d45~Genotype*Richness,permutations=9999)}
+aov.S45.genoXrich <- summary(aov(net.S45~Genotype*Richness))
+aov.L45.genoXrich <- summary(aov(sqrt(net.L45)~Genotype*Richness))
+aov.C45.genoXrich <- summary(aov(sqrt(asin(net.C45))~Genotype*Richness))
+if (adonis.on == TRUE){adonis.netD.all <- adonis(Inet.d45~Richness+Size+Degree+Centralization,permutations=9999)}
+
+@ 
+
+
+
+%%%chunk10
+<<echo=false,results=hide,label=gplots,include=false>>=
+##Graph plots
+#genomu.nets45 <- tapply(lco.nets45,net.geno45,edge.mean)
+#genomu.nets45 <- tapply(Inet[net.quad == 'n45.55'],net.geno45,edge.mean)
+  genomu.nets45 <- tapply(Inet,net.geno,edge.mean)
+par(mfrow=c(5,3),mai=c(0.3,0.3,0.3,0.3))
+for (i in 1:length(genomu.nets45)){
+  v.cex <- v.col<- apply(lco.com[LCO$Geno == names(genomu.nets45)[i],],2,sum)
+  v.col[v.col > 0] <- 'black'
+  v.col[v.col == 0] <- 'white'
+  v.cex <- log(v.cex+1)
+  v.cex <- v.cex + 1
+  e.lwd <- (abs(genomu.nets45[[i]])*100)^9
+  e.lwd[e.lwd > 25 & e.lwd < 50] <- 15
+  e.lwd[e.lwd > 50] <- 25
+  gplot(abs(genomu.nets45[[i]]),mode='circle',gmode='graph',vertex.sides=50,vertex.col=v.col,displaylabels=TRUE,vertex.border='black',vertex.cex=v.cex,label.cex=1.25,edge.lwd=e.lwd)
+  title(main=names(genomu.nets45)[i],cex=5)
+}
+
+@ 
+
+%%%Figure for macrobiology grant
+<<results=hide,echo=false>>=
+  net.figs<- c((1:length(genomu.nets45))[names(genomu.nets45) == '1008'],(1:length(genomu.nets45))[names(genomu.nets45) == '10'],(1:length(genomu.nets45))[names(genomu.nets45) == '11'])
+  genomu.nets45. <- genomu.nets45
+  for (i in 1:length(genomu.nets45.)){
+    colnames(genomu.nets45.[[i]]) <- rownames(genomu.nets45.[[i]]) <- 1:nrow(genomu.nets45.[[i]])
+  }
+  par(mfrow=c(1,length(net.figs)))
+  for (i in net.figs){
+    v.cex <- v.col <- apply(lco.com[LCO$Geno == names(genomu.nets45)[i],],2,sum)
+    v.col[v.col > 0] <- 'black'
+    v.col[v.col == 0] <- 'white'
+    v.cex <- log(v.cex+1)
+    v.cex <- v.cex + 1
+    if (names(genomu.nets45)[i] == '11'){v.cex[names(v.cex) == 'Xmon'] <- 1;v.col[names(v.cex) == 'Xmon'] <- 'black'}
+    e.lwd <- (abs(genomu.nets45[[i]])*100)^9
+    e.lwd[e.lwd > 25 & e.lwd < 50] <- 15
+    e.lwd[e.lwd > 50] <- 25
+#    gplot(abs(genomu.nets45.[[i]]),gmode='graph',vertex.sides=50,vertex.col=v.col,displaylabels=TRUE,vertex.border='black',vertex.cex=v.cex,label.cex=1,edge.lwd=e.lwd)
+    gplot(abs(genomu.nets45.[[i]]),mode='circle',gmode='graph',vertex.sides=50,vertex.col=v.col,displaylabels=TRUE,vertex.border='black',vertex.cex=v.cex,label.cex=1,edge.lwd=e.lwd)
+    title(main=paste('Genotype',names(genomu.nets45.)[i],sep=''),cex=10)
+  }
+
+@ 
+
+
+%%%chunk11
+<<echo=false,results=hide,label=ordinet,include=false>>=
+  ##Ordination of network statistics
+                                        #the whole network
+#pc.45 <- princomp(net.dist45)
+net.S <- lapply(Inet,function(x) length(apply(x,2,bin.sum)[apply(x,2,bin.sum) != 0]))
+net.L <- lapply(Inet,function(x) length(x[x != 0]))
+net.C <- unlist(lapply(Inet,function(x) centralization(x,degree,mode='undirected')))
+net.n2 <- lapply(lco.com.all,function(x) length(apply(x,2,bin.sum)[apply(x,2,bin.sum) == 2]))
+
+pc.45 <- princomp(Inet.dist)
+env.45 <- cbind(net.rough,net.rich,net.S,net.L,net.C,net.n2)
+ord.45 <- pc.45$scores[,1:2]
+colnames(env.45) <- c('Roughness','Richness','Size','Links','Centrality','Doubles')
+vfit45 <- envfit(ord.45,env.45)
+
+ord.mu45 <- cbind(tapply(ord.45[,1],net.geno,mean),tapply(ord.45[,2],net.geno,mean))
+ord.se45 <- cbind(tapply(ord.45[,1],net.geno,function(x) sd(x)/sqrt(length(x))),tapply(ord.45[,2],net.geno,function(x) sd(x)/sqrt(length(x))))
+ord.sd45 <- cbind(tapply(ord.45[,1],net.geno,sd),tapply(ord.45[,2],net.geno,sd))
+ord.ciu45 <- ord.mu45 + ord.se45
+ord.cil45 <- ord.mu45 - ord.se45
+
+plot(ord.mu45,col=rainbow(max(as.numeric(factor(rownames(ord.mu45)))))[as.numeric(factor(rownames(ord.mu45)))],cex=2,xlim=c(min(ord.cil45[,1]),max(ord.ciu45)),ylim=c(min(ord.cil45[,2]),max(ord.ciu45[,2])),pch=as.numeric(factor(rownames(ord.mu45))),xlab='PC1',ylab='PC2')
+
+for (i in 1:nrow(ord.mu45)){
+  lines(c(ord.mu45[i,1],ord.mu45[i,1]),c(ord.cil45[i,2],ord.ciu45[i,2]),col=grey(0.25)[1])
+  lines(c(ord.cil45[i,1],ord.ciu45[i,1]),c(ord.mu45[i,2],ord.mu45[i,2]),col=grey(0.25)[1])
+}
+
+plot(vfit45,col='black',lwd=5)
+legend('bottomright',legend=rownames(ord.mu45),pch=as.numeric(factor(rownames(ord.mu45))),col=rainbow(max(as.numeric(factor(rownames(ord.mu45)))))[as.numeric(factor(rownames(ord.mu45)))],bg='white',border='grey',cex=0.65)
+
+#plot(pc.45,las=2)
+#plot(pc.45$scores[,1:2],col=rainbow(max(as.numeric(factor(net.geno45))))[as.numeric(factor(net.geno45))],pch=19,cex=2)
+
+@ 
+
+
+%%%chunk11
+<<echo=false,results=hide,label=ordinet,include=false>>=
+  ##Ordination of network statistics
+#pc.45 <- princomp(net.dist45)
+pc.45 <- princomp(Inet.d45)
+env.45 <- cbind(net.S45,net.L45,net.rich45,net.C45,net.rough45)
+ord.45 <- pc.45$scores[,1:2]
+colnames(env.45) <- c('Size','Degree','Richness','Centralization','Roughness')
+vfit45 <- envfit(ord.45,env.45)
+
+ord.mu45 <- cbind(tapply(ord.45[,1],net.geno45,mean),tapply(ord.45[,2],net.geno45,mean))
+ord.se45 <- cbind(tapply(ord.45[,1],net.geno45,function(x) sd(x)/sqrt(length(x))),tapply(ord.45[,2],net.geno45,function(x) sd(x)/sqrt(length(x))))
+ord.sd45 <- cbind(tapply(ord.45[,1],net.geno45,sd),tapply(ord.45[,2],net.geno45,sd))
+ord.ciu45 <- ord.mu45 + ord.se45
+ord.cil45 <- ord.mu45 - ord.se45
+
+plot(ord.mu45,col=rainbow(max(as.numeric(factor(rownames(ord.mu45)))))[as.numeric(factor(rownames(ord.mu45)))],cex=2,xlim=c(min(ord.cil45[,1]),max(ord.ciu45)),ylim=c(min(ord.cil45[,2]),max(ord.ciu45[,2])),pch=as.numeric(factor(rownames(ord.mu45))),xlab='PC1',ylab='PC2')
+
+for (i in 1:nrow(ord.mu45)){
+  lines(c(ord.mu45[i,1],ord.mu45[i,1]),c(ord.cil45[i,2],ord.ciu45[i,2]),col=grey(0.25)[1])
+  lines(c(ord.cil45[i,1],ord.ciu45[i,1]),c(ord.mu45[i,2],ord.mu45[i,2]),col=grey(0.25)[1])
+}
+
+plot(vfit45,col='black',lwd=5)
+legend('bottomright',legend=rownames(ord.mu45),pch=as.numeric(factor(rownames(ord.mu45))),col=rainbow(max(as.numeric(factor(rownames(ord.mu45)))))[as.numeric(factor(rownames(ord.mu45)))],bg='white',border='grey',cex=0.65)
+
+#plot(pc.45,las=2)
+#plot(pc.45$scores[,1:2],col=rainbow(max(as.numeric(factor(net.geno45))))[as.numeric(factor(net.geno45))],pch=19,cex=2)
+
+@ 
+
+%%%chunk12
+<<echo=false,results=hide,label=pairsplot,include=false>>=
+  p.plot <- cbind(net.rich45,net.S45,net.L45,net.C45)
+colnames(p.plot) <- c('Richness','Size','Degree','Centralization')
+pairs(p.plot,cex=0.85,upper.panel=panel.lm,lower.panel=panel.cor)
+
+@ 
+
+\textbf{Take-Home:} Foundation species genetics influences the structure of
+  interactions among bark lichen species most likely by altering the
+  trajectory of community assembly.
+
+\section{Abstract}
+\begin{itemize}
+\item Understanding the complexities of community dynamics requires a
+  greater understanding of the interactions among species and the
+  forces that influence the structure of these interactions. 
+\item We present a study of bark lichen communities associated with
+  \textit{Populus angustifolia} (narrowleaf cottonwood), where we
+  applied quantitative network modeling to investigate the genetic
+  effects of a foundation tree species on bark-lichen community
+  interactions networks.
+\item There were three main findings:
+  \begin{enumerate}
+  \item Genotype significantly predicted the similarity of lichen
+    interactions networks. Species richness explained additional
+    variation in network similarity.
+  \item Both genotype and richness significantly predicted the
+    variation in three network structural metrics (size, degree and
+    centralization). 
+  \item All network metrics were highly correlated with each other and
+    lichen species richness. Thus, after controlling for the variation explained by lichen
+    species richness, all three network metrics significantly
+    predicted variation in the similarity of networks but only
+    network size explained a biologically relevant amount of variation
+    in network similarity. 
+  \end{enumerate}
+\item These results strongly support the hypothesis that there is a
+  genetic component to the structure of species interactions. Our
+  quantative network modeling and network analyses show that this
+  genetic effect is not due to variation in lichen species richness
+  arising from genotype, but by some other causal pathway. These
+  results indicate that the variation in network structure among
+  genotypes arises from the communities being at different levels of
+  community assembly, as both species richness and the size of the
+  network independently explained the most variation in network similarity.
+\item These findings are particularly important as they suggest that
+  quantitative modeling of community-wide interaction networks can aid
+  our understanding of community dynamics and that we need to place
+  interactions among species within an evolutionary framework.
+\end{itemize}
+
+\section{Introduction}
+\begin{itemize}
+\item Understanding complex species interactions is important for
+  ecology (reviewed in Bascompte 2009, and others...). 
+\item A substantial body of evidence provides support for the value in
+  putting communities and ecosystems into an evolutionary framework
+  (reviewed in PRS-B 2011, Johnson and Agrawal 200?, Whitham et
+  al. 2008 and Whitham et al. 2007). However, there is still little
+  known about how genetic variation in a foundation species affects
+  the interactions among multiple species in complex communities (but
+  see Bailey et al 2005).
+\item Defining species interactions and obtaining quantitative data
+  for interactions in complex communities presents a challenge to
+  ecologists.
+\item Newly developed quantitative network modeling methods provide
+  one means to not only obtain estimates of species interactions but
+  also circumvent the need to limit interactions to one or few
+  categories (e.g. trophic, mutualistic or host-parasite
+  interactions).
+\item Here, we present the results of a study of how foundation
+  species genetics influences variation in interactions among multiple
+  species.
+\end{itemize}
+
+\section{Methods}
+\begin{itemize}
+\item Garden description. 
+\item Samling description. The presence of bark lichen species were
+  assessed within 50 replicate 1 cm$^2$ grid cells of 10 cm$^2$
+  quadrats on replicate clones of known genotype in a  common garden
+  at the Ogden Nature Center (Utah, USA). 50 out of the  100 cells in
+  each quadrat were sampled in a checker-board pattern in  order to
+  minimize the probability of individuals overlapping between
+  cells. 122 trees sampled, 13 genotypes, 5800 grid cells.
+\item Network modeling. Network models were generated using a
+  correlation based algorithm to detect species interactions on each
+  individual tree. Thus, we produced a quantitative, undirected model
+  of species interactions on each individual tree.
+\item Statistical methods for network similarity. We then applied
+  network analyses and mutlivariate statistical methods to test for
+  the effect of genotype on lichen community interaction network
+  structure. In order to compare networks, we measured the similarity
+  between networks as the sum of the Euclidean distance for all edges
+  between each network pair for all networks. This formed a distance
+  matrix that we then used in PerMANOVA analyses of the factors
+  influencing network similarity. We used ANOVA to analyze the effect
+  of genotype and richness on the network structural metrics. To
+  visualize the similarity of network genotypes, we applied prinicipal
+  components analysis to the network distances and used ordination
+  vector fitting methods to explore the possible sources of similarity
+  among netowrks. 
+\end{itemize}
+
+\section{Results}
+
+\begin{enumerate}
+\item We found significant variation in network structure among tree
+  genotypes (Fig. 1). Genotype and lichen species richness were both
+  significant predictors of the structural similarity of the lichen community networks with genotype
+  and richness explaining
+  \Sexpr{round(unlist(adonis.genoXrich$aov.tab)[21],2)*100}\% and
+  \Sexpr{round(unlist(adonis.genoXrich$aov.tab)[22],2)*100}\% of the
+  variation in lichen network similarity (Table 1). 
+\item We investigated several network statistics to explore the
+  structural variation responsible for the variation in network
+  similarity and found that genotype and richness significantly
+  predicted the variation in all three network metrics (Fig. 2 and
+  Tables 2-4). Note that bark roughness was not a significant
+  predictor of network similarity ($p = $ \Sexpr{vfit45$'vectors'$'pvals'[5]}).
+\item  All network metrics were highly correlated with each other and
+  lichen species richness (Fig. 3). Thus, after controlling for the variation explained by lichen
+  species richness, all three network metrics significantly
+  predicted variation in the similarity of networks but only
+  network size explained a biologically relevant amount of variation
+  in network similarity.  ($r^2 = $
+  \Sexpr{round(unlist(adonis.netD.all$aov.tab)[26],2)}) after
+  controlling for the variation explained by lichen species richness
+  (Table 5).
+\end{enumerate}
+
+
+\section{Conclusion}
+
+\begin{itemize}
+\item Genotype influences the size, degree and centralization of
+  lichen community interaction networks. It is important to note
+  that none of these network metrics were significantly predicted by
+  the number of trees sampled for a given genotype (i.e. variation in
+  the number of observations did not produce these patterns). 
+\item This pattern does not seem to be related to the bark roughness,
+  as richness and community composition seem to be. This is
+  intriguing since roughness seems to be an important
+  factor in lichen establishment and a good predictor of the genotype
+  effect on the distribution of the dominant lichen species (Lamit et
+  al. 2010).
+\item These results are particularly striking given that lichen
+  species are very slow growing and that our communities are all
+  likely to be in the early stages of establishment.
+\item These findings are important as they present a
+  step toward putting complex, community-wide
+  interactions in an evolutionary framework.
+\end{itemize}
+
+
+\pagebreak
+
+%Table 1. PerMANOVA table for genotype x richness model
+%%%chunk13
+\begin{center} 
+<<echo=false,results=tex,fig=false>>=
+  xtable(adonis.genoXrich$aov.tab,caption='ANOVA table for the PerMANOVA test of the effect of genotype and lichen species richness on the similarity of the lichen interaction networks.')
+@ 
+\end{center} 
+
+\pagebreak
+
+%Table 2-4. ANOVA tables for the effect of genotype and richness on the
+%structural statistics.
+%%%chunk14
+\begin{center} 
+<<echo=false,results=tex,fig=false>>=
+  xtable(aov.S45.genoXrich,caption='ANOVA table for the tests of the effects of genotype and richness on network size (i.e. the number of species in the network).')
+@ 
+\end{center} 
+
+%%%chunk15
+\begin{center} 
+<<echo=false,results=tex,fig=false>>=
+  xtable(aov.L45.genoXrich,caption='ANOVA table for the tests of the effects of genotype and richness on network degree (i.e. the number of connections).')
+@ 
+\end{center} 
+
+%%%chunk16
+\begin{center} 
+<<echo=false,results=tex,fig=false>>=
+  xtable(aov.C45.genoXrich,caption='ANOVA table for the tests of the effects of genotype and richness on network centralization (i.e. the degree to which the network is dominated by one species).')
+@ 
+\end{center} 
+
+\pagebreak
+
+%Table 3. PerMANOVA of the effect of the three metrics after removing
+%the variance explained by richness.
+%%%chunk17
+\begin{center} 
+<<echo=false,results=tex,fig=false>>=
+  xtable(adonis.netD.all$aov.tab,caption='ANOVA table for the PerMANOVA test of the effects of the network metrics (size, degree and centralization) on network similarity after removing the variance explained by richness.')
+@ 
+\end{center} 
+
+\pagebreak
+
+%Figure 1 is the mean network graphs for each genotype.
+%%%chunk18
+\begin{figure} 
+\begin{center} 
+<<label=gplots,fig=TRUE,echo=false,width=13,height=20>>=
+<<gplots>> 
+@ 
+\end{center} 
+\caption{Network graphs for each genotype. Points represent species scaled by
+the log of there total frequency of occurrence and lines show the
+means of significant connections between species across genotype
+replicates scaled by their magnitudes. Species points that had zero
+frequencies are colored white.}
+
+\label{fig:one}
+\end{figure}
+
+
+%Figure 2 is the ordination plot with the vectors.
+%%%chunk19
+
+\begin{figure} 
+\begin{center} 
+<<label=ordinet,fig=TRUE,echo=false>>=
+<<ordinet>> 
+@ 
+\end{center} 
+\caption{Principle components ordination plot of the similarity
+  between networks. Points represent the genotype means for the
+  ordinated scores and bars show the spread (1 S.E.). Vectors show the
+strength (vector length) and the direction of spread networks (vector
+direction) of the correlation between roughness, the network metrics
+(size, degree and centralization) and richness and the ordinated
+networks.}
+\label{fig:two}
+\end{figure}
+
+
+%Figure 3 is the pairs plot of the relationship between richness and
+%the three network structural variables.
+%%%chunk20
+\begin{figure} 
+\begin{center} 
+<<label=pairsplot,fig=TRUE,echo=false>>=
+<<pairsplot>> 
+@ 
+\end{center} 
+\caption{Matrix of bivariate plots for the network structure
+  statistics (size = number of species in the network, degree = number
+of connections and centralization = dominance of the network by one
+species) and species richness (measured as the number of species
+present in the quadrat). Note that although a species may have been
+present in a quadrat, it may not have a significant connection to
+any other species in the community.}
+\label{fig:three}
+\end{figure}
+
+
+%%%Pit
+<<>>=
+
+
+@ 
+
+

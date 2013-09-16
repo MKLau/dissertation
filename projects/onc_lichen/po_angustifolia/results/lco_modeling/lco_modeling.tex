@@ -1,0 +1,428 @@
+\documentclass[12pt]{article}
+\usepackage{color}
+\usepackage{cite}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+%\usepackage{pdflscape}        %single page landscape
+                                %mode \begin{landscape} \end{landscape}
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{/Library/Frameworks/R.framework/Resources/share/texmf/Sweave}
+
+
+\title{}
+\author{}
+%\date{}                                           % Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+
+
+\setcounter{tocdepth}{3}
+\tableofcontents
+
+\section{Independence Networks for Bark Lichen Commnunities}
+
+
+\begin{Schunk}
+\begin{Sinput}
+> LCO <- read.csv("/Users/Aeolus/Documents/Active_Projects/ONC_Lichen/ONC_LCO_data/ONCLichenCooc_12May2011.csv")
+> if (use.upper) {
++ } else {
++     LCO <- LCO[LCO$Quadrat == "n45.55", ]
++ }
+\end{Sinput}
+\begin{Soutput}
+NULL
+\end{Soutput}
+\begin{Sinput}
+> attach(LCO)
+> tree.info <- paste(Tree, Geno, Quadrat, Year, sep = "_")
+> detach(LCO)
+> lco.com <- LCO[, 7:15]
+> lco.com.all <- list()
+> for (i in (1:length(unique(tree.info)))) {
++     lco.com.all[[i]] <- lco.com[tree.info == unique(tree.info)[i], 
++         ]
++ }
+> names(lco.com.all) <- unique(tree.info)
+> Inet <- list()
+> cut.off <- 3
+> for (i in 1:length(lco.com.all)) {
++     x <- lco.com.all[[i]]
++     x <- x[, apply(x, 2, sum) >= cut.off]
++     if (class(x) == "integer") {
++         x <- matrix(x, ncol = 1)
++         colnames(x)[1] <- colnames(lco.com.all[[i]])[1]
++     }
++     if (length(apply(x, 2, sum)[apply(x, 2, sum) != 0]) <= 1) {
++         Inet[[i]] <- array(0, dim = c(ncol(lco.com.all[[i]]), 
++             ncol(lco.com.all[[i]])))
++         colnames(Inet[[i]]) <- rownames(Inet[[i]]) <- colnames(lco.com.all[[i]])
++     }
++     else {
++         Inet[[i]] <- ind.net(as.matrix(vegdist(t(x))), nrow(x), 
++             fix.na = TRUE)
++     }
++     names(Inet)[i] <- names(lco.com.all)[i]
++ }
+> warnings()
+\end{Sinput}
+\begin{Soutput}
+Warning messages:
+1: package 'RLRsim' was built under R version 2.12.2
+2: package 'fossil' was built under R version 2.12.2
+3: In log((1 - R^2)) : NaNs produced
+4: In log((1 - R^2)) : NaNs produced
+5: In log((1 - R^2)) : NaNs produced
+6: In log((1 - R^2)) : NaNs produced
+7: In log((1 - R^2)) : NaNs produced
+8: In log((1 - R^2)) : NaNs produced
+9: In log((1 - R^2)) : NaNs produced
+10: In log((1 - R^2)) : NaNs produced
+11: In log((1 - R^2)) : NaNs produced
+12: In log((1 - R^2)) : NaNs produced
+13: In log((1 - R^2)) : NaNs produced
+14: In log((1 - R^2)) : NaNs produced
+15: In log((1 - R^2)) : NaNs produced
+16: In log((1 - R^2)) : NaNs produced
+17: In log((1 - R^2)) : NaNs produced
+18: In log((1 - R^2)) : NaNs produced
+\end{Soutput}
+\begin{Sinput}
+> conform.array <- array(0, dim = c(ncol(lco.com.all[[1]]), ncol(lco.com.all[[1]])))
+> colnames(conform.array) <- rownames(conform.array) <- colnames(lco.com.all[[1]])
+> Inet <- lapply(Inet, function(x) conform(x, conform.array)[[1]])
+> net.d <- as.dist(netDist(Inet))
+> com.d <- lapply(lco.com.all, function(x) apply(x, 2, sum))
+> com.d <- matrixFromList(com.d)
+> com.d <- apply(com.d, 2, function(x) x/max(x))
+> ds <- rep((1/nrow(com.d)), nrow(com.d))/2
+> com.d <- cbind(com.d, ds)
+> com.d <- vegdist(com.d)
+> all(names(lco.com.all) == unique(tree.info))
+\end{Sinput}
+\begin{Soutput}
+[1] TRUE
+\end{Soutput}
+\begin{Sinput}
+> net.info <- unique(tree.info)
+> info.info <- rep(paste("tree", "geno", "quad", "year", sep = "_"), 
++     length(net.info))
+> tree.factor <- unlist(strsplit(net.info, split = "_"))
+> info.factor <- unlist(strsplit(info.info, split = "_"))
+> net.tree <- tree.factor[info.factor == "tree"]
+> net.geno <- tree.factor[info.factor == "geno"]
+> net.quad <- tree.factor[info.factor == "quad"]
+> net.year <- tree.factor[info.factor == "year"]
+> rough <- read.csv("data/ONC_raw_roughness.csv")
+> rough[is.na(rough)] <- 0
+> rough[rough == " "] <- 0
+> rough <- rough[rough[, 1] != "", ]
+> names(rough)[1] <- "Tree"
+> names(rough)[2] <- "Geno"
+> names(rough)[3] <- "Quadrat"
+> rough$Tree <- as.character(rough$Tree)
+> rough$Tree <- as.mytree(rough$Tree)
+> rough$Quadrat <- as.character(rough$Quadrat)
+> rough$Quadrat[rough$Quadrat == "North 45-55"] <- "n45.55"
+> rough$Quadrat[rough$Quadrat == "North 80-90"] <- "n80.90"
+> rough$Quadrat[rough$Quadrat == "South 45-55"] <- "s45.55"
+> rough$Quadrat[rough$Quadrat == "South 80-90"] <- "s80.90"
+> attach(rough)
+> net.rough <- numeric()
+> rough.TQ <- paste(Tree, Quadrat)
+> net.TQ <- paste(net.tree, net.quad)
+> for (i in (1:length(net.TQ))) {
++     net.rough[i] <- Roughness[rough.TQ == net.TQ[i]]
++ }
+> detach(rough)
+> gps <- read.csv("data/NONC_gps_data.csv")[, 1:3]
+> gps$Location <- as.mytree(as.character(gps$Location))
+> gps <- rbind(gps, c("N1.5", -111.9995, 41.24699))
+> gps <- rbind(gps, c("N1.7", -111.9995, 41.24709))
+> gps <- rbind(gps, c("N2.31", -111.9995823, 41.248322))
+> gps <- rbind(gps, c("N1.24", -111.999534, 41.247919))
+> net.lat <- numeric()
+> net.lon <- numeric()
+> for (i in (1:length(net.tree))) {
++     net.lat[i] <- gps$Latitude[gps$Location == net.tree[i]]
++     net.lon[i] <- gps$Longitude[gps$Location == net.tree[i]]
++ }
+> net.lat <- as.numeric(net.lat)
+> net.lon <- as.numeric(net.lon)
+> check <- names(unlist(lapply(lco.com.all, function(x) length(apply(x, 
++     2, bin.sum)[apply(x, 2, bin.sum) != 0]))))
+> all(rownames(net.d) == check)
+\end{Sinput}
+\begin{Soutput}
+[1] TRUE
+\end{Soutput}
+\begin{Sinput}
+> net.rich <- as.numeric(unlist(lapply(lco.com.all, function(x) length(apply(x, 
++     2, bin.sum)[apply(x, 2, bin.sum) != 0]))))
+\end{Sinput}
+\end{Schunk}
+
+\section{Analyses and Figures}
+
+\begin{Schunk}
+\begin{Sinput}
+> genomu.nets <- tapply(Inet, net.geno, edge.mean)
+> par(mfrow = c(5, 3), mai = c(0.3, 0.3, 0.3, 0.3))
+> for (i in 1:length(genomu.nets)) {
++     v.cex <- v.col <- apply(lco.com[LCO$Geno == names(genomu.nets)[i], 
++         ], 2, sum)
++     v.col[v.col > 0] <- "black"
++     v.col[v.col == 0] <- "white"
++     v.cex <- log(v.cex + 1)
++     v.cex <- v.cex + 1
++     e.lwd <- (abs(genomu.nets[[i]]) * 100)^9
++     e.lwd[e.lwd > 25 & e.lwd < 50] <- 15
++     e.lwd[e.lwd > 50] <- 25
++     gplot(abs(genomu.nets[[i]]), mode = "circle", gmode = "graph", 
++         vertex.sides = 50, vertex.col = v.col, displaylabels = TRUE, 
++         vertex.border = "black", vertex.cex = v.cex, label.cex = 1.25, 
++         edge.lwd = e.lwd)
++     title(main = names(genomu.nets)[i], cex = 5)
++ }
+\end{Sinput}
+\end{Schunk}
+
+\begin{Schunk}
+\begin{Sinput}
+> net.S <- unlist(lapply(Inet, function(x) length(apply(x, 2, bin.sum)[apply(x, 
++     2, bin.sum) != 0])))
+> net.L <- unlist(lapply(Inet, function(x) length(x[x != 0])))
+> net.C <- unlist(lapply(Inet, function(x) centralization(x, degree, 
++     mode = "undirected")))
+> net.n2 <- unlist(lapply(lco.com.all, function(x) length(apply(x, 
++     2, bin.sum)[apply(x, 2, bin.sum) == 2])))
+> env <- cbind(net.rough, net.rich, net.S, net.L, net.C, net.n2)
+> colnames(env) <- c("Roughness", "Richness", "Size", "Links", 
++     "Centrality", "Doubles")
+> d <- net.d
+> x <- princomp(d)
+> ord <- x$scores[, 1:2]
+> vfit <- envfit(ord, env)
+> ord.mu <- cbind(tapply(ord[, 1], net.geno, mean), tapply(ord[, 
++     2], net.geno, mean))
+> ord.se <- cbind(tapply(ord[, 1], net.geno, function(x) sd(x)/sqrt(length(x))), 
++     tapply(ord[, 2], net.geno, function(x) sd(x)/sqrt(length(x))))
+> ord.sd <- cbind(tapply(ord[, 1], net.geno, sd), tapply(ord[, 
++     2], net.geno, sd))
+> ord.ciu <- ord.mu + ord.se
+> ord.cil <- ord.mu - ord.se
+> plot(ord.mu, col = rainbow(max(as.numeric(factor(rownames(ord.mu)))))[as.numeric(factor(rownames(ord.mu)))], 
++     cex = 2, xlim = c(min(ord.cil[, 1]), max(ord.ciu)), ylim = c(min(ord.cil[, 
++         2]), max(ord.ciu[, 2])), pch = as.numeric(factor(rownames(ord.mu))), 
++     xlab = "PC1", ylab = "PC2")
+> for (i in 1:nrow(ord.mu)) {
++     lines(c(ord.mu[i, 1], ord.mu[i, 1]), c(ord.cil[i, 2], ord.ciu[i, 
++         2]), col = grey(0.25)[1])
++     lines(c(ord.cil[i, 1], ord.ciu[i, 1]), c(ord.mu[i, 2], ord.mu[i, 
++         2]), col = grey(0.25)[1])
++ }
+> plot(vfit, col = "black", lwd = 5)
+> legend("bottomright", legend = rownames(ord.mu), pch = as.numeric(factor(rownames(ord.mu))), 
++     col = rainbow(max(as.numeric(factor(rownames(ord.mu)))))[as.numeric(factor(rownames(ord.mu)))], 
++     bg = "white", border = "grey", cex = 0.65)
+\end{Sinput}
+\end{Schunk}
+
+
+
+
+%%SEM
+\begin{Schunk}
+\begin{Sinput}
+> summary(princomp(net.d))
+\end{Sinput}
+\begin{Soutput}
+Importance of components:
+                          Comp.1    Comp.2     Comp.3     Comp.4      Comp.5
+Standard deviation     5.2269010 1.5157872 1.29025384 0.70797617 0.339876783
+Proportion of Variance 0.8512869 0.0715919 0.05187256 0.01561797 0.003599402
+Cumulative Proportion  0.8512869 0.9228788 0.97475133 0.99036930 0.993968701
+                            Comp.6      Comp.7       Comp.8       Comp.9
+Standard deviation     0.284081114 0.204614085 0.1613030232 0.1228834509
+Proportion of Variance 0.002514618 0.001304543 0.0008107228 0.0004705158
+Cumulative Proportion  0.996483319 0.997787863 0.9985985853 0.9990691011
+                            Comp.10      Comp.11      Comp.12      Comp.13
+Standard deviation     0.0884690974 0.0880613165 0.0642057639 4.835423e-02
+Proportion of Variance 0.0002438768 0.0002416338 0.0001284504 7.285449e-05
+Cumulative Proportion  0.9993129779 0.9995546118 0.9996830622 9.997559e-01
+                            Comp.14      Comp.15      Comp.16      Comp.17
+Standard deviation     4.192333e-02 0.0391957847 3.453528e-02 3.172560e-02
+Proportion of Variance 5.476448e-05 0.0000478703 3.716322e-05 3.136225e-05
+Cumulative Proportion  9.998107e-01 0.9998585514 9.998957e-01 9.999271e-01
+                            Comp.18      Comp.19      Comp.20      Comp.21
+Standard deviation     2.707694e-02 2.045140e-02 2.026094e-02 1.768870e-02
+Proportion of Variance 2.284476e-05 1.303268e-05 1.279107e-05 9.749429e-06
+Cumulative Proportion  9.999499e-01 9.999630e-01 9.999757e-01 9.999855e-01
+                            Comp.22      Comp.23      Comp.24      Comp.25
+Standard deviation     1.390965e-02 1.039132e-02 9.813428e-03 5.732059e-03
+Proportion of Variance 6.028643e-06 3.364562e-06 3.000743e-06 1.023785e-06
+Cumulative Proportion  9.999915e-01 9.999949e-01 9.999979e-01 9.999989e-01
+                            Comp.26      Comp.27      Comp.28      Comp.29
+Standard deviation     4.883706e-03 3.324050e-03 9.667195e-08 5.485252e-08
+Proportion of Variance 7.431670e-07 3.442885e-07 2.911980e-16 9.375199e-17
+Cumulative Proportion  9.999997e-01 1.000000e+00 1.000000e+00 1.000000e+00
+                            Comp.30      Comp.31      Comp.32      Comp.33
+Standard deviation     4.021480e-08 2.446965e-08 1.430212e-08 1.151161e-08
+Proportion of Variance 5.039171e-17 1.865704e-17 6.373653e-18 4.129138e-18
+Cumulative Proportion  1.000000e+00 1.000000e+00 1.000000e+00 1.000000e+00
+                            Comp.34      Comp.35      Comp.36      Comp.37
+Standard deviation     1.149319e-08 1.133905e-08 1.086838e-08 9.422916e-09
+Proportion of Variance 4.115932e-18 4.006276e-18 3.680589e-18 2.766674e-18
+Cumulative Proportion  1.000000e+00 1.000000e+00 1.000000e+00 1.000000e+00
+                            Comp.38      Comp.39      Comp.40      Comp.41
+Standard deviation     8.596766e-09 7.785610e-09 7.403881e-09 7.337117e-09
+Proportion of Variance 2.302807e-18 1.888742e-18 1.708072e-18 1.677407e-18
+Cumulative Proportion  1.000000e+00 1.000000e+00 1.000000e+00 1.000000e+00
+                            Comp.42      Comp.43      Comp.44      Comp.45
+Standard deviation     6.698638e-09 6.399369e-09 6.248159e-09 5.941065e-09
+Proportion of Variance 1.398171e-18 1.276033e-18 1.216442e-18 1.099806e-18
+Cumulative Proportion  1.000000e+00 1.000000e+00 1.000000e+00 1.000000e+00
+                            Comp.46      Comp.47      Comp.48      Comp.49
+Standard deviation     4.374845e-09 4.347154e-09 3.698564e-09 3.294252e-09
+Proportion of Variance 5.963657e-19 5.888402e-19 4.262395e-19 3.381434e-19
+Cumulative Proportion  1.000000e+00 1.000000e+00 1.000000e+00 1.000000e+00
+                            Comp.50      Comp.51      Comp.52      Comp.53
+Standard deviation     2.575424e-09 2.387204e-09 2.036386e-09 1.943390e-09
+Proportion of Variance 2.066736e-19 1.775687e-19 1.292134e-19 1.176812e-19
+Cumulative Proportion  1.000000e+00 1.000000e+00 1.000000e+00 1.000000e+00
+                            Comp.54      Comp.55      Comp.56      Comp.57
+Standard deviation     1.877030e-09 1.533047e-09 1.238548e-09 1.178465e-09
+Proportion of Variance 1.097817e-19 7.323157e-20 4.779840e-20 4.327335e-20
+Cumulative Proportion  1.000000e+00 1.000000e+00 1.000000e+00 1.000000e+00
+                            Comp.58      Comp.59      Comp.60      Comp.61
+Standard deviation     1.043129e-09 5.744224e-10 5.299582e-10 4.721551e-10
+Proportion of Variance 3.390495e-20 1.028135e-20 8.751262e-21 6.946353e-21
+Cumulative Proportion  1.000000e+00 1.000000e+00 1.000000e+00 1.000000e+00
+                            Comp.62      Comp.63      Comp.64      Comp.65
+Standard deviation     4.053776e-10 3.988053e-10 3.934276e-10 3.601986e-10
+Proportion of Variance 5.120435e-21 4.955748e-21 4.822998e-21 4.042700e-21
+Cumulative Proportion  1.000000e+00 1.000000e+00 1.000000e+00 1.000000e+00
+                            Comp.66      Comp.67      Comp.68      Comp.69
+Standard deviation     2.590680e-10 2.459320e-10 2.129273e-10 1.996599e-10
+Proportion of Variance 2.091293e-21 1.884592e-21 1.412700e-21 1.242136e-21
+Cumulative Proportion  1.000000e+00 1.000000e+00 1.000000e+00 1.000000e+00
+                            Comp.70      Comp.71      Comp.72      Comp.73
+Standard deviation     1.984822e-10 1.022840e-10 7.779222e-11 7.452504e-11
+Proportion of Variance 1.227526e-21 3.259889e-22 1.885644e-22 1.730581e-22
+Cumulative Proportion  1.000000e+00 1.000000e+00 1.000000e+00 1.000000e+00
+                            Comp.74      Comp.75      Comp.76      Comp.77
+Standard deviation     6.717637e-11 5.327165e-11 3.862382e-11 2.306331e-11
+Proportion of Variance 1.406114e-22 8.842595e-23 4.648340e-23 1.657413e-23
+Cumulative Proportion  1.000000e+00 1.000000e+00 1.000000e+00 1.000000e+00
+                            Comp.78      Comp.79 Comp.80 Comp.81 Comp.82
+Standard deviation     1.891891e-11 1.669900e-11       0       0       0
+Proportion of Variance 1.115269e-23 8.688967e-24       0       0       0
+Cumulative Proportion  1.000000e+00 1.000000e+00       1       1       1
+                       Comp.83 Comp.84 Comp.85 Comp.86 Comp.87 Comp.88 Comp.89
+Standard deviation           0       0       0       0       0       0       0
+Proportion of Variance       0       0       0       0       0       0       0
+Cumulative Proportion        1       1       1       1       1       1       1
+                       Comp.90 Comp.91 Comp.92 Comp.93 Comp.94 Comp.95 Comp.96
+Standard deviation           0       0       0       0       0       0       0
+Proportion of Variance       0       0       0       0       0       0       0
+Cumulative Proportion        1       1       1       1       1       1       1
+                       Comp.97 Comp.98 Comp.99 Comp.100 Comp.101 Comp.102
+Standard deviation           0       0       0        0        0        0
+Proportion of Variance       0       0       0        0        0        0
+Cumulative Proportion        1       1       1        1        1        1
+                       Comp.103 Comp.104 Comp.105 Comp.106 Comp.107 Comp.108
+Standard deviation            0        0        0        0        0        0
+Proportion of Variance        0        0        0        0        0        0
+Cumulative Proportion         1        1        1        1        1        1
+                       Comp.109 Comp.110 Comp.111 Comp.112 Comp.113 Comp.114
+Standard deviation            0        0        0        0        0        0
+Proportion of Variance        0        0        0        0        0        0
+Cumulative Proportion         1        1        1        1        1        1
+                       Comp.115 Comp.116 Comp.117 Comp.118 Comp.119 Comp.120
+Standard deviation            0        0        0        0        0        0
+Proportion of Variance        0        0        0        0        0        0
+Cumulative Proportion         1        1        1        1        1        1
+                       Comp.121 Comp.122
+Standard deviation            0        0
+Proportion of Variance        0        0
+Cumulative Proportion         1        1
+\end{Soutput}
+\begin{Sinput}
+> net.pc1 <- as.numeric(princomp(net.d)$scores[, 1])
+> pairs(cbind(as.matrix(env), net.pc1), lower.panel = panel.cor)
+> data.sem <- cbind(as.matrix(env), net.pc1)
+> colnames(data.sem)
+\end{Sinput}
+\begin{Soutput}
+[1] "Roughness"  "Richness"   "Size"       "Links"      "Centrality"
+[6] "Doubles"    "net.pc1"   
+\end{Soutput}
+\begin{Sinput}
+> data.sem <- data.sem[, -6]
+> Sigma <- var(data.sem)
+> model.sem <- specify.model(file = "lcoSEMmodel.txt")
+> model.sem <- model.sem[-2, ]
+> lco.sem <- sem(model.sem, Sigma, N = nrow(data.sem))
+> sem.pd <- plot.sem(lco.sem, var.names = colnames(data.sem))
+> gplot(abs(sem.pd), edge.lwd = abs(sem.pd * 10)^1.5, displaylabels = TRUE, 
++     label.cex = 0.75, label.pos = 5, vertex.cex = 7, vertex.col = 0, 
++     vertex.border = 0)
+> summary(lco.sem)
+\end{Sinput}
+\begin{Soutput}
+ Model Chisquare =  8.7032   Df =  5 Pr(>Chisq) = 0.12150
+ Chisquare (null model) =  946.12   Df =  15
+ Goodness-of-fit index =  0.97882
+ Adjusted goodness-of-fit index =  0.91106
+ RMSEA index =  0.078237   90% CI: (NA, 0.16288)
+ Bentler-Bonnett NFI =  0.9908
+ Tucker-Lewis NNFI =  0.98807
+ Bentler CFI =  0.99602
+ SRMR =  0.015115
+ BIC =  -15.317 
+
+ Normalized Residuals
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+-0.34800  0.00000  0.00000  0.00675  0.02050  0.26700 
+
+ Parameter Estimates
+      Estimate   Std Error  z value   Pr(>|z|)                             
+g.1.2   0.019711  0.0063145   3.12153 1.7992e-03 Richness <--- Roughness   
+g.2.6  -0.252734  0.0897065  -2.81734 4.8423e-03 net.pc1 <--- Richness     
+g.2.3   0.623358  0.0505907  12.32158 0.0000e+00 Size <--- Richness        
+g.2.4   0.045758  0.0590554   0.77483 4.3844e-01 Links <--- Richness       
+g.2.5  -0.000535  0.0022661  -0.23609 8.1336e-01 Centrality <--- Richness  
+g.3.6  -2.568683  0.2896332  -8.86874 0.0000e+00 net.pc1 <--- Size         
+g.3.4   1.507391  0.0706705  21.32986 0.0000e+00 Links <--- Size           
+g.3.5   0.036107  0.0027118  13.31478 0.0000e+00 Centrality <--- Size      
+g.4.6   1.561399  0.1401951  11.13732 0.0000e+00 net.pc1 <--- Links        
+g.5.6 -77.413455  3.6534618 -21.18907 0.0000e+00 net.pc1 <--- Centrality   
+e.1.1 542.975478 69.8215478   7.77662 7.5495e-15 Roughness <--> Roughness  
+e.2.2   2.619624  0.3368592   7.77662 7.5495e-15 Richness <--> Richness    
+e.3.3   0.876602  0.1127228   7.77662 7.5495e-15 Size <--> Size            
+e.4.4   0.529708  0.0681155   7.77662 7.5495e-15 Links <--> Links          
+e.5.5   0.000780  0.0001003   7.77662 7.5495e-15 Centrality <--> Centrality
+e.6.6   1.216280  0.1564021   7.77662 7.5495e-15 net.pc1 <--> net.pc1      
+
+ Iterations =  0 
+\end{Soutput}
+\begin{Sinput}
+> mod.indices(lco.sem)
+\end{Sinput}
+\begin{Soutput}
+ 5 largest modification indices, A matrix:
+     Links:Roughness Centrality:Roughness     Links:Centrality 
+           1.6845426            1.1786191            1.0029342 
+       Links:net.pc1     Centrality:Links 
+           0.7088407            0.4261063 
+
+  5 largest modification indices, P matrix:
+    Centrality:Links      Links:Roughness Centrality:Roughness 
+           4.1763190            1.6845426            1.1786191 
+      Size:Roughness    net.pc1:Roughness 
+           0.2846222            0.2589134 
+\end{Soutput}
+\end{Schunk}

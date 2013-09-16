@@ -1,0 +1,541 @@
+\documentclass[12pt]{article}
+\usepackage{color}
+\usepackage{cite}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+%\usepackage{pdflscape}        %single page landscape
+                                %mode \begin{landscape} \end{landscape}
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{/Library/Frameworks/R.framework/Resources/share/texmf/Sweave}
+
+
+\title{Genetics of Lichen Networks}
+\author{M.K. Lau}
+%\date{}                                           % Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+
+
+\setcounter{tocdepth}{3}
+\tableofcontents
+
+\section{Summary}
+\begin{itemize}
+\item Intraspecific variation is an important contributor to
+  ecological diversity
+\item It is still not clear whether or not this is direct by
+  influcening species abundances directly or if this is also through
+  indirect effects
+\item The complex structure and dynamics of communities is a potential
+  source of unpredicted variation
+\item Here, we present the results of a study of lichen species
+  associated with cottonwood trees in a common garden and show that:
+  \begin{enumerate}
+  \item There is structure of co-occurrence patterns even in a small
+    community of species (9 total)
+  \item The structure of covariance networks varied signficantly among
+    genotypes
+  \end{enumerate}
+\end{itemize}
+
+\section{Data}
+
+<<echo=false,results=hide>>=
+  ##Package dependencies
+  library(audio)
+library(xtable)
+library(ecodist)
+library(vegan)
+library(gdata)
+library(gplots)
+library(sna)
+library(lme4)
+library(RLRsim)
+library(fossil)
+library(sem)
+source('~/Documents/Active_Projects/CorNets/CorNets.R')
+source('~/Documents/R_Docs/Scripts/Functions/pairs.R')
+source('~/Documents/Active_Projects/New_Functions/New_Functions.R')
+source('~/Documents/Inactive_Projects/GeneticNetworks/Genetic_Networks/ind_net.R')
+                                        #import data
+site <- c('onc','pit')[2]
+lower.only <- FALSE
+                                        #
+if (site == 'onc'){
+                                        #ONC data
+LCO <- read.csv('~/Documents/Active_Projects/ONC_Lichen/ONC_LCO_data/ONCLichenCooc_12May2011.csv')
+                                        #remove upper quadrats
+if (lower.only == TRUE){LCO <- LCO[LCO$Quadrat != 'n80.90',]}else{}
+}else{
+                                        #PIT Data
+LCO <- read.csv('ONC_LCO_data/PITLichenCooccurrenceMay2011.csv')
+                                        #Remove genotype 1012 at PIT, it's only replicated once
+LCO <- LCO[LCO$Geno != '1012',]
+}
+                                        #
+attach(LCO)
+names(LCO)
+tree.info <- paste(Tree,Geno,Quadrat,Year,sep='_') #integrate tree information
+detach(LCO)
+                                        #Separate species observations
+lco.com <- LCO[,7:15]
+                                        #Isolate genotype information
+net.geno <- unlist(lapply(strsplit(unique(tree.info),split='_'),function(x) x[2]))
+                                        #Import tree position data
+gps <- read.csv('data/NONC_gps_data.csv')[,1:3]
+gps$Location <- as.mytree(as.character(gps$Location))
+                                        #add missing trees
+                                        #check with Jamie to make sure these data are correct
+gps <- rbind(gps,c('N1.5', -111.9995,  41.24699))
+gps <- rbind(gps,c('N1.7', -111.9995, 41.24709))
+gps <- rbind(gps,c('N2.31', -111.9995823, 41.248322))
+gps <- rbind(gps,c('N1.24', -111.999534, 41.247919))
+                                        #initiate the lat and log vectors for the network locations
+net.lat <- numeric() #lat
+net.lon <- numeric() #lon
+for (i in (1:length(net.tree))){
+  net.lat[i] <- gps$Latitude[gps$Location == net.tree[i]]
+  net.lon[i] <- gps$Longitude[gps$Location == net.tree[i]]
+}
+                                        #coerce into numeric
+net.lat <- as.numeric(net.lat)
+net.lon <- as.numeric(net.lon)
+                                        #Import roughness data
+rough <- read.csv('data/ONC_raw_roughness.csv')
+rough[is.na(rough)] <- 0 #replace NA values with zeros
+rough[rough == ' '] <- 0 #replace empty spots with zeros
+rough <- rough[rough[,1] != '',] #remove empty/place holder rows
+names(rough)[1] <- 'Tree' #re-name the Tree column
+names(rough)[2] <- 'Geno' #re-name the Genotype column
+names(rough)[3] <- 'Quadrat' #re-name Quadrat column
+                                        #coerce the Tree names
+rough$Tree <- as.character(rough$Tree)
+rough$Tree <- as.mytree(rough$Tree)
+                                        #re-name quadrat locations
+rough$Quadrat <- as.character(rough$Quadrat)
+rough$Quadrat[rough$Quadrat == 'North 45-55'] <- 'n45.55' #north 45 - 55
+rough$Quadrat[rough$Quadrat == 'North 80-90'] <- 'n80.90' #north 80 - 90
+rough$Quadrat[rough$Quadrat == 'South 45-55'] <- 's45.55' #south 45 - 55
+rough$Quadrat[rough$Quadrat == 'South 80-90'] <- 's80.90' #south 80 - 90
+                                        #for each quadrat on each tree, separate the roughness information
+names(rough)
+attach(rough)
+net.rough <- numeric()
+rough.TQ <- paste(Tree,Quadrat) #create a vector for coalescing the roughness data
+net.TQ <- paste(net.tree,net.quad)
+for (i in (1:length(net.TQ))){
+  net.rough[i] <- Roughness.[rough.TQ == net.TQ[i]]
+}
+detach(rough)
+
+@ 
+
+\begin{itemize}
+\item Data were collected in April 2011 in the North Garden of the
+  Ogden Nature Center UT
+\item Presence-absences of lichen species in every other 1 $cm^2$ of a
+  10 $cm^2$ grid on the north side of each tree at 45 cm from the ground
+\item Trees were of known genotype as determined by neutral RFLP
+  markers
+\end{itemize}
+
+
+\section{Modeling}
+
+<<echo=false,results=hide>>=
+##model networks
+##Independence networks
+Inet <- list() #list for networks
+                                        #alpha
+alpha <- 0.05
+                                        #cut.off for species' observation frequencies
+cut.off <- 2
+                                        #loop through to generate network for all trees
+lco.com.all <- list() #initial list for communities in each quadrat
+                                        #Loop to separate communities
+for (i in (1:length(unique(tree.info)))){
+  lco.com.all[[i]] <- lco.com[tree.info == unique(tree.info)[i],]
+}
+                                        #loop to generate networks
+                                        #using Dyer and Nasson algorithm
+for (i in 1:length(lco.com.all)){
+  x <- lco.com.all[[i]]
+  x <- x[,apply(x,2,sum) >= cut.off]
+  if (class(x) == 'integer'){x <- matrix(x,ncol=1);colnames(x)[1] <- colnames(lco.com.all[[i]])[1]}
+  if (length(apply(x,2,sum)[apply(x,2,sum) != 0]) <= 1){
+    Inet[[i]] <- array(0,dim=c(ncol(lco.com.all[[i]]),ncol(lco.com.all[[i]])))
+    colnames(Inet[[i]]) <- rownames(Inet[[i]]) <- colnames(lco.com.all[[i]])
+  }else{
+    Inet[[i]] <- ind.net(as.matrix(vegdist(t(x))),nrow(x),fix.na=TRUE,alpha=alpha)
+  }
+}
+
+##Network Conformation
+Inet <- net.conform(Inet)
+
+@ 
+
+%%%Plots of the mean networs for each genotype
+<<results=hide,fig=true>>=
+                                        #plots of the networks
+##Graph plots
+                                        #generate the genotype mean graphs
+genomu.nets45 <- list()
+for (i in 1:length(unique(net.geno))){
+  MU <- Inet[net.geno == unique(net.geno)[i]]
+  for (j in 2:length(MU)){
+    MU[[1]] <- MU[[1]] + MU[[j]]
+  }
+  genomu.nets45[[i]] <- MU[[1]] / length(MU)
+}
+names(genomu.nets45) <- unique(net.geno)
+                                        #plot all mean networks
+for (i in 1:length(genomu.nets45)){
+  rownames(genomu.nets45[[i]]) <- colnames(genomu.nets45[[i]]) <- 1:ncol(genomu.nets45[[i]])
+}
+par(mfrow=c(5,3),mai=c(0.3,0.3,0.3,0.3),bg='transparent')
+for (i in 1:length(genomu.nets45)){
+  v.cex <- v.col<- apply(lco.com[LCO$Geno == names(genomu.nets45)[i],],2,sum)
+  v.col[v.col > 0] <- 'grey'
+  v.col[v.col == 0] <- 'white'
+  v.cex <- log(v.cex+1)
+  v.cex <- v.cex + 1
+  e.lwd <- (abs(genomu.nets45[[i]])*10)^2
+  v.labels <- 1:nrow(genomu.nets45[[i]])
+  gplot(abs(genomu.nets45[[i]]),edge.col=pnEdges(genomu.nets45[[i]]),mode='circle',
+        gmode='graph',vertex.sides=50,vertex.col=v.col,displaylabels=TRUE,vertex.border=
+        'white',vertex.cex=v.cex,label.cex=0.75,edge.lwd=e.lwd)
+  title(main=names(genomu.nets45)[i],cex=3)
+}
+                                        #pdf('~/Desktop/Rplot.pdf')
+par(mfrow=c(1,3),mai=c(0.3,0.3,0.3,0.3),bg='transparent')
+for (i in c(5,1,11)){
+  v.cex <- v.col<- apply(lco.com[LCO$Geno == names(genomu.nets45)[i],],2,sum)
+  v.col[v.col > 0] <- 'grey'
+  v.col[v.col == 0] <- 'white'
+  v.cex <- log(v.cex+1)
+  v.cex <- v.cex + 1
+  e.lwd <- (abs(genomu.nets45[[i]])*10)^2
+  v.labels <- 1:nrow(genomu.nets45[[i]])
+  gplot(abs(genomu.nets45[[i]]),edge.col=pnEdges(genomu.nets45[[i]]),mode='circle',
+        gmode='graph',vertex.sides=50,vertex.col=v.col,displaylabels=TRUE,vertex.border=
+        'white',vertex.cex=v.cex,label.cex=2,edge.lwd=e.lwd)
+  title(names(genomu.nets45)[i],cex=0.25)
+}
+
+@ 
+
+
+
+\section{Analyses}
+<<>>=
+                                        #get the factors for analyses
+net.info <- unique(tree.info)
+info.info <- rep(paste('tree','geno','quad','year',sep='_'),length(net.info))
+tree.factor <- unlist(strsplit(net.info,split='_')) #tree-level information for each network
+info.factor <- unlist(strsplit(info.info,split='_')) #sep information for tree information
+net.quad <- tree.factor[info.factor == 'quad'] #quadrat information for each network
+net.quad <- factor(net.quad)
+net.tree <- tree.factor[info.factor == 'tree'] #tree number information for each network
+net.geno <- tree.factor[info.factor == 'geno'] #genotype information for each network
+net.geno <- factor(net.geno)
+net.year <- tree.factor[info.factor == 'year'] #year of sampling for each network
+                                        #Calculate total abundance of communities
+net.abun <- numeric()
+for (i in (1:length(unique(tree.info)))){
+  x <- lco.com[tree.info == unique(tree.info)[i],]
+  net.abun[i] <- sum(x)
+}
+
+                                        #Calculate species richness
+net.rich <- numeric()
+for (i in (1:length(unique(tree.info)))){
+  x <- lco.com[tree.info == unique(tree.info)[i],]
+  net.rich[i] <- sum(apply(x,2,function(x) if (any(x) > 0){1}else{0}))
+}
+
+@ 
+
+<<results=tex,echo=false>>=
+                                        #permanova
+  Inet.dist <- as.dist(netDist(Inet))
+n.perm <- 9999
+adonis(Inet.dist~net.geno,permutations=n.perm)
+perm.results <- adonis(Inet.dist~net.geno*net.lat,permutations=n.perm)
+play(c(sin(1:10000/20),rep(0,1000),sin(1:10000/10)))
+perm.results
+xtable(perm.results$aov.tab)
+
+@ 
+
+\subsection{Probability Based Approach}
+<<>>=
+test1 <- lapply(lco.com.all,jpMat)
+test2 <- lapply(lco.com.all,jpMat,independent=TRUE)
+test3 <- lapply(lco.com.all,cpMat)
+test4 <- lapply(lco.com.all,symLink)
+test5 <- lapply(lco.com.all,overlapDegree)
+
+                                        #remove any values within 0.1 of 0.5
+rm.0.5 <- function(x){x[x>=0.45&x<=0.65] <- 0;return(x)}
+test1 <- lapply(test1,rm.0.5) 
+test2 <- lapply(test2,rm.0.5) 
+test3 <- lapply(test3,rm.0.5) 
+                                        #
+dtest1 <- as.dist(netDist(test1))
+dtest2 <- as.dist(netDist(test2))
+dtest3 <- as.dist(netDist(test3))
+dtest4 <- as.dist(netDist(test4))
+dtest5 <- as.dist(netDist(test5))
+                                        #
+adonis(dtest1~net.geno,permutations=9999) #joint probabilities
+adonis(dtest2~net.geno,permutations=9999) #independence (joint) probabilities (i.e. P(A)*P(B))
+adonis(dtest3~net.geno,permutations=9999) #conditional probabilities
+adonis(dtest4~net.geno,permutations=9999) #symmetry of connections
+                                        #average symmetry
+avg.sym <- unlist(lapply(test4,mean))
+plot(avg.sym~net.geno,las=2)
+summary(lm(avg.sym~net.geno))
+xgal <- unlist(lapply(lco.com.all,function(x) sum(x[,1])))
+summary(aov(avg.sym~net.geno*xgal))
+plot(avg.sym~xgal)
+abline(lm(avg.sym~xgal))
+                                        #
+adonis(dtest5~net.geno,permutations=9999) #degree of overlap
+
+@ 
+
+<<>>=
+test <- test1
+v.scale <- lapply(lco.com.all,function(x) ((apply(x,2,sum)/sum(x))+1)^3)
+v.col <- rainbow(ncol(test[[1]]))[1:ncol(test[[1]])]
+s <- 1
+f <- s+24
+n <- length(s:f)
+                                        #
+par(mfrow=c(sqrt(n),sqrt(n)),mar=(c(5.1, 4.1, 4.1, 2.1)-2.1),mai=c(0.25, 0.15, 0.15, 0.000))
+for (i in s:f){
+  if (i > length(test)){}else{
+    gplot(test[[i]],gmode='graph',vertex.sides=50,vertex.col=v.col,vertex.cex=v.scale[[i]],edge.col='grey',vertex.border=v.col)
+  }
+}
+
+@ 
+
+<<>>=
+use.nmds <- TRUE
+if (use.nmds){
+nms1 <- nmds(dtest1,2,2)
+nms2 <- nmds(dtest2,2,2)
+nms3 <- nmds(dtest3,2,2)
+par(mfrow=c(1,3))
+plot(nmds.min(nms1),col=rainbow(length(unique(net.geno)))[as.numeric(net.geno)],pch=19)
+ordispider(nmds.min(nms1),net.geno,col='lightgrey')
+legend('topright',legend=round(min(nms1$stress),2),bty='n')
+plot(nmds.min(nms2),col=rainbow(length(unique(net.geno)))[as.numeric(net.geno)],pch=19)
+ordispider(nmds.min(nms2),net.geno,col='lightgrey')
+legend('topright',legend=round(min(nms2$stress),2),bty='n')
+plot(nmds.min(nms3),col=rainbow(length(unique(net.geno)))[as.numeric(net.geno)],pch=19)
+ordispider(nmds.min(nms3),net.geno,col='lightgrey')
+legend('topright',legend=round(min(nms3$stress),2),bty='n')
+
+}else{
+nms1 <- princomp(dtest1)$scores[,1:2]
+nms2 <- princomp(dtest2)$scores[,1:2]
+nms3 <- princomp(dtest3)$scores[,1:2]
+par(mfrow=c(1,3))
+plot(nms1,col=rainbow(length(unique(net.geno)))[as.numeric(net.geno)],pch=19)
+ordispider(nms1,net.geno,col='lightgrey')
+plot(nms2,col=rainbow(length(unique(net.geno)))[as.numeric(net.geno)],pch=19)
+ordispider(nms2,net.geno,col='lightgrey')
+plot(nms3,col=rainbow(length(unique(net.geno)))[as.numeric(net.geno)],pch=19)
+ordispider(nms3,net.geno,col='lightgrey')
+
+}
+
+@ 
+
+\section{Results}
+
+<<fig=true,results=hide>>=
+  ##Ordination of networks and vectors of statistics
+                                        #principal components
+  pc.45 <- princomp(Inet.dist)
+                                        #calculate the total abundance of each species
+spp.abn <- lapply(lco.com.all,function(x) apply(x,2,sum))
+spp.abn <- do.call(rbind,spp.abn)
+colnames(spp.abn) <- paste('Sp',1:ncol(spp.abn))
+                                        #caclulate the network statistics
+net.S <- unlist(lapply(Inet,function(x) length(apply(x,2,bin.sum)[apply(x,2,bin.sum) != 0])))
+net.L <- unlist(lapply(Inet,function(x) length(x[x != 0])))
+net.C <- unlist(lapply(Inet,function(x) centralization(x,degree,mode='undirected')))
+net.n2 <- unlist(lapply(lco.com.all,function(x) length(apply(x,2,bin.sum)[apply(x,2,bin.sum) == 2])))
+env.45 <- cbind(net.rough,net.abun,net.rich,net.S,net.L,net.C,net.n2,net.lat,net.lon)
+ord.45 <- pc.45$scores[,1:2]
+colnames(env.45) <- c('Roughness','Abundance','Richness','Size','Links','Centrality','Doubles','Lat','Lon')
+vfit45.env <- envfit(ord.45,env.45[,c(1,8)])
+vfit45.com <- envfit(ord.45,env.45[,c(2,3)])
+vfit45.spp <- envfit(ord.45,spp.abn)
+vfit45.net <- envfit(ord.45,env.45[,c(6,6)])
+                                        #calculated the means and standard errors
+ord.mu45 <- cbind(tapply(ord.45[,1],net.geno,mean),tapply(ord.45[,2],net.geno,mean))
+ord.se45 <- cbind(tapply(ord.45[,1],net.geno,function(x) sd(x)/sqrt(length(x))),tapply(ord.45[,2],net.geno,function(x) sd(x)/sqrt(length(x))))
+ord.sd45 <- cbind(tapply(ord.45[,1],net.geno,sd),tapply(ord.45[,2],net.geno,sd))
+ord.ciu45 <- ord.mu45 + ord.se45
+ord.cil45 <- ord.mu45 - ord.se45
+                                        #plot the ordination
+plot(ord.mu45,col=rainbow(max(as.numeric(factor(rownames(ord.mu45)))))[as.numeric(factor(rownames(ord.mu45)))],cex=2,xlim=c(min(ord.cil45[,1]),max(ord.ciu45)),ylim=c(min(ord.cil45[,2]),max(ord.ciu45[,2])),pch=as.numeric(factor(rownames(ord.mu45))),xlab='PC1',ylab='PC2')
+                                        #plot the se bars
+for (i in 1:nrow(ord.mu45)){
+  lines(c(ord.mu45[i,1],ord.mu45[i,1]),c(ord.cil45[i,2],ord.ciu45[i,2]),col=grey(0.25)[1])
+  lines(c(ord.cil45[i,1],ord.ciu45[i,1]),c(ord.mu45[i,2],ord.mu45[i,2]),col=grey(0.25)[1])
+}
+                                        #plot legend
+legend('bottomright',legend=rownames(ord.mu45),pch=as.numeric(factor(rownames(ord.mu45))),col=rainbow(max(as.numeric(factor(rownames(ord.mu45)))))[as.numeric(factor(rownames(ord.mu45)))],bg='white',border='grey',cex=0.65)
+                                        #plot vectors
+                                        # plot(vfit45,col='black',lwd=5) #all vectors
+                                        #phenotype and environmental vectors
+plot(vfit45.env,col='black',lwd=7)
+                                        #community and species vectors
+plot(vfit45.com,col='black',lwd=5)
+plot(vfit45.spp,col='darkred',lwd=5)
+                                        #network stats
+plot(vfit45.net,col='darkviolet',lwd=5)
+
+@ 
+
+%%Genotype predicting network statistics
+<<fig=true>>=
+summary(aov(log(net.S+1)~net.geno))
+summary(aov(log(net.L+1)~net.geno))
+summary(aov(log(net.C+1)~net.geno))
+                                        #centrality and roughness
+summary(lm(log(net.C+1)~net.rough))
+summary(aov(net.rough~net.geno))
+
+
+@ 
+
+%%Barplot for centrality by genotype
+<<fig=true,echo=false,results=hide>>=
+C.m <- tapply(net.C,net.geno,mean)
+C.se <- tapply(net.C,net.geno,se)
+C.pval <- round(unlist(summary(aov(net.C~net.geno*net.lat)))[17],3)
+C.r2 <- round(get.rsquare(aov(net.C~net.geno))[1],3)
+barplot2(C.m[order(C.m,decreasing=TRUE)],las=2,plot.ci=TRUE,ci.u=C.m[order(C.m,decreasing=TRUE)]+C.se[order(C.m,decreasing=TRUE)],ci.l=C.m[order(C.m,decreasing=TRUE)]-C.se[order(C.m,decreasing=TRUE)],ylab='Centralization',ylim=c(0,0.12))
+legend('topright',legend=c(paste('p =',C.pval),paste('R2 =',C.r2)),bty='n')
+summary(aov(net.C~net.geno*net.lat))
+unlist(summary(aov(net.C~net.geno*net.lat)))
+
+
+@ 
+
+%%%Mantel of geographic, community and network distance
+<<>>=
+library(vegan)
+com <- cbind(spp.abn,rep(1,nrow(spp.abn)))
+com.dist <- vegdist(comRel(com))
+mantel(geo.dist,com.dist)
+mantel(com.dist,net.dist)
+mantel.partial(com.dist,net.dist,geo.dist)
+
+@ 
+
+<<>>=
+                                        #Barplot of pc1
+pc1 <- ord.45[,1]
+pc2 <- ord.45[,2]
+pc1.m <- tapply(pc1,net.geno,mean)
+pc1.se <- tapply(pc1,net.geno,se)
+pc2.m <- tapply(pc2,net.geno,mean)
+pc2.se <- tapply(pc2,net.geno,se)
+anova.pval1 <- round(unlist(summary(aov(pc1~net.geno)))[9],3)
+anova.pval2 <- round(unlist(summary(aov(pc2~net.geno)))[9],3)
+par(mfrow=c(1,2))
+barplot2(pc1.m,las=2,plot.ci=TRUE,ci.u=pc1.m+pc1.se,ci.l=pc1.m-pc1.se,ylab='PC1')
+legend('topright',legend=paste('p =',anova.pval1),bty='n')
+barplot2(pc2.m,las=2,plot.ci=TRUE,ci.u=pc2.m+pc2.se,ci.l=pc2.m-pc2.se,ylab='PC2')
+legend('topright',legend=paste('p =',anova.pval2),bty='n')
+
+@ 
+
+
+
+%%Pairs plot of PC1 and network statistics
+
+<<fig=true,echo=false,results=hide>>=
+par(mfrow=c(1,2))
+plot(pc1~net.C)
+abline(lm(pc1~net.C))
+net.geno[net.C < .05]
+                                        #inset within values of centralization >0.05 and <0.25
+plot(pc1[net.C > 0.05 & net.C <0.25]~net.C[net.C > 0.05 & net.C <0.25])
+abline(lm(pc1[net.C > 0.05 & net.C <0.25]~net.C[net.C > 0.05 & net.C <0.25]))
+summary(lm(pc1[net.C > 0.05 & net.C <0.25]~net.C[net.C > 0.05 & net.C <0.25]))
+
+@ 
+
+%community composition
+%% <<fig=true>>=
+%% comp <- cbind(spp.abn,rep(1,nrow(spp.abn)))
+%% comp.rel <- comRel(comp)
+%% adonis(comp~net.geno)
+%% adonis(comp.rel~net.geno)
+%% play(c(sin(1:10000/20),rep(0,1000),sin(1:10000/10)))
+%%                                         #ordination
+%% comprel.nmds <- nmds(vegdist(comp.rel),2,2,nits=100)
+%% comprel.min <- nmds.min(comprel.nmds)
+%% min(comprel.nmds$stress)
+%% plot(comprel.min,pch=as.numeric(net.geno))
+
+%% @ 
+
+<<>>=
+##                                         #SEM
+## summary(aov(pc1~net.geno*net.lat*net.rough))
+## summary(aov(net.rough~net.geno*net.lat))
+##                                         #specify model
+##                                         #Build genotype composite
+## geno.comp <- my.latent(net.geno)
+## sem.data <- cbind(geno.comp,net.rough,net.lat,pc1)
+## sem.data <- cbind(geno.comp,net.rough,pc1)
+## sigma <- cov(sem.data)
+## sigma
+## sem.mod <- specifyModel(file='gln_sem.R')
+## sem1 <- sem(sem.mod,S=sigma,N=nrow(sem.data))
+
+@ 
+
+\section{Discussion}
+
+\section{References}
+
+%% %%Figure construction
+%% <<echo=false,results=hide,label=fig1,include=false>>=
+%% @ 
+
+
+%% %%Figure plotting
+%% \begin{figure} 
+%% \begin{center} 
+%% <<label=fig1,fig=TRUE,echo=false>>=
+%% <<fig1>> 
+%% @ 
+%% \end{center} 
+%% \caption{}
+%% \label{fig:one}
+%% \end{figure}
+
+
+%% %%Activate for bibtex vibliography
+%% \cite{goossens93}
+%% \bibliographystyle{plain}
+%% \bibliography{/Users/Aeolus/Documents/bibtex/biblib}
+
+
+\end{document}  
+
+
