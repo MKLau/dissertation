@@ -28,12 +28,25 @@
 \setcounter{tocdepth}{1}
 \tableofcontents
 
+\section{Tasks}
+\begin{itemize}
+\item Email Lamit to get:
+  \begin{enumerate}
+  \item Final species designations
+  \item 
+  \end{enumerate}
+\item 
+\end{itemize}
+
+
 \section{16 Sep 2013}
 
 \begin{itemize}
 \item Re-organized files to conform with current best practices for
   projects
 \item Now on github
+\item Downloaded EcoSimR (use it for your co-occurrence analyses)
+\item Began the final phase of data entry (adding to lco_Apr2012.csv)
 \item 
 \end{itemize}
 
