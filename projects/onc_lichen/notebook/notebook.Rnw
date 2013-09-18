@@ -38,6 +38,11 @@
 \item Finish data entry from the wild stands
 \end{itemize}
 
+\section{18 Sep 2013}
+
+Continuing analyses from the 17 Sep 2013. See chunk below.
+
+
 \section{17 Sep 2013}
 \begin{itemize}
 \item Got Wild Stand data from Lamit (= ``UintaMaster_LichenHeritNL_FallSpring_2012_ForLau.xls'')
@@ -91,8 +96,8 @@ adonis(com.~height)
 com.rel <- apply(com.,2,function(x) if(sum(x)!=0){x/sum(x)}else{x})
 adonis(com.rel~height)
                                         #patterns with abundance and richness
-adonis(com~A)
-adonis(com~R)
+adonis(com.~A)
+adonis(com.~R)
 adonis(com.rel~A)
 adonis(com.rel~R)
 
@@ -152,56 +157,16 @@ c.score <- function(x,cu.mat=FALSE){
 com.q <- lapply(x.q,function(x) x[,5:18])
 cs.q <- lapply(com.q,c.score)
 cs.q <- unlist(cs.q)
+par(mfrow=c(1,2))
 plot(cs.q~A)
 abline(lm(cs.q~A))
 plot(cs.q~R)
 abline(lm(cs.q~R))
 summary(lm(cs.q~A))
 summary(lm(cs.q~R))
+par(mfrow=c(1,1))
 
 ###Analyses with roughness, age, total cover and height
-env <- read.csv('~/projects/dissertation/projects/onc_lichen/data/UintaMaster_LichenHeritNL_FallSpring_2012_ForLau.csv')
-env.names <- as.character(env[,1])
-env.names <- tolower(env.names) #lower case
-env.names <- sub('\\?','',env.names) #replace ? with ''
-env.names <- sub('\\_','\\.',env.names) #replace _ with .
-env.names <- sub('\\-','\\.',env.names) #replace - with .
-env.names <- sub('\\.0','\\.',env.names) #replace .0 with .
-env.names[env.names=="gnu.85.1ftaway"] <- "gnu.85"
-env.names[env.names=="gnu.68.ramet"] <- "ramet.gnu.68"
-                                        #check the names matching
-unique(x$tree)[unique(x$tree)%in%unique(env.names)==FALSE]
-                                        #reduce to trees present in co-occurrence dataset
-env <- env[unique(env.names)%in%unique(x$tree),]
-env[,1] <- unique(env.names)[unique(env.names)%in%unique(x$tree)]
-                                        #isolate upper quadrate community info
-quad.q <- as.character(sapply(names(com.q),function(x) unlist(strsplit(x,split=' '))[2]))
-com.up <- com.q[quad.q=='n80.90']
-A.up <- A[quad.q=='n80.90']
-R.up <- R[quad.q=='n80.90']
-cs.up <- cs.q[quad.q=='n80.90']
-                                        #match datasets
-names.up <- as.character(sapply(names(com.up),function(x) unlist(strsplit(x,split=' '))[1]))
-all(env[match(names.up,env[,1]),1]==names.up)
-env <- env[match(names.up,env[,1]),]
-                                        #Analyze patterns of:
-                                        #Roughness by age
-plot(Rough.U~AgeFinal.U,data=env)
-abline(lm(Rough.U~AgeFinal.U,data=env))
-summary(lm(Rough.U~AgeFinal.U,data=env))
-                                        #Circumference by age
-plot(Bole.Circ.cm~AgeFinal.U,data=env)
-abline(lm(Bole.Circ.cm~AgeFinal.U,data=env))
-summary(lm(Bole.Circ.cm~AgeFinal.U,data=env))
-                                        #Roughness by circumference
-plot(Rough.U~Bole.Circ.cm,data=env)
-abline(lm(Rough.U~Bole.Circ.cm,data=env))
-summary(lm(Rough.U~Bole.Circ.cm,data=env))
-                                        #Cscore by env
-pairs(cbind(cs.up,Rough=env$Rough.U,Circ=env$Circ.cm,Age=env$AgeFinal.U))
-summary(lm(log(cs.up+1)~Rough.U,data=env))
-summary(lm(log(cs.up+1)~Bole.Circ.cm,data=env))
-summary(lm(log(cs.up+1)~AgeFinal.U,data=env))
 
                                         #SES analysis
 library(pbapply)

@@ -63,6 +63,11 @@
 <<>>=
   x <- read.csv('~/projects/dissertation/projects/onc_lichen/data/lco_Apr2012.csv')
 x <- na.omit(x)
+###NOTE: gnu.44 is a fremont
+                                        #remove gnu.44
+x <- x[x$tree!='gnu.44',]
+                                        #remove ll.6, weird tree
+x <- x[x$tree!='ll.6',]
                                         #break into quadrat list (x.q)
 quads <- paste(x$tree,x$quadrat)
 x.q <- split(x,quads)
@@ -153,9 +158,54 @@ plot(cs.q~R)
 abline(lm(cs.q~R))
 summary(lm(cs.q~A))
 summary(lm(cs.q~R))
+
+###Analyses with roughness, age, total cover and height
+env <- read.csv('~/projects/dissertation/projects/onc_lichen/data/UintaMaster_LichenHeritNL_FallSpring_2012_ForLau.csv')
+env.names <- as.character(env[,1])
+env.names <- tolower(env.names) #lower case
+env.names <- sub('\\?','',env.names) #replace ? with ''
+env.names <- sub('\\_','\\.',env.names) #replace _ with .
+env.names <- sub('\\-','\\.',env.names) #replace - with .
+env.names <- sub('\\.0','\\.',env.names) #replace .0 with .
+env.names[env.names=="gnu.85.1ftaway"] <- "gnu.85"
+env.names[env.names=="gnu.68.ramet"] <- "ramet.gnu.68"
+                                        #check the names matching
+unique(x$tree)[unique(x$tree)%in%unique(env.names)==FALSE]
+                                        #reduce to trees present in co-occurrence dataset
+env <- env[unique(env.names)%in%unique(x$tree),]
+env[,1] <- unique(env.names)[unique(env.names)%in%unique(x$tree)]
+                                        #isolate upper quadrate community info
+quad.q <- as.character(sapply(names(com.q),function(x) unlist(strsplit(x,split=' '))[2]))
+com.up <- com.q[quad.q=='n80.90']
+A.up <- A[quad.q=='n80.90']
+R.up <- R[quad.q=='n80.90']
+cs.up <- cs.q[quad.q=='n80.90']
+                                        #match datasets
+names.up <- as.character(sapply(names(com.up),function(x) unlist(strsplit(x,split=' '))[1]))
+all(env[match(names.up,env[,1]),1]==names.up)
+env <- env[match(names.up,env[,1]),]
+                                        #Analyze patterns of:
+                                        #Roughness by age
+plot(Rough.U~AgeFinal.U,data=env)
+abline(lm(Rough.U~AgeFinal.U,data=env))
+summary(lm(Rough.U~AgeFinal.U,data=env))
+                                        #Circumference by age
+plot(Bole.Circ.cm~AgeFinal.U,data=env)
+abline(lm(Bole.Circ.cm~AgeFinal.U,data=env))
+summary(lm(Bole.Circ.cm~AgeFinal.U,data=env))
+                                        #Roughness by circumference
+plot(Rough.U~Bole.Circ.cm,data=env)
+abline(lm(Rough.U~Bole.Circ.cm,data=env))
+summary(lm(Rough.U~Bole.Circ.cm,data=env))
+                                        #Cscore by env
+pairs(cbind(cs.up,Rough=env$Rough.U,Circ=env$Circ.cm,Age=env$AgeFinal.U))
+summary(lm(log(cs.up+1)~Rough.U,data=env))
+summary(lm(log(cs.up+1)~Bole.Circ.cm,data=env))
+summary(lm(log(cs.up+1)~AgeFinal.U,data=env))
+
                                         #SES analysis
 library(pbapply)
-ses.q <- pblapply(com.q,function(x) oecosimu(x, c.score, "swap", burnin=100, thin=10, statistic="evals"))
+ses.q <- pblapply(com.q,function(x) oecosimu(x[,apply(x,2,sum)!=0], c.score, "swap", burnin=100, thin=10, statistic="evals"))
 
 
 @ 
