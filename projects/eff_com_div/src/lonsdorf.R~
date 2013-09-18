@@ -1,6 +1,7 @@
 ###Lonsdorf model
 ###Matlab code for simulations described in Shuster et al. Community Heritability MS
 
+reps <- 10 #number of times to run simulation
 ### tree genotypic values - range from 11 to 21
 trees2 <- read.csv('../data/lonsdorf/trees.txt') #SEE BELOW CODE FOR VALUES
 ###generate arthropod alleles for 25 species
@@ -13,7 +14,6 @@ insect[,2] <- (insects[,1]+0.5*insects[,2])/2 #D allelic value = (HET + 0.5*rang
 ###Experimental design
 GG <- 8 #number of selection scenarios
 YY <- 5 #number of environmental scenarios
-reps <- 100 #number of times to run simulation
 ###Parameter values
 VeT <- 8 #environmental variance in tree trait influences tree heritability (2 for high H2 and 8 for low H2)
 Ve <- 0.1 #environmental variance for insect trait
@@ -29,7 +29,7 @@ gen_load <- matrix(NA,nrow=T,ncol=I) #insect ?
 dem_load <- matrix(NA,nrow=T,ncol=I) #insect ?
 art_pop <- matrix(NA,nrow=T,ncol=I) #insect ?
                                         #STORAGE LIST
-AP <- list()
+out <- gg.list <- yy.list <- list()
 ###Simulation
 tic <- Sys.time() #start stopwatch
 for (RR in 1:reps){
@@ -79,11 +79,13 @@ for (RR in 1:reps){
 ###keeping track of which iteration the simulation is on reps*GG*(y-1)+reps*(z-1)+RR
 ###dlmwrite(int2str(reps*GG*(y-1)+reps*(z-1)+RR),art_pop,'\t');  %%% write arthropod sampling to file %%%
       print(paste(reps*GG*(y-1),reps*(z-1),RR,sep='_'))
+      gg.list[[z]] <- art_pop
     } #end selection loop
+    yy.list[[y]] <- gg.list
   } #end environment loop
   toc <- Sys.time() #stop stopwatch
-  AP[[RR]] <- art_pop
+  out[[RR]] <- yy.list
 } #end REP loop and END simulation
 ###4.344779 per rep
 print(toc-tic)
-dput(AP,file='./ld.Rdata')
+dput(out,file='./ld.Rdata')

@@ -29,14 +29,55 @@
 \tableofcontents
 
 \section{Tasks}
+\begin{enumerate}
+\item Finalize tree level analysis
+\item Where would you send this? Two papers? PLoS One?
+\item Look at notes on slides
+\end{enumerate}
+
+
+\section{Meeting with Tom 18Sep2013}
+
 \begin{itemize}
-\item Email Lamit to get:
-  \begin{enumerate}
-  \item Final species designations
-  \item Field data for trees?
-  \end{enumerate}
-\item Finish data entry from the wild stands
+\item LCO
+\item 
+  \begin{itemize}
+  \item Take Home - Interaction network structure is determined by the
+    ecological variation created by roughness which is genetically
+    based. 
+    \begin{enumerate}
+    \item Roughness drives composition (cite lamit's work)
+    \item Co-occurrence at the tree level tracks roughness in the wild
+      (C-score vs roughness)
+    \item Co-occurrence at the tree level tracks roughness in the
+      garden (Pit too?) (C-score vs roughness)
+    \item Interaction networks inferred from co-occurrence patterns
+      similar in wild and garden (all positive patterns, two central
+      species) (Mantel Test)
+    \item Interaction network structure tracks roughness (how to show this?)
+    \end{enumerate}
+  \end{itemize}
+\item ECD
+  \begin{itemize}
+  \item Need to understand the math before moving forward
+  \item Putting on a scale?
+  \item Simple three species networks?
+  \item Using lichen network as a real example?
+  \end{itemize}
 \end{itemize}
+
+\section{Tasks}
+\begin{itemize}
+\item Try Networks plotted with nodes arrayed along an axis of
+  environment (i.e. the points centered where their abundance is
+  highest)
+\item NEED TO RECONCILE TAXONOMIC DIFFERENCES
+\end{itemize}
+
+\section{18 Sep 2013}
+
+Continuing analyses from the 17 Sep 2013. See chunk below.
+
 
 \section{17 Sep 2013}
 \begin{itemize}
@@ -51,11 +92,18 @@
 
 \subsection{Wild Stand Analysis}
 
+\textbf{Previous Work}
+\begin{itemize}
+\item Tree phenotype affects lichen communities (Lamit et al. 2011 and Lamit unpublished)
+  \subitem Richness, Total Cover, Community Composition
+\item Genotypes vary in development of rough bark
+\item Crustose and foliose respond differently 
+\end{itemize}
+
 \textbf{Analysis Summary}
 \begin{itemize}
-\item Abundance correlated with Richness
-\item Sampling height does not affect Abundance, Richness or Community Composition
-\item Composition (even when relativized) is related to abundance and richness
+\item Roughness affects the co-occurrence patterns of lichen in the field
+\item Roughness is geneticaly based
 \item 
 \end{itemize}
 
@@ -91,8 +139,8 @@ adonis(com.~height)
 com.rel <- apply(com.,2,function(x) if(sum(x)!=0){x/sum(x)}else{x})
 adonis(com.rel~height)
                                         #patterns with abundance and richness
-adonis(com~A)
-adonis(com~R)
+adonis(com.~A)
+adonis(com.~R)
 adonis(com.rel~A)
 adonis(com.rel~R)
 
@@ -124,10 +172,8 @@ for (i in 1:length(m.q)){
   }
 }
                                         #plot
-for (i in 1:length(S.q)){
-  image(t(S.q[[i]]),col=heat.colors(length(unique(unlist(S.q)))))
-  scan(n=1)
-}
+image(t(S.q[[i]]),col=heat.colors(length(unique(unlist(S.q)))))
+
                                         #Null Model Based
 cu <- function(x,y){
   S <- sum(x[(x+y)==2])
@@ -152,64 +198,114 @@ c.score <- function(x,cu.mat=FALSE){
 com.q <- lapply(x.q,function(x) x[,5:18])
 cs.q <- lapply(com.q,c.score)
 cs.q <- unlist(cs.q)
+par(mfrow=c(1,2))
 plot(cs.q~A)
 abline(lm(cs.q~A))
 plot(cs.q~R)
 abline(lm(cs.q~R))
 summary(lm(cs.q~A))
 summary(lm(cs.q~R))
+par(mfrow=c(1,1))
 
 ###Analyses with roughness, age, total cover and height
-env <- read.csv('~/projects/dissertation/projects/onc_lichen/data/UintaMaster_LichenHeritNL_FallSpring_2012_ForLau.csv')
-env.names <- as.character(env[,1])
-env.names <- tolower(env.names) #lower case
-env.names <- sub('\\?','',env.names) #replace ? with ''
-env.names <- sub('\\_','\\.',env.names) #replace _ with .
-env.names <- sub('\\-','\\.',env.names) #replace - with .
-env.names <- sub('\\.0','\\.',env.names) #replace .0 with .
-env.names[env.names=="gnu.85.1ftaway"] <- "gnu.85"
-env.names[env.names=="gnu.68.ramet"] <- "ramet.gnu.68"
-                                        #check the names matching
-unique(x$tree)[unique(x$tree)%in%unique(env.names)==FALSE]
-                                        #reduce to trees present in co-occurrence dataset
-env <- env[unique(env.names)%in%unique(x$tree),]
-env[,1] <- unique(env.names)[unique(env.names)%in%unique(x$tree)]
-                                        #isolate upper quadrate community info
-quad.q <- as.character(sapply(names(com.q),function(x) unlist(strsplit(x,split=' '))[2]))
-com.up <- com.q[quad.q=='n80.90']
-A.up <- A[quad.q=='n80.90']
-R.up <- R[quad.q=='n80.90']
-cs.up <- cs.q[quad.q=='n80.90']
-                                        #match datasets
-names.up <- as.character(sapply(names(com.up),function(x) unlist(strsplit(x,split=' '))[1]))
-all(env[match(names.up,env[,1]),1]==names.up)
-env <- env[match(names.up,env[,1]),]
-                                        #Analyze patterns of:
-                                        #Roughness by age
-plot(Rough.U~AgeFinal.U,data=env)
-abline(lm(Rough.U~AgeFinal.U,data=env))
-summary(lm(Rough.U~AgeFinal.U,data=env))
-                                        #Circumference by age
-plot(Bole.Circ.cm~AgeFinal.U,data=env)
-abline(lm(Bole.Circ.cm~AgeFinal.U,data=env))
-summary(lm(Bole.Circ.cm~AgeFinal.U,data=env))
-                                        #Roughness by circumference
-plot(Rough.U~Bole.Circ.cm,data=env)
-abline(lm(Rough.U~Bole.Circ.cm,data=env))
-summary(lm(Rough.U~Bole.Circ.cm,data=env))
-                                        #Cscore by env
-pairs(cbind(cs.up,Rough=env$Rough.U,Circ=env$Circ.cm,Age=env$AgeFinal.U))
-summary(lm(log(cs.up+1)~Rough.U,data=env))
-summary(lm(log(cs.up+1)~Bole.Circ.cm,data=env))
-summary(lm(log(cs.up+1)~AgeFinal.U,data=env))
+env <- read.csv('~/projects/dissertation/projects/onc_lichen/data/Uinta2012_all_data_from_Lamit.csv')
+env <- env[is.na(env$Pct.Roughness)==FALSE,]
+env[,1] <- sub('\\?','',sub('\\.0','\\.',sub('\\_','\\.',sub('\\-','\\.',tolower(as.character(env[,1]))))))
+env[env[,1]=='ll.6_(znu.29)',1] <- 'll.6'
+env[env[,1]=='gnu.85.1ftaway',1] <- 'gnu.85'
+env$Quad.Loc <- as.character(sapply(as.character(env$Quad.Loc),function(x) unlist(strsplit(x,split='_'))[2]))
+env$Quad.Loc <- sub('\\-','\\.',env$Quad.Loc)
+env$Quad.Loc <- paste('n',env$Quad.Loc,sep='')
+                                        #remove southern aspect
+env <- env[env$Aspect!='South',]
+env.tid <- paste(env$Tree.ID,env$Quad.Loc)
+                                        #check that the datasets are compatible
+all(names(x.q)%in%env.tid) 
+                                        #match observations
+all(env.tid[match(names(x.q),env.tid)] == names(x.q))
+                                        #delimit to co-occurrence dataset and match
+env <- env[match(names(x.q),env.tid),]
+                                        #Cscore analyses
+all(names(cs.q)==names(x.q))
+plot(cs.q~env$Pct.Roughness,font.lab=2,cex.lab=1.25,xlab='Percent Roughness',ylab='C-Score')
+abline(lm(cs.q~env$Pct.Roughness))
+summary(lm(cs.q~env$Pct.Roughness))
+                                        #
+plot(cs.q~env$Pct.Total.Cover)
+abline(lm(cs.q~env$Pct.Total.Cover))
+summary(lm(cs.q~env$Pct.Total.Cover))
+                                        #isocline for each species
+
+                                        #pairs plots
+source('~/projects/dissertation/projects/onc_lichen/docs/LCO_analyses/source/pairs.R')
+pairs(cbind(Roughness=env$Pct.Roughness,Total.Cover=env$Pct.Total.Cover,Abundance=A,Richness=R,Cscore=cs.q),upper.panel=panel.lm,lower.panel=panel.cor)
+                                        #Look at Araujo co-occurrence networks
+library(sna)
+source('~/projects/dissertation/projects/onc_lichen/src/araujo_nets.R')
+dep.all <- dep.net(all[,5:18])
+net.graph <- dep.all[apply(dep.all,1,sum)!=0,apply(dep.all,2,sum)!=0]
+gplot(net.graph,displaylabels=TRUE,edge.col='darkgrey',
+      gmode='graph',label.cex=1.5,vertex.col='lightblue',
+      edge.lwd=(net.graph/max(net.graph)+1)^2.5,uselen=FALSE,
+      edge.len=0.025,usearrows=FALSE)
+                                        #
+net.q <- lapply(x.q,function(x) co.net(x[,5:18]))
+unlist(lapply(net.q,function(x) length(x[x!=0])))
+                                        #
+par(mfrow=c(4,6))
+for (i in 1:length(net.q)){
+  if (sum(net.q[[i]])==0){
+    plot(0)
+  }else{
+    gplot(net.q[[i]],displaylabels=FALSE)
+  }
+}
+
+                                        #"pseudo-motifs" = cell species richness = pm
+                                        # avg. pseudo.motif size = aps
 
                                         #SES analysis
-library(pbapply)
-ses.q <- pblapply(com.q,function(x) oecosimu(x[,apply(x,2,sum)!=0], c.score, "swap", burnin=100, thin=10, statistic="evals"))
+                                        #library(pbapply)
+                                        #ses.q <- pblapply(com.q,function(x) oecosimu(x[,apply(x,2,sum)!=0], c.score, "swap", burnin=100, thin=10, statistic="evals"))
 
+###Garden Analysis
+garden.data <- read.csv('~/projects/dissertation/projects/onc_lichen/data/LCO_data_ONC_PIT.csv')
+garden <- substr(garden.data[,1],2,2)
+garden[garden=='P'] <- 'pit'
+garden[garden!='pit'] <- 'onc'
+                                        #separate gardens
+onc <- garden.data[garden=='onc',]
+pit <- garden.data[garden=='pit',]
+                                        #onc network
+onc.cn <- co.net(onc[,7:15])
+onc.dn <- dep.net(onc[,7:15])
+onc.graph <- onc.dn[apply(onc.dn,1,sum)!=0,apply(onc.dn,2,sum)!=0]
+gplot(onc.graph,displaylabels=TRUE,edge.col='darkgrey',
+      gmode='graph',label.cex=1.5,vertex.col='lightblue',
+      edge.lwd=(onc.graph/max(onc.graph)+1)^2.5,uselen=FALSE,
+      edge.len=0.025,usearrows=FALSE)
+                                        #pit network
+pit.cn <- co.net(pit[,7:15])
+pit.dn <- dep.net(pit[,7:15])
+pit.graph <- pit.dn[apply(pit.dn,1,sum)!=0,apply(pit.dn,2,sum)!=0]
+gplot(pit.graph,displaylabels=TRUE,edge.col='darkgrey',
+      gmode='graph',label.cex=1.5,vertex.col='lightblue',
+      edge.lwd=(pit.graph/max(pit.graph)+1)^2.5,uselen=FALSE,
+      edge.len=0.025,usearrows=FALSE)
+
+###Roughness in the Garden
+rough <- read.csv('data/ONC_raw_roughness.csv')
+head(rough)
+
+###Correlation of wild and onc network structure
+
+###NEED TO RECONCILE TAXONOMIC DIFFERENCES
+wild.net <- net.graph
+onc.net <- onc.dn
+colnames(wild.net)
+colnames(onc.net)
 
 @ 
-
 
 
 \section{16 Sep 2013}

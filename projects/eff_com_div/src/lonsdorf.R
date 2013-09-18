@@ -3,7 +3,7 @@
 
 reps <- 10 #number of times to run simulation
 ### tree genotypic values - range from 11 to 21
-trees2 <- read.csv('../data/lonsdorf/trees.txt') #SEE BELOW CODE FOR VALUES
+trees2 <- read.csv('~/projects/dissertation/projects/eff_com_div/data/trees.txt')
 ###generate arthropod alleles for 25 species
 insects <- matrix(NA,nrow=25,ncol=2)
 insects[,1] <- runif(25,5,21) #heterozygote value between 5 and 21
@@ -88,4 +88,4 @@ for (RR in 1:reps){
 } #end REP loop and END simulation
 ###4.344779 per rep
 print(toc-tic)
-dput(out,file='./ld.Rdata')
+dput(out,file='./ecd_output')

@@ -27,6 +27,22 @@
 %\setcounter{tocdepth}{3}  %%activate to number sections
 %\tableofcontents
 
+\section{Tasks}
+\begin{enumerate}
+\item Finish working through the math
+\item Write-up summary of suggested changes/additions
+  \begin{enumerate}
+  \item Re-organize math
+  \item Re-do simulations
+  \item Do other simulations?
+  \item Add lichen network models (use dependency networks from
+    Araujo)
+  \item Ground with estimates of genetic effects needed for evolution
+  \end{enumerate}
+\item Email steve
+\end{enumerate}
+
+
 \section{13 Sep 2013}
 
 Understanding the math.
@@ -92,6 +108,8 @@ log(x2,base=2)
 \section{03 Sep 2013}
 
 \textbf{Theory Summary}
+
+
 \begin{itemize}
 \item The important conceptual advance and practical implication of
   defining a species’ effective community diversity is that the
@@ -129,7 +147,6 @@ diversity of selective agents one species faces.
 This seems to suggest that Ulanowicz's inkling that evolution plays an
 important role in ecosystem flow networks is true and warrants
 investigation.
-
 
 
 \section{30 Aug 2013}
