@@ -33,10 +33,133 @@
 \item Email Lamit to get:
   \begin{enumerate}
   \item Final species designations
-  \item 
+  \item Field data for trees?
   \end{enumerate}
+\item Finish data entry from the wild stands
+\end{itemize}
+
+\section{17 Sep 2013}
+\begin{itemize}
+\item Got Wild Stand data from Lamit (= ``UintaMaster_LichenHeritNL_FallSpring_2012_ForLau.xls'')
+  \subitem ``I excluded 2 trees, I think, because the cores were hard
+  to read and I could not get a reliable age. One sheet is the raw
+  data by quadrat and one is the final averaged data I used in the
+  manuscript''
+\item Finished wild stand data (NOTE: a check on the 45-55N = entered)
+\item Analyzed data:
+\end{itemize}
+
+\subsection{Wild Stand Analysis}
+
+\textbf{Analysis Summary}
+\begin{itemize}
+\item Abundance correlated with Richness
+\item Sampling height does not affect Abundance, Richness or Community Composition
+\item Composition (even when relativized) is related to abundance and richness
 \item 
 \end{itemize}
+
+
+<<>>=
+  x <- read.csv('~/projects/dissertation/projects/onc_lichen/data/lco_Apr2012.csv')
+x <- na.omit(x)
+                                        #break into quadrat list (x.q)
+quads <- paste(x$tree,x$quadrat)
+x.q <- split(x,quads)
+
+###look at abundance and richness patterns
+A <- unlist(lapply(x.q,function(x) sum(x[,5:18])))
+R <- unlist(lapply(x.q,function(x) sum(sign(apply(x[,5:18],2,sum)))))
+plot(R~A)
+abline(lm(R~A))
+summary(lm(R~A))
+height <- unlist(lapply(strsplit(names(x.q),split='\ n'),function(x) x[2]))
+summary(aov(A~height))
+summary(aov(R~height))
+
+###Composition
+library(vegan)
+com <- do.call(rbind,lapply(x.q,function(x) apply(x[,5:18],2,sum)))
+com. <- cbind(com,ds=rep(1,nrow(com)))
+                                        #patterns of height
+adonis(com.~height)
+com.rel <- apply(com.,2,function(x) if(sum(x)!=0){x/sum(x)}else{x})
+adonis(com.rel~height)
+                                        #patterns with abundance and richness
+adonis(com~A)
+adonis(com~R)
+adonis(com.rel~A)
+adonis(com.rel~R)
+
+###examine spatial patterns for each species
+                                        #reproduce spatial grid for each species
+sp.grid <- function(x,sp.col=5){
+  x. <- cbind(x[,3:4],x[,sp.col])
+  m <- matrix(0,nrow=10,ncol=10)
+  for (i in 1:nrow(x.)){
+    m[x.[i,1],x.[i,2]] <- x.[i,3]
+  }
+  return(m)
+}
+                                        #loops to get the grids
+m.q <- list()
+m.j <- list()
+for (i in 1:length(x.q)){
+  for (j in 1:14){
+    m.j[[j]] <- sp.grid(x.q[[i]],j+4)
+  }
+  names(m.j) <- colnames(x.q[[i]])[5:18]
+  m.q[[i]] <- m.j
+}
+                                        #integrated grids
+S.q <- lapply(m.q,function(x)x[[1]])
+for (i in 1:length(m.q)){
+  for (j in 2:length(m.q[[i]])){
+    S.q[[i]] <- S.q[[i]] + m.q[[i]][[j]]
+  }
+}
+                                        #plot
+for (i in 1:length(S.q)){
+  image(t(S.q[[i]]),col=heat.colors(length(unique(unlist(S.q)))))
+  scan(n=1)
+}
+                                        #Null Model Based
+cu <- function(x,y){
+  S <- sum(x[(x+y)==2])
+  return((sum(x)-S)*(sum(y)-S))
+}
+                                        #
+c.score <- function(x,cu.mat=FALSE){
+  cu.m <- matrix(0,nrow=ncol(x),ncol=ncol(x))
+  rownames(cu.m) <- colnames(cu.m) <- colnames(x)
+  for (i in 1:ncol(x)){
+    for (j in 1:ncol(x)){
+      cu.m[i,j] <- cu(x[,i],x[,j])
+    }
+  }
+  if (cu.mat){
+    return(cu.m)
+  }else{
+    return(mean(cu.m))
+  }
+}
+                                        #Cscore analysis
+com.q <- lapply(x.q,function(x) x[,5:18])
+cs.q <- lapply(com.q,c.score)
+cs.q <- unlist(cs.q)
+plot(cs.q~A)
+abline(lm(cs.q~A))
+plot(cs.q~R)
+abline(lm(cs.q~R))
+summary(lm(cs.q~A))
+summary(lm(cs.q~R))
+                                        #SES analysis
+library(pbapply)
+ses.q <- pblapply(com.q,function(x) oecosimu(x, c.score, "swap", burnin=100, thin=10, statistic="evals"))
+
+
+@ 
+
 
 
 \section{16 Sep 2013}
@@ -45,10 +168,10 @@
 \item Re-organized files to conform with current best practices for
   projects
 \item Now on github
-\item Downloaded EcoSimR (use it for your co-occurrence analyses)
+\item EcoSimR doesn't have the co-occurrence analyses built in
 \item Began the final phase of data entry (adding to lco_Apr2012.csv)
-\item 
 \end{itemize}
+
 
 
 \end{document}
