@@ -36,6 +36,26 @@
 \end{enumerate}
 
 
+\section{25 Sep 2013}
+
+\subsection{Meeting with Tom}
+
+Discussion:
+\begin{enumerate}
+\item SAP hold?
+\item PRFB letter of rec
+
+\item Wild: SES for tree level co-occurrence patterns
+\item Wild: SES responds to tree roughness
+
+\end{enumerate}
+
+Notes:
+\begin{itemize}
+\item 
+\end{itemize}
+
+
 \section{Meeting with Tom 18Sep2013}
 
 \begin{itemize}
@@ -94,7 +114,6 @@ Continuing analyses from the 17 Sep 2013. See chunk below.
 
 \textbf{Previous Work}
 \begin{itemize}
-\item Tree phenotype affects lichen communities (Lamit et al. 2011 and Lamit unpublished)
   \subitem Richness, Total Cover, Community Composition
 \item Genotypes vary in development of rough bark
 \item Crustose and foliose respond differently 

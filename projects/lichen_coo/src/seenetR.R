@@ -1,3 +1,11 @@
+###Functions for the SEEnetR package
+###Spatial, Ecological and Evolutionary Networks in R
+###25 Sep 2013
+
+###Spatial
+
+null.prune <- function(a,b,std=TRUE){
+
 ###Method for producing network models from co-occurrence data.
 ###Developed in Araujo et al. 2011 Ecography Using species co-occurrence networks to assess the impacts of climate change
 ###Coded 18 Sep 2013 MKLau
@@ -5,6 +13,9 @@
 ## E is an environmental lattice with rows = N and cols = M and has size A = N*M.
 ## A = total number of sites
 ## Na = number of sites with species a
+                                        #determine number of sites
+A <- length(a)
+                                        #NULL probabilities
 ## Assuming no interactions among species
 ## Probability of observing species a
 ## Pa <- Na/A
@@ -17,39 +28,35 @@
 ## and it follows that 
 ## Pa&b + Pa+b + P!a&!b = 1
 
-## Three states, i = ab, ii a+b = (a&!b + !a&b), iii = !a!b
-
-## E(i) = APa&b
-## E(ii) = APa+b
-## E(iii) = AP!a&!b
-
-## Var(i) = APa&b(1-Pa&b)
-## Var(ii) = APa+b(1-APa+b)
-## Var(iii) = AP!a&!b(1-AP!a&!b)
-
-## Critical interval
-
-## CI.u = E(i) + 2*Var(i)^2 = attractive overlap
-## CI.l = E(i) - 2*Var(i)^2 = repulsive overlap
-
-null.prune <- function(a,b,std=TRUE){
-                                        #determine number of sites
-A <- length(a)
-                                        #NULL probabilities
 pa <- sum(a)/A
 pb <- sum(b)/A
 paANDb <- pa * pb
 paORb <- pa + pb - 2*pa*pb
 pNOTaORb <- 1- pa - pb + pa*pb
+
+## Three states, i = ab, ii a+b = (a&!b + !a&b), iii = !a!b
                                         #expected frequencies
+## E(i) = APa&b
+## E(ii) = APa+b
+## E(iii) = AP!a&!b
+
 Ei <- A*paANDb
 Eii <- A*paORb
 Eiii <- A*pNOTaORb
                                         #variance of frequencies
+## Var(i) = APa&b(1-Pa&b)
+## Var(ii) = APa+b(1-APa+b)
+## Var(iii) = AP!a&!b(1-AP!a&!b)
+
 Vi <- A*paANDb*(1-paANDb)
 Vii <- A*paORb*(1-paORb)
 Viii <- A*pNOTaORb*(1-pNOTaORb)
-                                        #critical threshold (+ = attraction and - = repulstion)
+                                        
+## Critical interval
+## Critical threshold (+ = attraction and - = repulstion)
+## CI.u = E(i) + 2*Var(i)^2 = attractive overlap
+## CI.l = E(i) - 2*Var(i)^2 = repulsive overlap
+
 ci.u <- Ei + 2*Vi^(1/2)
 ci.l <- Ei - 2*Vi^(1/2)
                                         #Oi = observed a AND b
@@ -69,6 +76,7 @@ return(out)
 }
 
 co.net <- function(x='species in cols',diag.zero=TRUE,std=TRUE){
+  x[x!=0] <- 1
   out <- matrix(NA,nrow=ncol(x),ncol=ncol(x))
   rownames(out) <- colnames(out) <- colnames(x)
   for (j in 1:ncol(x)){
@@ -103,3 +111,40 @@ dep.net <- function(x='species in cols',zero.na=TRUE,prune=TRUE,diag.zero=TRUE){
   if (zero.na){out[is.na(out)] <- 0}
   return(out)
 }
+
+
+###Ecological
+
+###Calculate Stone and Roberts C-score
+cscore <- function(x,cu.mat=FALSE){
+  cu <- matrix(0,nrow=ncol(x),ncol=ncol(x))
+  for (i in 1:ncol(x)){
+    for (j in 1:ncol(x)){
+      ri <- sum(x[,i])
+      rj <- sum(x[,j])
+      S <- x[,i]*0
+      S[x[,i]==1&x[,j]==1] <- 1
+      S <- sum(S)
+      cu[i,j] <- (ri-S)*(rj-S)
+    }
+  }
+  if (cu.mat){return(cu)}else{return(mean(cu))}
+}
+
+require(vegan)
+
+nullCom <- function(com,method='r1',nits=5000,burn=500,thin=10){
+                                        #force binary
+  com[com!=0] <- 1
+  for (i in 1:burn){post.burn <- commsimulator(x=com,method=method,thin=thin)}
+  out <- list()
+  for (i in 1:nits){out[[i]] <- commsimulator(x=post.burn,method=method,thin=thin)}
+  return(out)
+}
+
+
+###Evolutionary
+
+##Effective community diversity calculator
+
+##Mass action community genetics simulator
