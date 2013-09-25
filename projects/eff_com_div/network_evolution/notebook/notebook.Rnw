@@ -1,0 +1,137 @@
+\documentclass[12pt]{article}
+\usepackage{color}
+\usepackage{cite}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+%\usepackage{pdflscape}        %single page landscape
+                                %mode \begin{landscape} \end{landscape}
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{multicol} % \begin{multicols}{number of columns} \end{multicols}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{Sweave}
+\newcommand{\etal}{\textit{et al.}}
+\usepackage{hyperref}  %\hyperref[label_name]{''link text''}
+                       %\hyperlink{label}{anchor caption}
+                       %\hypertarget{label}{link caption}
+\linespread{1.5}
+
+\title{Network Evolution}
+\author{M.K. Lau}
+%\date{}                                           % Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+
+\setcounter{tocdepth}{3}  %%activate to number sections
+\tableofcontents
+
+\section{04 Jul 2013}
+Evolution in a trophic network happens bi-directionaly even though the
+ecological structure of the trophic network is hierarchical.  
+
+This results from the phenotypic matching, i.e. a higher trophic level
+will tend to consume a lower trophic level within the range determined
+by its phenotype and vice-versa.
+
+Is this concept developed elsewhere? Maybe in the geographic mosaic
+lit or in Mike Wade's lit?
+
+If this is developed, this area is where the model should start
+from.
+
+What are the network wide consequences of this? Will certain
+structures yield stability or enable dynamics that allow for novelty
+to persist? Is novelty, diversity, self-organized at the local scale.
+
+
+\section{03 Jul 2013}
+
+Trophic networks are energetically conserved in the units of carbon. 
+
+What are the units of evolutionary networks?
+
+Individual Based Networks may be warranted as they do not require
+strict unit parameterizations. 
+
+Read Miguel's papers on network evolution. 
+
+%%%Glean the major questions in network evolution from the  main
+%%%papers on ecological networks
+
+%%%Read the network chapter in Nowak's book
+
+%%%Read the ecological interaction evolution literature
+
+
+\subsection*{Model Idea 1}
+
+\begin{itemize}
+\item Trophic network
+\item Fitness is directly linked to edibility
+\item Is a low quality, un-evovling node essential for evolutionary
+  stability?
+\end{itemize}
+
+<<>>=
+##Pairwise
+  print('initiate')
+                                        #Initiate a set of genotypes=phenotypes
+n1 <- 10000
+n2 <- (1/10)*n1
+
+###uniform pops
+sp1 <- sample(1:100,n1,replace=TRUE) #prey
+sp2 <- sample(1:100,n2,replace=TRUE) #predator
+##normal pops
+sp1 <- rnorm(n1,25,3) #prey
+sp2 <- rnorm(n2,25,3) #predator
+##
+mu1 <- mean(sp1)
+mu2 <- mean(sp2)
+sd1 <- sd(sp1)
+sd2 <- sd(sp2)
+ns <- 10000 #number of time steps
+mr <- 0.05 #mutation rate
+sd2 <- mean(sp2)/10 #sd of species 2 feeding
+                                        #
+print("start simulation")
+for (i in 2:ns){
+print(round(i/ns*100,0))
+                                        #Randomly choose a predator
+                                        #let it feed
+                                        #let it reproduce
+                                        #the prey is replaced randomly
+    #select a random sp2 and determine its feeding probability
+    sp2.act <- sample(1:length(sp2),1)
+    pfeed <- sp1
+    pfeed[sp1<=sp2[sp2.act]] <- pnorm(pfeed[sp1<=sp2[sp2.act]],sp2[sp2.act],sd2)
+    pfeed[sp1>sp2[sp2.act]] <- pnorm(pfeed[sp1>sp2[sp2.act]],sp2[sp2.act],sd2,lower.tail=TRUE)
+    #choose its prey (sp1.fed)
+    sp1.fed <- sample(1:length(sp1),1,prob=pfeed)
+    #replace a random sp2 with sp2.act (with chance of mutation)
+    rep2 <- sample((1:length(sp2))[-sp2.act],1)
+    sp2[rep2] <- sp2[sp2.act] + sample(c(-1,0,1),1,prob=c((mr/2),(1-mr),(mr/2)))
+    #replace fed with random
+    rep1 <- sample((1:length(sp1))[-sp1.fed],1)
+    sp1[sp1.fed] <- sp1[rep1] + sample(c(-1,0,1),1,prob=c((mr/2),(1-mr),(mr/2)))
+    #check that phenotypes stay within bounds
+    sp2[sp2>100] <- 100
+    sp2[sp2<0] <- 0
+    sp1[sp1>100] <- 100
+    sp1[sp1<0] <- 0
+    #measure mean phenotype and sd
+    mu1[i] <- mean(sp1)
+    mu2[i] <- mean(sp2)
+    sd1[i] <- sd(sp1)
+    sd2[i] <- sd(sp2)
+print(paste(mu1,mu2),sep=' ')
+
+}
+
+@ 
+
+
+\end{document}  
+
+
