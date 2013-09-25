@@ -57,11 +57,51 @@
   \end{enumerate}
 \end{enumerate}
 
-To Do List
+\section{25 Sep 2013}
+
+\subsection{Meeting with Tom}
+
+Discussed LCN project results (see github Issues)
+
 \begin{enumerate}
-\item Move other project folders into dissertation/projects
-\item Find lonsdorf paper and move into eff_com_div folder
+\item Finish wild analyses
+\item Start wild paper
+\item Start garden analyses
 \end{enumerate}
+
+Email Adrian about arthropod networks paper.
+
+\section{18 Sep 2013}
+
+\subsection{Meeting with Tom}
+\begin{itemize}
+\item lco
+\item 
+  \begin{itemize}
+  \item take home - interaction network structure is determined by the
+    ecological variation created by roughness which is genetically
+    based. 
+    \begin{enumerate}
+    \item roughness drives composition (cite lamit's work)
+    \item co-occurrence at the tree level tracks roughness in the wild
+      (c-score vs roughness)
+    \item co-occurrence at the tree level tracks roughness in the
+      garden (pit too?) (c-score vs roughness)
+    \item interaction networks inferred from co-occurrence patterns
+      similar in wild and garden (all positive patterns, two central
+      species) (mantel test)
+    \item interaction network structure tracks roughness (how to show this?)
+    \end{enumerate}
+  \end{itemize}
+\item ecd
+  \begin{itemize}
+  \item need to understand the math before moving forward
+  \item putting on a scale?
+  \item simple three species networks?
+  \item using lichen network as a real example?
+  \end{itemize}
+\end{itemize}
+
 
 \section{2013 Aug 30}
 

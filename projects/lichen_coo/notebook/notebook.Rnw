@@ -28,87 +28,31 @@
 \setcounter{tocdepth}{1}
 \tableofcontents
 
-\section{Tasks}
-\begin{enumerate}
-\item Finalize tree level analysis
-\item Where would you send this? Two papers? PLoS One?
-\item Look at notes on slides (in docs folder)
-\end{enumerate}
+\section{Analyses}
+
+<<>>=
+source('~/projects/dissertation/projects/onc_lichen/src/wild_stand.r')
+source('~/projects/dissertation/projects/onc_lichen/src/onc.r')
+source('~/projects/dissertation/projects/onc_lichen/src/pit.r')
+
+@ 
 
 
 \section{25 Sep 2013}
 
-\subsection{Meeting with Tom}
+Meeting with Tom, see dissertation/notebook.Rnw
 
-Discussion:
+\textbf{Analytics Outline}
+
 \begin{enumerate}
-\item SAP hold?
-\item prfb letter of rec
-
-\item wild: ses for tree level co-occurrence patterns
-\item wild: ses responds to tree roughness
-
+\item Look at the effect of height and tree (Can you lump upper and lower?)
+\item Basic community responses to roughness
+\item Stand level ecoSim analysis and Araujo modeling
+\item Tree level ecoSim analysis and Araujo modeling
+\item Trait network patterns?
+\item Effective community diversity?
+\item Information theoreitc patterns?
 \end{enumerate}
-
-notes:
-\begin{itemize}
-\item email cameron and rikke and lamit about interactions
-\item biofilm on coral and other analogous
-\item check ses calculations, starting with ses = 10
-\item how does an ses of 10 compare to other communities?
-\item resource co-occurrence pattern analysis
-\item do tree level network modeling and compare that average to the
-  stand level network structure
-\item plant traits and community evolution
-\item effective community diversity?
-\item efd - sensitivity for missing parameters
-\item think broad, how does this relate to other systems
-\item start on gardens
-\item think about information: a = -sum ti log tij/ti ?
-\item correlate ses and richness
-\item correlate with xgal
-\item succession turn over
-\item look at age
-\end{itemize}
-
-
-\section{meeting with tom 18sep2013}
-
-\begin{itemize}
-\item lco
-\item 
-  \begin{itemize}
-  \item take home - interaction network structure is determined by the
-    ecological variation created by roughness which is genetically
-    based. 
-    \begin{enumerate}
-    \item roughness drives composition (cite lamit's work)
-    \item co-occurrence at the tree level tracks roughness in the wild
-      (c-score vs roughness)
-    \item co-occurrence at the tree level tracks roughness in the
-      garden (pit too?) (c-score vs roughness)
-    \item interaction networks inferred from co-occurrence patterns
-      similar in wild and garden (all positive patterns, two central
-      species) (mantel test)
-    \item interaction network structure tracks roughness (how to show this?)
-    \end{enumerate}
-  \end{itemize}
-\item ecd
-  \begin{itemize}
-  \item need to understand the math before moving forward
-  \item putting on a scale?
-  \item simple three species networks?
-  \item using lichen network as a real example?
-  \end{itemize}
-\end{itemize}
-
-\section{tasks}
-\begin{itemize}
-\item try networks plotted with nodes arrayed along an axis of
-  environment (i.e. the points centered where their abundance is
-  highest)
-\item need to reconcile taxonomic differences
-\end{itemize}
 
 \section{18 sep 2013}
 
@@ -143,12 +87,6 @@ continuing analyses from the 17 sep 2013. see chunk below.
 \end{itemize}
 
 
-<<>>=
-source('~/projects/dissertation/projects/onc_lichen/src/wild_stand.r')
-source('~/projects/dissertation/projects/onc_lichen/src/onc.r')
-source('~/projects/dissertation/projects/onc_lichen/src/pit.r')
-
-@ 
 
 
 \section{16 sep 2013}
