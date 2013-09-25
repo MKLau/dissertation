@@ -6,7 +6,7 @@
 ##?????
 
 ###Tree data
-x <- read.csv('~/projects/dissertation/projects/lichen_coo/data/lco_Apr2012.csv')
+x <- read.csv('~/dissertation/projects/lichen_coo/data/lco_Apr2012.csv')
 x <- na.omit(x)
                                         #remove gnu.44 = FREMONT
 x <- x[x$tree!='gnu.44',]
@@ -21,7 +21,7 @@ x <- x[,-c(6,8,10,18,13,14,15,16)]
 quads <- paste(x$tree,x$quadrat)
 x.q <- split(x,quads)
                                         #environmental data from lamit
-env <- read.csv('~/projects/dissertation/projects/lichen_coo/data/Uinta2012_all_data_from_Lamit.csv')
+env <- read.csv('~/dissertation/projects/lichen_coo/data/Uinta2012_all_data_from_Lamit.csv')
 env <- env[is.na(env$Pct.Roughness)==FALSE,]
 env[,1] <- sub('\\?','',sub('\\.0','\\.',sub('\\_','\\.',sub('\\-','\\.',tolower(as.character(env[,1]))))))
 env[env[,1]=='ll.6_(znu.29)',1] <- 'll.6'
@@ -56,8 +56,12 @@ adonis(com.~ht)
 ###Co-occurrence C-score
 
 ##Whole Stand
-head(com)
-stand.null <- nullCom(x[,-c(1:4,ncol(x))])
+source('./seenetR.R')
+com.null <- nullCom(com)
+com.obs <- cscore(com)
+com.cs <- unlist(lapply(com.null,cscore))
+
+##stand.null <- nullCom(x[,-c(1:4,ncol(x))])
 stand.cs <- 
 scn <- co.net(x[,-c(1:4,ncol(x))]) #stand-level co-occurrence network
 gplot(abs(scn),displaylabels=TRUE,vertex.col='lightblue',gmode='graph',pad=1)
@@ -86,6 +90,8 @@ x.sim <- pblapply(x.t,nullCom)
 x.cs <- pblapply(x.sim,function(x) lapply(x,cscore))
 x.cs <- pblapply(x.cs,unlist)
                                         #dput(x.cs,file='~/projects/dissertation/projects/lichen_coo/results/x_cs.txt')
+test <- dget(file='~/dissertation/projects/lichen_coo/results/x_cs.txt')
+x.cs <- test
 hist(x.cs[[1]])
 abline(v=cs[[1]])
 ses <- cs*0

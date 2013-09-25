@@ -117,6 +117,7 @@ dep.net <- function(x='species in cols',zero.na=TRUE,prune=TRUE,diag.zero=TRUE){
 
 ###Calculate Stone and Roberts C-score
 cscore <- function(x,cu.mat=FALSE){
+  x[x!=0] <- 1 #force binary
   cu <- matrix(0,nrow=ncol(x),ncol=ncol(x))
   for (i in 1:ncol(x)){
     for (j in 1:ncol(x)){
