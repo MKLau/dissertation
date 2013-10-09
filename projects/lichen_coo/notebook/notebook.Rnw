@@ -37,6 +37,9 @@ source('~/projects/dissertation/projects/onc_lichen/src/pit.r')
 
 @ 
 
+\section{2 Oct 2013}
+
+Meeting with Tom, see dissertation/notebook.Rnw
 
 \section{25 Sep 2013}
 

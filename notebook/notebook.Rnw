@@ -57,6 +57,20 @@
   \end{enumerate}
 \end{enumerate}
 
+\section{2 Oct 2013}
+
+Meeting with Tom,
+
+\begin{enumerate}
+\item Wild stand, SES~roughness, P=0.0127
+\item Art's manuscript
+  \begin{itemize}
+  \item Read through Art's manuscript
+  \item See where networks fit
+  \item Re-do network analyses, write-up methods, add results for Art
+  \end{itemize}
+\end{enumerate}
+
 \section{25 Sep 2013}
 
 \subsection{Meeting with Tom}
