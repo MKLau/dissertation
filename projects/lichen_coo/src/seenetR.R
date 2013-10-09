@@ -99,7 +99,7 @@ dep.net <- function(x='species in cols',zero.na=TRUE,prune=TRUE,diag.zero=TRUE){
   out <- matrix(NA,nrow=ncol(x),ncol=ncol(x))
   for (i in 1:ncol(x)){
     for (j in 1:ncol(x)){
-      out[i,j] <- calcDepend(x[,i],x[j])
+      out[i,j] <- calcDepend(x[,i],x[,j])
     }
   }
   if (prune){

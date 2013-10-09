@@ -37,6 +37,22 @@ source('~/projects/dissertation/projects/onc_lichen/src/pit.r')
 
 @ 
 
+\section{9 Oct 2013}
+
+\textbf{Analysis Outline}
+\begin{enumerate}
+\item Resolve species
+\item Stand Level SES and Araujo Net
+\item Composition ~ Height
+\item SES ~ Richness
+\item SES ~ Abundance
+\item Age ~ Roughness
+\item SES ~ Roughness
+\item SES ~ Age
+\end{enumerate}
+
+
+
 \section{2 Oct 2013}
 
 Meeting with Tom, see dissertation/notebook.Rnw
