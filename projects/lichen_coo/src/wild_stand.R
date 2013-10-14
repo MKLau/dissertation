@@ -57,15 +57,15 @@ adonis(com.~ht)
 
 ##Whole Stand
 source('./seenetR.R')
-com.null <- nullCom(com)
-com.obs <- cscore(com)
-com.cs <- unlist(lapply(com.null,cscore))
-
-##stand.null <- nullCom(x[,-c(1:4,ncol(x))])
-stand.cs <- 
-scn <- co.net(x[,-c(1:4,ncol(x))]) #stand-level co-occurrence network
-gplot(abs(scn),displaylabels=TRUE,vertex.col='lightblue',gmode='graph',pad=1)
-
+library(sna)
+scn <- dget('~/projects/dissertation/projects/lichen_coo/results/scn.Rdata')
+scn <- scn[rownames(scn)!='folio_grey_black',colnames(scn)!='folio_grey_black']
+e.col <- sign(scn)
+e.col[e.col==1] <- 'grey'
+e.col[e.col==-1] <- 'red'
+gplot(abs(scn),displaylabels=TRUE,gmode='graph',pad=1.5,
+      edge.col=e.col,edge.lwd=abs(scn),
+      vertex.cex=1,vertex.col='lightblue')
 
 ##Tree scale
 x.split <- paste(x$tree,x$quadrat,sep='_')
@@ -78,7 +78,16 @@ x.t <- lapply(x.t,function(x) x[,-c(1:4,ncol(x))])
 cs <- unlist(lapply(x.t,cscore))
 prb <- tapply(env$Pct.Roughness,env.split,mean) #percent rough bark
 tid <- unlist(sapply(names(cs),function(x) strsplit(x,split='_')[[1]][1]))
-                      #
+                                        #co-occurrence nets
+conets.t <- lapply(x.t,co.net)
+net.d <- matrix(0,nrow=length(conets.t),ncol=length(conets.t))
+rownames(net.d) <- colnames(net.d) <- names(conets.t)
+for (i in 1:nrow(net.d)){
+  for (j in 1:ncol(net.d)){
+    net.d[i,j] <- sum(abs(conets.t[[i]]-conets.t[[j]])^2)
+  }
+}
+                                        #
 plot(cs~prb)
 abline(lm(cs~prb))
 summary(lm(cs~prb))
@@ -91,19 +100,102 @@ library(pbapply)
                                         #dput(x.cs,file='~/projects/dissertation/projects/lichen_coo/results/x_cs.txt')
 test <- dget(file='~/projects/dissertation/projects/lichen_coo/results/x_cs.txt')
 x.cs <- test
-hist(x.cs[[1]])
-abline(v=cs[[1]])
 ses <- cs*0
 for (i in 1:length(ses)){
   ses[i] <- (cs[i] - mean(x.cs[[i]])) / sd(x.cs[[i]])
 }
 ses[is.na(ses)] <- 0
-plot((ses~prb),xlab='Mean Percent Roughness',pch=19)
-abline(lm(ses~prb))
-summary(lm(ses~prb))
                                         #
 par(mfrow=c(4,4))
 for (i in 1:length(x.cs)){
-  hist(x.cs[[i]],main=names(x.cs)[i],xlab='C-Score',)
-  abline(v=cs[i],lty=1,col='red')
+  if (cs[i]<min(x.cs[[i]])){
+    plot(density(x.cs[[i]]),main=names(cs)[i],xlab='C-Score',xlim=c(cs[i],max(x.cs[[i]])))
+    abline(v=cs[i],lty=1,col='red')
+  }else if (cs[i]>max(x.cs[[i]])){
+    plot(density(x.cs[[i]]),main=names(cs)[i],xlab='C-Score',,xlim=c(min(x.cs[[i]]),cs[i]))
+    abline(v=cs[i],lty=1,col='red')
+  }
+  else{
+    plot(density(x.cs[[i]]),main=names(cs)[i],xlab='C-Score')
+    abline(v=cs[i],lty=1,col='red')
+  }
 }
+
+wild.p <- cs*0
+for (i in 1:length(wild.p)){
+  wild.p[i] <- length(x.cs[[i]][x.cs[[i]]<=cs[i]])/length(x.cs[[i]])
+}
+
+wild.coa <- cbind(ses=ses,p=wild.p)
+write.csv(wild.coa,file='~/projects/dissertation/projects/lichen_coo/results/tables/wild_coa_table.csv')
+
+###SES roughness, age, abundance, richness
+height <- as.character(sapply(rownames(com),function(x) strsplit(x,split='_')[[1]][2]))
+com.4555 <- com[height=='n45.55',]
+com.8090 <- com[height=='n80.90',]
+com.t <- com.4555+com.8090
+total.abundance <- apply(com.t,1,sum)
+species.richness <- apply(sign(com.t),1,sum)
+                                        #
+plot((ses~prb),xlab='Mean Percent Roughness',ylab='SES',pch=19,font.lab=2)
+abline(lm(ses~prb))
+summary(lm(ses~prb))
+                                        #
+plot((ses~total.abundance),xlab='Total Abundance',ylab='SES',pch=19,font.lab=2)
+abline(lm(ses~total.abundance))
+summary(lm(ses~total.abundance))
+                                        #
+plot((ses~species.richness),xlab='Species Richness',ylab='SES',pch=19,font.lab=2)
+abline(lm(ses~species.richness))
+summary(lm(ses~species.richness))
+                                        #Age
+age <- read.csv('~/projects/dissertation/projects/lichen_coo/data/UintaMaster_LichenHeritNL_FallSpring_2012_ForLau.csv')
+                                        #predict age
+gnu19.dbh <- age$DBH.cm_01[34]
+new <- data.frame(DBH.cm_01=seq(min(age$DBH.cm_01),max(age$DBH.cm_01),by=0.1))
+age <- na.omit(age)
+pairs(cbind(age=age$AgeFinal.U,bole.circ=age$Bole.Circ.cm,DBH=age$DBH.cm_01,height=age$Height.m),lower.panel=panel.cor)
+pred.age <- predict(lm(AgeFinal.U~DBH.cm_01,data=age),new)
+plot(pred.age~new[,1])
+gnu19.age <- as.numeric(pred.age[new[,1]==gnu19.dbh])
+                                        #
+age <- read.csv('~/projects/dissertation/projects/lichen_coo/data/UintaMaster_LichenHeritNL_FallSpring_2012_ForLau.csv')
+age <- data.frame(tree.id=age[,1],age.final=age$AgeFinal.U)
+age[,1] <- tolower(age[,1])
+age[,1] <- sub('_','\\.',age[,1])
+age[,1] <- sub('-','\\.',age[,1])
+age[,1] <- sub('\\?','',age[,1])
+age[,1] <- sub('\\.0','\\.',age[,1])
+age[age[,1]=='gnu.85.1ftaway',1] <- 'gnu.85'
+all(names(ses)%in%age[,1])
+                                        #
+tree.age <- numeric(length(ses))
+tree.age <- age[match(names(ses),age[,1]),2]
+tree.age[is.na(tree.age)] <- gnu19.age
+                                        #
+par(mfrow=c(1,2))
+plot(prb~tree.age,xlab='Tree Age (years)',ylab='Percent Bark Roughness',font.lab=2,pch=19)
+abline(lm(prb~tree.age))
+summary(lm(prb~tree.age))
+plot(ses~tree.age)
+abline(lm(ses~tree.age))
+summary(lm(ses~tree.age))
+                                        #
+library(sem)
+###tree.age -> prb -> ses
+model.sem <- specifyModel(file='~/projects/dissertation/projects/lichen_coo/src/sem_model.txt')
+   sem.data <- cbind(tree.age,prb,ses)
+                                        #transforms
+###
+                                        #sem fitting and analysis
+   Sigma <- var(sem.data)
+   sem.fit <- sem(model.sem,S=Sigma,N=nrow(sem.data))
+   summary(sem.fit)
+   modIndices(sem.fit)
+                                        #effects(sem.fit)
+                                        #hist(residuals(sem.fit))
+                                        #stdCoef(sem.fit)
+pathDiagram(sem.fit,file='~/projects/dissertation/projects/lichen_coo/results/sem_coo',
+               edge.labels='values',standardize=TRUE
+               ,ignore.double=TRUE,size=c(12,12),edge.font=c("Arial", 10),
+               graphics.fmt='png') #export to graphviz

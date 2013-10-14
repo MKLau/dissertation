@@ -42,8 +42,8 @@ source('~/projects/dissertation/projects/onc_lichen/src/pit.r')
 \textbf{Analysis Outline}
 \begin{enumerate}
 \item Resolve species
-\item Stand Level SES and Araujo Net
 \item Composition ~ Height
+\item Stand Level SES and Araujo Net
 \item SES ~ Richness
 \item SES ~ Abundance
 \item Age ~ Roughness
@@ -51,7 +51,18 @@ source('~/projects/dissertation/projects/onc_lichen/src/pit.r')
 \item SES ~ Age
 \end{enumerate}
 
-
+\textbf{Wild Results}
+\begin{enumerate}
+\item Lec and Phy combined
+\item Height doesn't influence comp (P = 0.717)
+\item Stand SES = -20.5079, P $<<< 0.0002$, See ``results/figs/Wild Stand-level CoNet.png''
+\item C-scores are not significantly related to roughness (P = 0.169)
+\item SES varies (see ``wild stand-level cscore densities), but generally negative (Mean = -4.2521, SE = 0.9611965)
+\item SES negatively correlated with Roughness (Percent Rough Bark) (P
+  = 0.0127, R2 = 0.417)
+\item Age predicts roughness (R2 = 0.2959, P = 0.044) but not SES (P =0.0983)
+\item SEM shows that age prdicts roughness predicts SES
+\end{enumerate}
 
 \section{2 Oct 2013}
 
