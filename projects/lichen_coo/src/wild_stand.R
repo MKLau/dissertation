@@ -3,7 +3,8 @@
 ###25 Sep 2013
 
 ###Meta
-##?????
+##Site = Uintah, UT
+##Study area = 225 * 463 = 104,175 m2 = 0.104175 km2
 
 ###Tree data
 x <- read.csv('~/projects/dissertation/projects/lichen_coo/data/lco_Apr2012.csv')
@@ -63,9 +64,37 @@ scn <- scn[rownames(scn)!='folio_grey_black',colnames(scn)!='folio_grey_black']
 e.col <- sign(scn)
 e.col[e.col==1] <- 'grey'
 e.col[e.col==-1] <- 'red'
+v.cex <- apply(com,2,sum)[colnames(com)!='folio_grey_black']
+v.cex <- log(v.cex,10)
+v.cex <- v.cex * (1/min(v.cex))
+v.cex <- v.cex/2
 gplot(abs(scn),displaylabels=TRUE,gmode='graph',pad=1.5,
       edge.col=e.col,edge.lwd=abs(scn),
-      vertex.cex=1,vertex.col='lightblue')
+      vertex.cex=v.cex,vertex.col='lightblue')
+
+##Centrality analysis
+scn.centrality <- degree(scn)
+scn.abund <- apply(com,2,sum)
+scn.rel <- scn.abund/sum(scn.abund)*100
+names(scn.rel)[4] <- 'fgb'
+                                        #
+par(mfrow=c(1,2))
+plot(scn.centrality~scn.rel[c(-4)])
+abline(lm(scn.centrality~scn.rel[c(-4)]))
+summary(lm(scn.centrality~scn.rel[c(-4)]))
+                                        #
+plot(scn.centrality[-1]~scn.rel[c(-1,-4)])
+abline(lm(scn.centrality[-1]~scn.rel[c(-1,-4)]))
+summary(lm(scn.centrality[-1]~scn.rel[c(-1,-4)]))
+                                        #
+par(mfrow=c(1,2))
+barplot(scn.centrality[order(scn.centrality,decreasing=TRUE)],
+        names=rownames(scn)[order(scn.centrality,decreasing=TRUE)],
+        las=2,ylab='Node Level Centrality')
+barplot(scn.rel[order(scn.rel,decreasing=TRUE)],
+        names=names(scn.rel)[order(scn.rel,decreasing=TRUE)],
+        las=2,ylab='Relative Total Abundance')
+
 
 ##Tree scale
 x.split <- paste(x$tree,x$quadrat,sep='_')
@@ -199,3 +228,13 @@ pathDiagram(sem.fit,file='~/projects/dissertation/projects/lichen_coo/results/se
                edge.labels='values',standardize=TRUE
                ,ignore.double=TRUE,size=c(12,12),edge.font=c("Arial", 10),
                graphics.fmt='png') #export to graphviz
+
+###Microsite
+
+env <- read.csv('~/projects/dissertation/projects/lichen_coo/data/UintaMaster_LichenHeritNL_FallSpring_2012_ForLau.csv')
+env[,1] <- sub('\\?','',sub('\\.0','\\.',sub('\\_','\\.',sub('\\-','\\.',tolower(as.character(env[,1]))))))
+env[env[,1]=='ll.6_(znu.29)',1] <- 'll.6'
+env[env[,1]=='gnu.85.1ftaway',1] <- 'gnu.85'
+env <- env[match(names(ses),env[,1]),]
+range(na.omit(env$Height.m))
+

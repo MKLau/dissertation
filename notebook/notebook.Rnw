@@ -57,6 +57,42 @@
   \end{enumerate}
 \end{enumerate}
 
+\section{16 Oct 2013}
+
+Meeting with Tom:
+
+Think about research network.
+\begin{itemize}
+\item Aaron and the pitcher plants
+\item Urban design and urban metabolism
+\end{itemize}
+
+\begin{enumerate}
+\item Focusing on trait variation. What's Tom's suggestion?
+  \begin{enumerate}
+  \item "Phenotypic" trait variation
+  \item Tie in with Sunset lit
+  \item Fungal Ecology, Oecologia, Report for Ecology (genetics
+    without genetics), Network Ecology?
+  \item Look at bark traits from Barbour paper too
+  \item Look for other bark roughess genetics papers
+  \item 
+  \end{enumerate}
+\item Can you write a genetics paper without roughness?
+\item Network perspective?
+\end{enumerate}
+
+
+
+From Tom's comments on the outline:
+\begin{itemize}
+\item Make results in abstract agree with presentation in body
+\item Focus on trait variation effects and end with a conclusion that
+  the genetic component should be investigated
+\item Get the genetics for Goncho's trees and see where they fall out
+  on Matt's hybrid index
+\end{itemize}
+
 \section{2 Oct 2013}
 
 Meeting with Tom,

@@ -12,8 +12,20 @@ garden.data <- read.csv('~/projects/dissertation/projects/lichen_coo/data/LCO_da
 garden <- substr(garden.data[,1],2,2)
 garden[garden=='P'] <- 'pit'
 garden[garden!='pit'] <- 'onc'
-                                        #separate onc
+                                        #separate gardens
 onc <- garden.data[garden=='onc',]
+pit <- garden.data[garden=='pit',]
+                                        #onc network
+par(mfrow=c(1,2))
+onc.cn <- co.net(onc[,7:15])
+onc.dn <- dep.net(onc[,7:15])
+onc.graph <- onc.dn[apply(onc.dn,1,sum)!=0,apply(onc.dn,2,sum)!=0]
+my.gplot(onc.graph)
+                                        #
+pit.cn <- co.net(pit[,7:15])
+pit.dn <- dep.net(pit[,7:15])
+pit.graph <- pit.dn[apply(pit.dn,1,sum)!=0,apply(pit.dn,2,sum)!=0]
+my.gplot(pit.graph)
 
 ###Composition with height
 library(vegan)
@@ -31,23 +43,6 @@ detach(env)
 ###SES values
 library(pbapply)
 source('./seenetR.R')
-
-##stand level
-                                        #onc network
-onc.cn <- co.net(onc[,7:15])
-onc.dn <- dep.net(onc[,7:15])
-onc.graph <- onc.dn[apply(onc.dn,1,sum)!=0,apply(onc.dn,2,sum)!=0]
-my.gplot(onc.dn)
-onc.deg <- degree(onc.dn)
-names(onc.deg) <- rownames(onc.cn)
-barplot(onc.deg,ylab='Centrality')
-                                        #co-occurrence
-                                        #stand.null <- nullCom(onc[,7:15])
-                                        #stand.null <- lapply(stand.null,cscore)
-stand.ses <- (cscore(onc[,7:15]) - mean(stand.null)) / sd(stand.null)
-
-
-##tree level 
                                         #separate trees
 onc.q <- split(onc,paste(onc[,1],onc[,3],onc[,4]))
 onc.q <- lapply(onc.q,function(x) x[,7:15])
@@ -60,7 +55,6 @@ onc.ses <- dget(file='~/projects/dissertation/projects/lichen_coo/data/onc_ses.R
 ## for (i in 1:length(onc.ses)){
 ##   onc.ses[i] <- (obs.cs[i] - mean(onc.cs[[i]])) / sd(onc.cs[[i]])
 ## }
-
 
 
 ###Genotype and Roughness in the Garden
