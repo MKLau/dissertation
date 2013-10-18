@@ -12,8 +12,13 @@ garden.data <- read.csv('~/projects/dissertation/projects/lichen_coo/data/LCO_da
 garden <- substr(garden.data[,1],2,2)
 garden[garden=='P'] <- 'pit'
 garden[garden!='pit'] <- 'onc'
+
                                         #separate onc
 onc <- garden.data[garden=='onc',]
+					#tree overlap between years
+unique(onc$Tree[onc$Year=='2010']) %in% unique(onc$Tree[onc$Year=='2011'])
+unique(onc$Tree[onc$Year=='2011']) %in% unique(onc$Tree[onc$Year=='2010'])
+onc <- onc[onc$Year=='2011',]
 
 ###Composition with height
 library(vegan)
@@ -22,11 +27,7 @@ com <- do.call(rbind,lapply(com,function(x) apply(x,2,sum)))
 com <- cbind(com,ds=rep(1,nrow(com)))
 env <- data.frame(do.call(rbind,sapply(rownames(com),strsplit,split=' ')))
 colnames(env) <- c('tree','year','height')
-attach(env)
-
-adonis(com~height)
-
-detach(env)
+attach(env);adonis(com~height);detach(env)
 
 ###SES values
 library(pbapply)
@@ -42,29 +43,33 @@ onc.deg <- degree(onc.dn)
 names(onc.deg) <- rownames(onc.cn)
 barplot(onc.deg,ylab='Centrality')
                                         #co-occurrence
-                                        #stand.null <- nullCom(onc[,7:15])
-                                        #stand.null <- lapply(stand.null,cscore)
+stand.null <- unlist(dget(file='../data/onc_stand_null.Rdata'))
 stand.ses <- (cscore(onc[,7:15]) - mean(stand.null)) / sd(stand.null)
-
+stand.ses.p <- length(stand.null[stand.null<=stand.ses])/length(stand.null)
 
 ##tree level 
                                         #separate trees
-onc.q <- split(onc,paste(onc[,1],onc[,3],onc[,4]))
+onc.q <- split(onc,paste(onc[,1],onc[,3],onc[,2]))
 onc.q <- lapply(onc.q,function(x) x[,7:15])
 obs.cs <- unlist(lapply(onc.q,cscore))
-onc.ses <- dget(file='~/projects/dissertation/projects/lichen_coo/data/onc_ses.Rdata')
-## nonc.sim <- pblapply(onc.q,function(x) if (sum(sign(apply(x,2,sum)))>1){nullCom(x)}else{NA})
-## onc.cs <- pblapply(onc.sim,function(x) if (any(is.na(x[[1]]))){NA}else{lapply(x,cscore)})
-## onc.cs <- pblapply(onc.cs,unlist)
-## onc.ses <- obs.cs*0
-## for (i in 1:length(onc.ses)){
-##   onc.ses[i] <- (obs.cs[i] - mean(onc.cs[[i]])) / sd(onc.cs[[i]])
-## }
+onc.ses <- dget('../data/onc_tree_ses_2011.Rdata')
+names(onc.ses) <- names(onc.q)
+     # onc.sim <- pblapply(onc.q,function(x) if (sum(sign(apply(x,2,sum)))>1){nullCom(x)}else{NA})
+     # onc.cs <- pblapply(onc.sim,function(x) if (any(is.na(x[[1]]))){NA}else{lapply(x,cscore)})
+     # onc.cs <- pblapply(onc.cs,unlist)
+     # onc.ses <- obs.cs*0
+     # for (i in 1:length(onc.ses)){
+     #   onc.ses[i] <- (obs.cs[i] - mean(onc.cs[[i]])) / sd(onc.cs[[i]])
+     # }
 
+###Genotype
+genotype <- as.character(sapply(names(onc.q),function(x) unlist(strsplit(x,split=' '))[3]))
+onc.ses[is.na(onc.ses)] <- 0
+summary(aov(onc.ses~genotype))
+plot(onc.ses~factor(genotype))
 
-
-###Genotype and Roughness in the Garden
-rough <- read.csv('~/projects/dissertation/projects/lichen_coo/data/ONC_raw_roughness.csv')
+###Roughness in the Garden
+rough <- read.csv('../data/ONC_raw_roughness.csv')
 rough <- na.omit(rough[,1:5])
                                         #remove southern quadrats
 rough[,3] <- as.character(rough[,3])
@@ -93,6 +98,8 @@ ses.data <- cbind(ses=onc.ses,rough=onc.rough)
 plot(ses~rough,data=ses.data)
 abline(lm(ses~rough,data=data.frame(ses.data)))
 summary(lm(ses~rough,data=data.frame(ses.data)))
+
+##Genotype test
 
 ###Correlation of wild and onc network structure
 

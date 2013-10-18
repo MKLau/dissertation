@@ -41,7 +41,15 @@ source('~/projects/dissertation/projects/onc_lichen/src/pit.r')
 
 \textbf{ONC Analyses}
 \begin{enumerate}
-\item 
+\item Stand level SES = -44.86902, P < 0.001
+\item Tree
+  \begin{enumerate}
+  \item Upper differs from lower, but this might not matter for the
+    co-occurrence patterns, only for the scale at which they manifest
+    within a tree
+  \item Limit to 2011 only (2011 has all of 2010 trees plus more)
+  \item 
+  \end{enumerate}
 \end{enumerate}
 
 
