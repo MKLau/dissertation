@@ -16,6 +16,7 @@ pit <- garden.data[garden=='pit',]
                                         #
 pit.q <- split(pit,paste(pit$Tree,pit$Geno))
 pit.tree <- unlist(sapply(names(pit.q),function(x) strsplit(x,split=' ')[[1]][1]))
+
 pit.geno <- unlist(sapply(names(pit.q),function(x) strsplit(x,split=' ')[[1]][2]))
                                         #remove 1012 for now
 pit.q <- pit.q[pit.geno!='1012']

@@ -37,7 +37,17 @@ source('~/projects/dissertation/projects/onc_lichen/src/pit.r')
 
 @ 
 
+\section{21 Oct 2013}
+
+\textbf{Note on Pit data collection}
+Pit data collection in 2012 was done to extend the dataset collected
+in 2011 by collection more trees and the upper quadrats. These have
+not been entered.
+
+
 \section{18 Oct 2013}
+
+Neither Pit nor ONC show an effect of genotype or roughness on composition.
 
 \textbf{ONC Analyses}
 \begin{enumerate}

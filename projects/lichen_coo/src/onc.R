@@ -18,7 +18,7 @@ onc <- garden.data[garden=='onc',]
 					#tree overlap between years
 unique(onc$Tree[onc$Year=='2010']) %in% unique(onc$Tree[onc$Year=='2011'])
 unique(onc$Tree[onc$Year=='2011']) %in% unique(onc$Tree[onc$Year=='2010'])
-onc <- onc[onc$Year=='2011',]
+                                        #onc <- onc[onc$Year=='2011',]
 
 ###Composition with height
 library(vegan)
@@ -46,7 +46,7 @@ barplot(onc.deg,ylab='Centrality')
 stand.null <- unlist(dget(file='../data/onc_stand_null.Rdata'))
 stand.ses <- (cscore(onc[,7:15]) - mean(stand.null)) / sd(stand.null)
 stand.ses.p <- length(stand.null[stand.null<=stand.ses])/length(stand.null)
-
+c(stand.ses,stand.ses.p)
 ##tree level 
                                         #separate trees
 onc.q <- split(onc,paste(onc[,1],onc[,3],onc[,2]))
@@ -70,41 +70,26 @@ plot(onc.ses~factor(genotype))
 
 ###Roughness in the Garden
 rough <- read.csv('../data/ONC_raw_roughness.csv')
-rough <- na.omit(rough[,1:5])
-                                        #remove southern quadrats
-rough[,3] <- as.character(rough[,3])
-side <- sapply(rough[,3],function(x) unlist(strsplit(x,split=' '))[1])
-rough <- rough[side=='North',]
-                                        #reformat
-rough[,1] <- as.character(rough[,1])
-rough[,1] <- sub('\\-','\\.',rough[,1])
-rough[rough[,3]=='North 45-55',3] <- 'n45.55'
-rough[rough[,3]=='North 80-90',3] <- 'n80.90'
-rough.tq <- paste(rough[,1],rough[,3])
-rough.tq <- sub('\\.0','\\.',rough.tq)
-onc.tq <- do.call(rbind,sapply(names(onc.ses),strsplit,split=' '))
-onc.tq <- paste(onc.tq[,1],onc.tq[,3])
+rough <- rough[as.character(rough[,1])!="",1:5]
+                                        #isolate north quadrats
+rough <- rough[sapply(rough[,3],function(x) substr(x,1,1)=='N'),]
+                                        #average roughness
+avg.rough <- tapply(rough[,5],rough[,1],mean)
+r.tree <- names(avg.rough)
+r.tree <- sub('-','\\.',r.tree)
+r.tree <- sub('\\.0','\\.',r.tree)
+names(avg.rough) <- r.tree
+                                        #match to ses values
+ses.tree <- as.character(sapply(names(onc.ses),function(x) unlist(strsplit(x,split=' '))[1]))
+avg.rough <- avg.rough[match(ses.tree,r.tree)]
+all(ses.tree==names(avg.rough))
                                         #
-onc.rough <- numeric(length(onc.tq))
-for (i in 1:length(onc.tq)){
-  if (onc.tq[i]%in%rough.tq){
-    onc.rough[i] <- rough[rough.tq==onc.tq[i],5]
-  }else{
-    onc.rough[i] <- NA
-  }
-}
+summary(lm(onc.ses~avg.rough))
 
-ses.data <- cbind(ses=onc.ses,rough=onc.rough)
-plot(ses~rough,data=ses.data)
-abline(lm(ses~rough,data=data.frame(ses.data)))
-summary(lm(ses~rough,data=data.frame(ses.data)))
-
-##Genotype test
-
-###Correlation of wild and onc network structure
+                                        #look at compositional effect of genotype
+com <- do.call(rbind,lapply(onc.q,function(x) apply(x,2,sum)))
+com. <- cbind(com,ds=rep(1,nrow(com)))
+adonis(com.~factor(genotype))
+adonis(com.~avg.rough)
 
 ###NEED TO RECONCILE TAXONOMIC DIFFERENCES
-wild.net <- net.graph
-onc.net <- onc.dn
-colnames(wild.net)
-colnames(onc.net)
