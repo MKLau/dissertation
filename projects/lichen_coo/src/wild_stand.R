@@ -6,7 +6,8 @@
 ##Site = Uintah, UT
 ##Study area = 225 * 463 = 104,175 m2 = 0.104175 km2
 
-###Tree data
+
+###lichen data
 x <- read.csv('~/projects/dissertation/projects/lichen_coo/data/lco_Apr2012.csv')
 x <- na.omit(x)
                                         #remove gnu.44 = FREMONT
@@ -22,6 +23,9 @@ x <- x[,-c(6,8,10,18,13,14,15,16)]
 quads <- paste(x$tree,x$quadrat)
 x.q <- split(x,quads)
                                         #environmental data from lamit
+wenv <- read.csv('~/projects/dissertation/projects/lichen_coo/data/uintah_trees/uintah_2012_lco_trees.csv')
+wenv$tree <- sub('\\.0','\\.',wenv$tree) #remove leading zeros
+
 env <- read.csv('~/projects/dissertation/projects/lichen_coo/data/Uinta2012_all_data_from_Lamit.csv')
 env <- env[is.na(env$Pct.Roughness)==FALSE,]
 env[,1] <- sub('\\?','',sub('\\.0','\\.',sub('\\_','\\.',sub('\\-','\\.',tolower(as.character(env[,1]))))))
