@@ -29,3 +29,5 @@ com. <- cbind(com,ds=rep(1,nrow(com)))
 com.rel <- apply(com.,2,function(x) x/max(x))
 com.rel[is.na(com.rel)] <- 0
 adonis(com.rel~pit.geno)
+###SES analyses
+

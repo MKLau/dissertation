@@ -37,12 +37,69 @@ source('~/projects/dissertation/projects/onc_lichen/src/pit.r')
 
 @ 
 
+\section{22 Oct 2013}
+
+Got wild stand tree data from Lamit. Use data/unitau_trees/FAX_20131022_1382474004_17.pdf.
+
+\begin{itemize}
+\item Bayesian stats?
+\item New Paper Idea: Wild stand and tree level analyses
+\item New Paper Idea: Mantel of garden and wild or QAP (Common garden similar to wild)
+\item New Paper Idea: Replicated genotypes in common garden
+  \begin{itemize}
+  \item Genetic distance = email nash
+  \item email Andy about next gen sequencing
+  \item Non-bark effects
+  \end{itemize}
+\item genotype level co-occurrence analyses and network models
+\item tannins
+\item Check entry error
+\item SEM?
+\item Genetic similarity?
+\end{itemize}
+
+ONC preliminary analyses:
+
+\begin{itemize}
+\item Stand level network structure is significant (see SES =
+  -44.8416, P < 0.001)
+\item Roughness ~ genotype P = 0.000001
+\item SES ~ genotype P = 0.318
+\item Degree ~ genotype P = 0.053
+\item Degree ~ rougness P = 0.0661
+\item Centrality ~ genotype P = 0.0783
+\item Centrality ~ roughness P = 0.185
+\item Network similarity ~ genotype = 0.273
+\end{itemize}
+
+
 \section{21 Oct 2013}
+
+\textbf{Preliminary Analysis of ONC Co-occurrence Patterns}
+
+For next set of analyses, re-do ses and make non-significant ses
+values zero.
+
+\begin{itemize}
+\item Removed RL6 due to low sample size and weird tree
+\item Also removed N1.31 as it is also an odd tree for 1008
+\iem Relativized composition correlates with genotype and roughness
+\item SES doesn't correlate with genotype or roughness
+\item Network similarity doesn't correlated with genotype or roughness
+\item Network degree does correlated with genotype (P = 0.053) and
+  marginally with roughness (P = 0.066)
+\item Network centrality marginally correlated with genotype (P =
+  0.074) but not roughness
+\end{itemize}
+
+Stand and tree SES calcuations are now handled by the src/onc_ses.R
+script for ease of access to server. Output data are in
+data/onc_stand_null.Rdata and data/onc_tree_ses.Rdata.
 
 \textbf{Note on Pit data collection}
 Pit data collection in 2012 was done to extend the dataset collected
 in 2011 by collection more trees and the upper quadrats. These have
-not been entered.
+not been entered. Pit data from 2011 only has 45.55 quadrat.
 
 
 \section{18 Oct 2013}
