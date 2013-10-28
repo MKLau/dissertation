@@ -38,10 +38,40 @@ source('~/projects/dissertation/projects/onc_lichen/src/pit.r')
 @ 
 
 \section{28 Oct 2013}
+
+\textbf{Wild Stand Analysis Summary}
+- Network modeling of co-occurrence patterns at the stand scale
+revealed statistically significant structure (Fig1. Stand Network
+Model)
+- Abundance not correlated with centrality (P = 0.795)
+- Trees varied in co-occurrence patterns (Table 1. SES and P-values)
+- Geographic distance did not explain co-occurrence patterns (Mantel,
+P = 0.78) or bark roughness (P = 0.80)
+- Bark roughness significantly affected co-occurrence patters (r2 =
+0.42, P = 0.0127, Fig2. Scatterplot SES)
+- Tree age did not directly affect co-occurrence patterns (P = 0.098)
+but did indirectly influence co-occurrence patterns via a significant
+affect on roughness (SEM: chi2=0.38, P = 0.54, Fig. 3 ?)
+
+
+
+
+
+
+
 \begin{enumerate}
 \item enter wild stand tree data 
 \item send tree data to lamit
 \item check data
+\item Final analyses
+\item write up results
+\end{enumerate}
+
+Final Analyses
+\begin{enumerate}
+\item Microsite
+\item Establishment (i.e. tree age)
+\item Tree traits
 \end{enumerate}
 
 \section{22 Oct 2013}

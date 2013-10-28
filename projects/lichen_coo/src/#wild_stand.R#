@@ -302,8 +302,8 @@ gplot(abs(scn),displaylabels=TRUE,gmode='graph',pad=1.5,
 summary(lm(ses~prb))
 shapiro.test(residuals(summary(lm(ses~prb))))
                                         #affect of age on ses
-summary(lm(ses~prb))
-shapiro.test(residuals(summary(lm(ses~prb))))
+summary(lm(ses~tree.age))
+shapiro.test(residuals(summary(lm(ses~tree.age))))
                                         #mantels
                                         #microsite
                                         # geographic distance
