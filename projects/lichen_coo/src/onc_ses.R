@@ -4,12 +4,17 @@ library(vegan)
 library(pbapply)
 print('Loading data')
 garden.data <- read.csv('../data/LCO_data_ONC_PIT.csv')
-garden <- substr(garden.data[,1],2,2)
-garden[garden=='P'] <- 'pit'
-garden[garden!='pit'] <- 'onc'
+                                        #remove genotype RL6 and N1.31
+garden.data <- garden.data[garden.data$Geno!='RL6',]
+garden.data <- garden.data[garden.data$Tree!='N1.31',]
                                         #separate onc
+garden.data[,1] <- as.character(garden.data[,1])
+g1 <- substr(garden.data[,1],2,2)
+g1[g1!='P'] <- 'onc'
+                                        #separate onc
+onc <- garden.data[g1=='onc',]
 print('ONC analyses')
-onc <- garden.data[garden=='onc',]
+                                        #
 ###Merge species groups
 print('Merge physcia species')
 Phy <- apply(onc[,12:14],1,sum) #make phy out of pmel,pads,pund
@@ -28,15 +33,13 @@ onc.p <- obs.cs*0
 for (i in 1:length(onc.ses)){
   print(i)
   onc.ses[i] <- (obs.cs[i] - mean(onc.cs[[i]])) / sd(onc.cs[[i]])
-  onc.p[i] <- length(onc.cs[[i]][onc.cs[[i]]<=obs.cs[i]])/length(onc.cs[i])
+  onc.p[i] <- length(onc.cs[[i]][onc.cs[[i]]<=obs.cs[i]])/length(onc.cs[[i]])
 }
 print('Writing to: ../data/onc_tree_ses.Rdata')
 dput(onc.cs,'../data/onc_tree_cs.Rdata')
 dput(onc.ses,'../data/onc_tree_ses.Rdata')
 dput(onc.p,'../data/onc_tree_pval.Rdata')
-					#stand level
-# print('Stand level co-occurrence')
-# stand.null <- nullCom(onc[,7:ncol(onc)])
-# stand.null <- lapply(stand.null,cscore)
-# print('Writing to: ../data/onc_stand_null.Rdata')
-# dput(stand.null,file='../data/onc_stand_null.Rdata')
+					#stand
+stand.null <- nullCom(onc[,7:15])
+stand.null <- lapply(stand.null,cscore)
+dput(stand.null,file='../data/onc_stand_null.Rdata')
