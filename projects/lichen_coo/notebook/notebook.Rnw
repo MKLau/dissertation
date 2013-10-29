@@ -54,11 +54,6 @@ but did indirectly influence co-occurrence patterns via a significant
 affect on roughness (SEM: chi2=0.38, P = 0.54, Fig. 3 ?)
 
 
-
-
-
-
-
 \begin{enumerate}
 \item enter wild stand tree data 
 \item send tree data to lamit
