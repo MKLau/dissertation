@@ -22,7 +22,7 @@ onc. <- onc[,-12:-14]
 onc <- data.frame(onc.,Phy)
 					#tree level
 print('Tree level co-occurrence')
-onc.q <- split(onc,paste(onc[,1],onc[,3],onc[,2]))
+onc.q <- split(onc,paste(onc[,1],onc[,2]))
 onc.q <- lapply(onc.q,function(x) x[,7:ncol(x)])
 obs.cs <- unlist(lapply(onc.q,cscore))
 onc.sim <- pblapply(onc.q,function(x) if (sum(sign(apply(x,2,sum)))>1){nullCom(x)}else{NA})

@@ -35,6 +35,8 @@ com <- cbind(com,ds=rep(1,nrow(com)))
 env <- data.frame(do.call(rbind,sapply(rownames(com),strsplit,split=' ')))
 colnames(env) <- c('tree','year','height')
 attach(env);adonis(com~height);detach(env)
+
+###modeling
 library(pbapply)
 source('./seenetR.R')
 ###Co-occurrences
@@ -55,9 +57,10 @@ stand.ses.p <- length(stand.null[stand.null<=stand.ses])/length(stand.null)
 c(stand.ses,stand.ses.p)
 ##tree level 
                                         #separate trees
-onc.q <- split(onc,paste(onc[,1],onc[,3],onc[,2]))
+onc.q <- split(onc,paste(onc[,1],onc[,2]))
 onc.q <- lapply(onc.q,function(x) x[,7:ncol(x)])
 obs.cs <- unlist(lapply(onc.q,cscore))
+                                        #load ses values
 onc.ses <- dget('../data/onc_tree_ses.Rdata')
 onc.p <- dget('../data/onc_tree_pval.Rdata')
 ses.zero.p <- TRUE;ses.zero.sd2 <- FALSE
@@ -66,6 +69,7 @@ if (ses.zero.sd2){onc.ses[abs(onc.ses) < 2] <- 0}else{}
 onc.tn <- lapply(onc.q,dep.net) #tree level networks
 names(onc.ses) <- names(onc.q)[names(onc.q)!='']
 onc.ses[is.na(onc.ses)] <- 0
+onc.ses <- onc.ses[is.na(names(onc.ses))!=TRUE]
 onc.centrality <- unlist(lapply(onc.tn,function(x) centralization(x,FUN='degree')))
 onc.deg <- unlist(lapply(onc.tn,function(x) length(x[x!=0])))
 ###Roughness in the Garden
@@ -85,7 +89,6 @@ avg.rough <- avg.rough[match(ses.tree,r.tree)]
 all(ses.tree==names(avg.rough))
 
 ###Genotype
-genotype <- as.character(sapply(names(onc.q),function(x) unlist(strsplit(x,split=' '))[3]))
-                                        #remove outlier trees
-rm.n1.31 <- (names(onc.ses)!='N1.31 2011 1008')
-rm.rl6 <- (genotype!='RL6')
+genotype <- as.character(sapply(names(onc.q),function(x) unlist(strsplit(x,split=' '))[2]))
+###Analyses
+onc.ses
