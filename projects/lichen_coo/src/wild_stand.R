@@ -1,10 +1,11 @@
-wqen###LCO - Analysis of the wild stand co-occurrence data in Uintah, UT
+###LCO - Analysis of the wild stand co-occurrence data in Uintah, UT
 ###Taken out of the notebook.Rnw file chunk
 ###25 Sep 2013
 
 ###Meta
 ##Site = Uintah, UT
 ##Study area = 225 * 463 = 104,175 m2 = 0.104175 km2
+
 
 
 ###lichen data
@@ -85,7 +86,8 @@ adonis(com.~ht)
 ##Whole Stand
 source('../src/seenetR.R')
 library(sna)
-scn <- dget('~/projects/dissertation/projects/lichen_coo/results/scn.Rdata')
+                                        #scn <- dep.net(x[,((1:ncol(x))[colnames(x)=='xgal']):((1:ncol(x))[colnames(x)=='phy'])])
+scn <- dget(file='~/projects/dissertation/projects/lichen_coo/results/scn.Rdata')
 scn <- scn[rownames(scn)!='folio_grey_black',colnames(scn)!='folio_grey_black']
 e.col <- sign(scn)
 e.col[e.col==1] <- 'grey'
@@ -203,15 +205,14 @@ rownames(com.t) <- as.character(unlist(sapply(rownames(com.4555),function(x) str
 total.abundance <- apply(com.t,1,sum)
 species.richness <- apply(sign(com.t),1,sum)
                                         #composition by rough
-com.t.rel <- apply(com.t,2,function(x) x/max(x))
-adonis(com.t~prb,permutation=5000)
-adonis(com.t.rel~prb,permutation=5000)
+adonis((com.t)~prb,permutation=5000)
+adonis((com.t)~age,permutation=5000)
 mantel(vegdist(com.t)~geo.dist)
 mantel(vegdist(com.t)~net.d+geo.dist)
-mantel(vegdist(com.t.rel)~net.d)
                                         #
-plot((ses~prb),xlab='Mean Percent Roughness',ylab='SES',pch=19,font.lab=2)
-abline(lm(ses~prb))
+plot(ses~prb,xlab='Mean Percent Roughness',ylab='SES',pch=19,
+     cex=1.5,font.lab=2,cex.lab=1.25,font.axis=2)
+my.line(prb,ses,lwd=3)
 summary(lm(ses~prb))
                                         #
 ses.zp <- ses; ses.zp[wild.coa[,2]>0.05] <- 0 #zeroed ses based on p-value
@@ -227,14 +228,6 @@ plot((ses~species.richness),xlab='Species Richness',ylab='SES',pch=19,font.lab=2
 abline(lm(ses~species.richness))
 summary(lm(ses~species.richness))
                                         #Ageage <- read.csv('~/projects/dissertation/projects/lichen_coo/data/UintaMaster_LichenHeritNL_FallSpring_2012_ForLau.csv')
-                                        #predict age
-gnu19.dbh <- age$DBH.cm_01[34]
-new <- data.frame(DBH.cm_01=seq(min(age$DBH.cm_01),max(age$DBH.cm_01),by=0.1))
-age <- na.omit(age)
-pairs(cbind(age=age$AgeFinal.U,bole.circ=age$Bole.Circ.cm,DBH=age$DBH.cm_01,height=age$Height.m),lower.panel=panel.cor)
-pred.age <- predict(lm(AgeFinal.U~DBH.cm_01,data=age),new)
-plot(pred.age~new[,1])
-gnu19.age <- as.numeric(pred.age[new[,1]==gnu19.dbh])
                                         #
 age <- read.csv('~/projects/dissertation/projects/lichen_coo/data/UintaMaster_LichenHeritNL_FallSpring_2012_ForLau.csv')
 age <- data.frame(tree.id=age[,1],age.final=age$AgeFinal.U)
@@ -245,6 +238,15 @@ age[,1] <- sub('\\?','',age[,1])
 age[,1] <- sub('\\.0','\\.',age[,1])
 age[age[,1]=='gnu.85.1ftaway',1] <- 'gnu.85'
 all(names(ses)%in%age[,1])
+                                        #
+                                        #predict age
+gnu19.dbh <- age$DBH.cm_01[34]
+new <- data.frame(DBH.cm_01=seq(min(age$DBH.cm_01),max(age$DBH.cm_01),by=0.1))
+age <- na.omit(age)
+pred.age <- predict(lm(AgeFinal.U~DBH.cm_01,data=age),new)
+plot(pred.age~new[,1])
+gnu19.age <- as.numeric(pred.age[new[,1]==gnu19.dbh])
+
                                         #
 tree.age <- numeric(length(ses))
 tree.age <- age[match(names(ses),age[,1]),2]
@@ -262,14 +264,14 @@ summary(lm(ses~tree.age))
 library(sem)
 ###tree.age -> prb -> ses
 model.sem <- specifyModel(file='~/projects/dissertation/projects/lichen_coo/src/sem_model.txt')
-   sem.data <- cbind(tree.age,prb,ses)
+   sem.data <- na.omit(cbind(tree.age,prb,ses))
                                         #transforms
 ###
                                         #sem fitting and analysis
    Sigma <- var(sem.data)
    sem.fit <- sem(model.sem,S=Sigma,N=nrow(sem.data))
    summary(sem.fit)
-   modIndices(sem.fit)
+
                                         #effects(sem.fit)
                                         #hist(residuals(sem.fit))
                                         #stdCoef(sem.fit)
@@ -281,9 +283,11 @@ pathDiagram(sem.fit,file='~/projects/dissertation/projects/lichen_coo/results/se
 ###Tree characters predict network structure (deg.t) and co-occurrence patterns (ses.zp)
                                         #roughness (prb)
 summary(lm(deg.t~prb))
-summary(lm(ses.zp~prb))
+summary(lm(ses~prb))
+summary(aov(ses.zp~prb))
                                         #cover (canopy.n)/96
 cover <- (wenv$canopy.n/96)*100
+summary(lm(cover~tree.age))
 summary(lm(deg.t~cover))
 summary(lm(ses.zp~cover))
                                         #height

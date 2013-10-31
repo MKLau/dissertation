@@ -63,15 +63,16 @@ obs.cs <- unlist(lapply(onc.q,cscore))
                                         #load ses values
 onc.ses <- dget('../data/onc_tree_ses.Rdata')
 onc.p <- dget('../data/onc_tree_pval.Rdata')
-ses.zero.p <- TRUE;ses.zero.sd2 <- FALSE
+ses.zero.p <- FALSE;ses.zero.sd2 <- FALSE
 if (ses.zero.p){onc.ses[onc.p>0.05] <- 0}else{}
 if (ses.zero.sd2){onc.ses[abs(onc.ses) < 2] <- 0}else{}
 onc.tn <- lapply(onc.q,dep.net) #tree level networks
 names(onc.ses) <- names(onc.q)[names(onc.q)!='']
 onc.ses[is.na(onc.ses)] <- 0
 onc.ses <- onc.ses[is.na(names(onc.ses))!=TRUE]
-onc.centrality <- unlist(lapply(onc.tn,function(x) centralization(x,FUN='degree')))
+onc.cen <- unlist(lapply(onc.tn,function(x) centralization(x,FUN='degree')))
 onc.deg <- unlist(lapply(onc.tn,function(x) length(x[x!=0])))
+onc.netd <- netDist(onc.tn)
 ###Roughness in the Garden
 rough <- read.csv('../data/ONC_raw_roughness.csv')
 rough <- rough[as.character(rough[,1])!="",1:5]
@@ -87,8 +88,85 @@ names(avg.rough) <- r.tree
 ses.tree <- as.character(sapply(names(onc.ses),function(x) unlist(strsplit(x,split=' '))[1]))
 avg.rough <- avg.rough[match(ses.tree,r.tree)]
 all(ses.tree==names(avg.rough))
-
 ###Genotype
 genotype <- as.character(sapply(names(onc.q),function(x) unlist(strsplit(x,split=' '))[2]))
+
+###Data match check
+length(genotype)==length(avg.rough) & length(avg.rough)==length(onc.ses)
+all(names(avg.rough)==as.character(unlist(sapply(names(onc.ses),function(x) strsplit(x,split=' ')[[1]][1]))))
+all(names(onc.deg)==names(onc.ses))
 ###Analyses
-onc.ses
+                                        #community composition
+onc.com <- do.call(rbind,lapply(onc.q,function(x) apply(x,2,sum)))
+onc.com <- (onc.com/100)
+onc.com <- cbind(onc.com,ds=rep(min(onc.com[onc.com!=0])/10,nrow(onc.com)))
+adonis(onc.com~factor(genotype),permutations=10000)
+adonis(onc.com~avg.rough+factor(genotype),permutations=10000)
+                                        #indicator species analysis
+## library(labdsv)
+## indval(onc.com[,-ncol(onc.com)],genotype)
+## indval(onc.rel[,-ncol(onc.rel)],genotype)
+## detach(package:labdsv)
+                                        #what species like it rough
+library(ecodist)
+onc.nms <- nmds(vegdist(onc.com))
+onc.ef <- envfit(nmds.min(onc.nms),env=avg.rough)
+nms.col <- rainbow(max(as.numeric(factor(genotype))))[as.numeric(factor(genotype))]
+plot(nmds.min(onc.nms),col=nms.col,pch=19,cex=2)
+plot(onc.ef)
+detach(package:ecodist)
+                                        #networks and ses
+summary(lm(onc.deg~onc.ses))
+summary(lm(onc.cen~onc.ses))
+summary(lm(onc.cen~onc.deg))
+pairs(cbind(ses=onc.ses,degree=onc.deg,centrality=onc.cen))
+                                        #roughness
+summary(lm(log(abs(onc.ses)+0.1)~avg.rough))
+summary(lm(onc.deg~avg.rough))
+summary(lm(onc.cen~avg.rough))
+adonis(onc.netd~avg.rough)
+                                        #genotype
+summary(aov(avg.rough~factor(genotype)))
+plot(log(abs(onc.ses)+0.1)~factor(genotype))
+summary(aov(log(abs(onc.ses)+0.1)~factor(genotype)))
+shapiro.test(residuals(aov(log(abs(onc.ses)+0.1)~factor(genotype))))
+hist(residuals(aov(log(abs(onc.ses)+0.1)~factor(genotype))))
+ses.mu <- tapply(onc.ses,factor(genotype),mean)
+ses.se <- tapply(onc.ses,factor(genotype),function(x) sd(x)/sqrt(length(x)))
+barplot2(ses.mu,plot.ci=TRUE,ci.u=ses.mu+ses.se,ci.l=ses.mu-ses.se,las=2,ylab='SES',font.lab=2,cex.lab=1.25,font.axis=2)
+                                        #ses predicts composition
+library(ecodist)
+mantel(vegdist(onc.com)~dist(onc.ses)+dist(avg.rough))
+adonis(vegdist(onc.com)~onc.ses)
+mantel(vegdist(onc.com)~dist(avg.rough)+dist(onc.ses))
+mantel(vegdist(onc.com)~onc.netd)
+mantel(onc.netd~dist(onc.ses))
+                                        #nmds of composition
+                                        #onc.nms <- nmds(vegdist(onc.com))
+onc.nms <- dget(file='../results/figs/onc_nms.Rdata')
+ch.plot(nmds.min(onc.nms),genotype,cex=2,plot.legend=FALSE,loc='topleft')
+onc.ef <- envfit(nmds.min(onc.nms),env=data.frame(SES=onc.ses))
+plot(onc.ef,labels='SES',col='black')
+onc.ef
+                                        #network correlations
+onc.com <- com[,-ncol(com)]
+wild.dn <- dget(file='~/projects/dissertation/projects/lichen_coo/results/scn.Rdata')
+wild.com <- dget(file='../data/wild_com.Rdata')
+                                        #re-organize nodes to match
+wild.dn <- wild.dn[c(1,2,6,5,3,4,7),c(1,2,6,5,3,4,7)]
+wild.com <- wild.com[,c(1,2,6,5,3,4,7)]
+rownames(wild.dn) <- colnames(wild.dn) <- colnames(onc.dn)
+                                        #test for correlation in structure
+par(mfrow=c(2,2))
+coord <- mgp(wild.dn,wild.com)
+mgp(onc.dn,onc.com,my.coord=coord)
+plot(wild.dn[wild.dn!=0|onc.dn!=0]~onc.dn[wild.dn!=0|onc.dn!=0]
+     ,xlab='Wild Network Edges',ylab='Garden Network Edges',pch=19,
+     cex=1.5,font.lab=2,cex.lab=1.25,font.axis=2)
+my.line(onc.dn[wild.dn!=0|onc.dn!=0],wild.dn[wild.dn!=0|onc.dn!=0],lwd=3)
+cor.test(wild.dn[wild.dn!=0|onc.dn!=0],onc.dn[wild.dn!=0|onc.dn!=0])
+delta.dn <- ((wild.dn-onc.dn)/onc.dn)
+delta.dn[is.na(delta.dn)] <- 0
+mgp2(abs(delta.dn),(abs(apply(wild.com,2,sum)-apply(onc.com,2,sum))/apply(onc.com,2,sum)),my.coord=coord,scalar=1)
+                                        #pairs plot of species
+pairs(onc.com[,-ncol(onc.com)])

@@ -4,6 +4,6 @@ digraph "sem.fit" {
   node [fontname="Helvetica" fontsize=14 shape=box];
   edge [fontname="Arial" fontsize=10];
   center=1;
-  "tree.age" -> "prb" [label="0.54"];
-  "prb" -> "ses" [label="-0.65"];
+  "tree.age" -> "prb" [label="0.39"];
+  "prb" -> "ses" [label="-0.56"];
 }
