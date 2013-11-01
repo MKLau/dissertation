@@ -21,6 +21,13 @@ onc <- garden.data[g1=='onc',]
 					#tree overlap between years
 unique(onc$Tree[onc$Year=='2010']) %in% unique(onc$Tree[onc$Year=='2011'])
 unique(onc$Tree[onc$Year=='2011']) %in% unique(onc$Tree[onc$Year=='2010'])
+
+###Microsat data from Nash
+library(polysat)
+library(xlsx)
+gen.d <- read.xlsx(file='../data/ONC_MSAT_datafromnash.xlsx',sheetIndex=2,row.names=TRUE)
+gen.d[is.na(gen.d)] <- 0
+gen.d <- as.dist((gen.d))
                                         #onc <- onc[onc$Year=='2011',]
 ###Merge species groups
 Phy <- apply(onc[,12:14],1,sum) #make phy out of pmel,pads,pund
@@ -129,6 +136,8 @@ adonis(onc.netd~avg.rough)
 summary(aov(avg.rough~factor(genotype)))
 plot(log(abs(onc.ses)+0.1)~factor(genotype))
 summary(aov(log(abs(onc.ses)+0.1)~factor(genotype)))
+summary(aov(log(abs(onc.ses)+0.1)~factor(genotype)))
+summary(lm(log(abs(onc.ses)+0.1)~avg.rough))
 shapiro.test(residuals(aov(log(abs(onc.ses)+0.1)~factor(genotype))))
 hist(residuals(aov(log(abs(onc.ses)+0.1)~factor(genotype))))
 ses.mu <- tapply(onc.ses,factor(genotype),mean)
@@ -149,7 +158,7 @@ onc.ef <- envfit(nmds.min(onc.nms),env=data.frame(SES=onc.ses))
 plot(onc.ef,labels='SES',col='black')
 onc.ef
                                         #network correlations
-onc.com <- com[,-ncol(com)]
+                                        #onc.com <- com[,-ncol(com)]
 wild.dn <- dget(file='~/projects/dissertation/projects/lichen_coo/results/scn.Rdata')
 wild.com <- dget(file='../data/wild_com.Rdata')
                                         #re-organize nodes to match
@@ -170,3 +179,25 @@ delta.dn[is.na(delta.dn)] <- 0
 mgp2(abs(delta.dn),(abs(apply(wild.com,2,sum)-apply(onc.com,2,sum))/apply(onc.com,2,sum)),my.coord=coord,scalar=1)
                                         #pairs plot of species
 pairs(onc.com[,-ncol(onc.com)])
+                                        #genetic distance
+onc.gavg <- matrix(0,nrow=length(unique(genotype)),ncol=ncol(onc.com))
+rownames(onc.gavg) <- unique(genotype)
+colnames(onc.gavg) <- colnames(onc.com)
+for (i in 1:nrow(onc.gavg)){
+  onc.gavg[i,] <- apply(onc.com[genotype==unique(genotype)[i],],2,mean)
+  rownames(onc.gavg)[i] <- unique(genotype)[i]
+}
+                                        #match
+gen.d <- as.matrix(gen.d)
+gavg.d <- as.matrix(vegdist(onc.gavg))
+gavg.d <- gavg.d[match(rownames(gen.d),rownames(gavg.d)),match(rownames(gen.d),rownames(gavg.d))]
+gen.d <- as.dist(gen.d)
+gavg.d <- as.dist(gavg.d)
+                                        #mantel
+mantel(gavg.d~gen.d)
+                                        #ses
+ses.mu <- tapply(onc.ses,genotype,mean)
+ses.d <- as.matrix(dist(ses.mu))
+ses.d <- as.dist(ses.d[match(rownames(as.matrix(gen.d)),rownames(ses.d)),match(rownames(as.matrix(gen.d)),rownames(ses.d))])
+mantel(ses.d~gen.d)
+
