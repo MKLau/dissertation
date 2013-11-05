@@ -11,7 +11,7 @@ source('../../lichen_coo/src/seenetR.R')
 ## onc.key <- read.csv('~/projects/dissertation/projects/art_coo/data/key.csv')
 ###Data from Pit
 
-pit <- read.csv('~/projects/dissertation/projects/art_coo/data/arth_cooc_PIT_lau.csv')
+pit <- read.csv('~/projects/dissertation/projects/art_coo/data/arth_cooc_PIT_Lau.csv')
 
 ###Data checks
                                         #na to zeros

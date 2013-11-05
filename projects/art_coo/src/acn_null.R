@@ -8,7 +8,7 @@ library(vegan)
 library(pbapply)
 ########################################################################
 print('Loading data..')
-pit <- read.csv('~/projects/dissertation/projects/art_coo/data/arth_cooc_PIT_lau.csv')
+pit <- read.csv('~/projects/dissertation/projects/art_coo/data/arth_cooc_PIT_Lau.csv')
 pit[is.na(pit)] <- 0
 pit.com <- pit[,-c(1,2,3,4,5)]
 pb <- apply(pit.com[,1:7],1,sum)
@@ -32,7 +32,7 @@ for (i in 1:length(acn.ses)){
   acn.ses[i] <- (obs.cs[i] - mean(acn.cs[[i]])) / sd(acn.cs[[i]])
   acn.p[i] <- length(acn.cs[[i]][acn.cs[[i]]<=obs.cs[i]])/length(acn.cs[[i]])
 }
-print('Writing to: ../data/onc_tree_ses.Rdata')
-dput(onc.cs,'../data/acn_tree_cs.Rdata')
-dput(onc.ses,'../data/acn_tree_ses.Rdata')
-dput(onc.p,'../data/acn_tree_pval.Rdata')
+print('Writing output')
+dput(acn.cs,'../data/acn_tree_cs.Rdata')
+dput(acn.ses,'../data/acn_tree_ses.Rdata')
+dput(acn.p,'../data/acn_tree_pval.Rdata')

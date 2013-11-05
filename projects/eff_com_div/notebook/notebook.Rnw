@@ -109,7 +109,6 @@ log(x2,base=2)
 
 \textbf{Theory Summary}
 
-
 \begin{itemize}
 \item The important conceptual advance and practical implication of
   defining a species’ effective community diversity is that the
