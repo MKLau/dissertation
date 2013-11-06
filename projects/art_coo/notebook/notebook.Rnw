@@ -22,11 +22,20 @@
 \begin{document}
 \maketitle
 
-\section{5 Nov 2013}
-Running analyses.
+\section{6 Nov 2013}
+
 \begin{enumerate}
-\item Stand level networks
-\item Tree level co-occurrence patterns
+\item Decide on species groups
+\item Re-run analyses
+\item Collect senescing and leaf litter data
+\end{enumerate}
+
+\section{5 Nov 2013}
+
+Running preliminary analyses.
+\begin{enumerate}
+\item Stand level networks (structure)
+\item Tree level co-occurrence patterns (significant genotype effect)
 \end{enumerate}
 
 

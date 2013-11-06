@@ -3,7 +3,7 @@
 ###See notebook.Rnw for meta-data
 
 library(sna)
-source('../../lichen_coo/src/helper_funcs.R')
+source('../../art_coo/src/helper_func.R')
 source('../../lichen_coo/src/seenetR.R')
 
 ###Prelim data from ONC
@@ -35,8 +35,22 @@ mgp2(pit.dnet,(apply(pit.com,2,sum)/max(apply(pit.com,2,sum)))+1,log.scale=FALSE
 pit.l <- split(pit.com,paste(pit$tree,pit$geno))
 geno <- as.character(unlist(sapply(names(pit.l),function(x) strsplit(x,split=' ')[[1]][2])))
                                         #co-occurrence
+pit.ses <- dget('../data/acn_tree_ses.Rdata')
+pit.pval <- dget('../data/acn_tree_pval.Rdata')
+pit.pval[pit.ses>0] <- 1 - pit.pval[pit.ses>0] 
+pit.ses.zp <- pit.ses
+pit.ses.zp[pit.pval>0.05] <- 0
+hist(pit.ses)
+hist(pit.ses.zp)
+plot(pit.ses,pit.pval)
+plot(pit.ses.zp,pit.pval)
+summary(aov(pit.ses~geno))
+plot(pit.ses~factor(geno))
 
-
+                                        #plots
+par(mfrow=c(1,2))
+mgp2(pit.dnet,(apply(pit.com,2,sum)/max(apply(pit.com,2,sum)))+1,log.scale=FALSE)
+plot(pit.ses~factor(geno),xlab='Genotype',ylab='SES')
 
 
 mark

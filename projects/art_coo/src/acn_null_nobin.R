@@ -11,12 +11,6 @@ print('Loading data..')
 pit <- read.csv('~/projects/dissertation/projects/art_coo/data/arth_cooc_PIT_Lau.csv')
 pit[is.na(pit)] <- 0
 pit.com <- pit[,-c(1,2,3,4,5)]
-pb <- apply(pit.com[,1:7],1,sum)
-pit.com <- cbind(pb,pit.com[,-1:-7])
-pit.com <- cbind(pit.com[,-c(2,3)],chew=apply(pit.com[,2:3],1,sum))
-pit.com <- pit.com[,apply(pit.com,2,sum)>1]
-pit.com$pb[pit.com$pb!=0] <- 1
-pit.com$chew[pit.com$chew!=0] <- 1
 pit.l <- split(pit.com,paste(pit$tree,pit$geno))
 ########################################################################
 print('Tree level co-occurrence')
@@ -32,6 +26,6 @@ for (i in 1:length(acn.ses)){
   acn.p[i] <- length(acn.cs[[i]][acn.cs[[i]]<=obs.cs[i]])/length(acn.cs[[i]])
 }
 print('Writing output')
-dput(acn.cs,'../data/acn_tree_cs.Rdata')
-dput(acn.ses,'../data/acn_tree_ses.Rdata')
-dput(acn.p,'../data/acn_tree_pval.Rdata')
+dput(acn.cs,'../data/acn_tree_cs_nb.Rdata')
+dput(acn.ses,'../data/acn_tree_ses_nb.Rdata')
+dput(acn.p,'../data/acn_tree_pval_nb.Rdata')

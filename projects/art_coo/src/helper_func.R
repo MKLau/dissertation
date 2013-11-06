@@ -1,4 +1,6 @@
 ###cross hair plots
+
+
 ch.plot <- function(x,g,cex=1,buffer=0.1,plot.legend=TRUE,loc='topleft'){
   mu <- apply(x,2,function(x,g) tapply(x,g,mean),g=g)
   se <- apply(x,2,function(x,g) tapply(x,g,function(x) sd(x)/sqrt(length(x))),g=g)
