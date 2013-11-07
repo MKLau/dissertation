@@ -2,6 +2,8 @@
 ###Modeling and analyses
 ###See notebook.Rnw for meta-data
 
+binned.species <- TRUE
+
 library(sna)
 source('../../art_coo/src/helper_func.R')
 source('../../lichen_coo/src/seenetR.R')
@@ -12,19 +14,23 @@ source('../../lichen_coo/src/seenetR.R')
 ###Data from Pit
 
 pit <- read.csv('~/projects/dissertation/projects/art_coo/data/arth_cooc_PIT_Lau.csv')
+                                        #genotype remove 1007
+pit <- pit[pit$geno!='1007',]
 
 ###Data checks
                                         #na to zeros
 pit[is.na(pit)] <- 0
                                         #merge categories
 pit.com <- pit[,-c(1,2,3,4,5)]
-pb <- apply(pit.com[,1:7],1,sum)
-pit.com <- cbind(pb,pit.com[,-1:-7])
-pit.com <- cbind(pit.com[,-c(2,3)],chew=apply(pit.com[,2:3],1,sum))
-pit.com <- pit.com[,apply(pit.com,2,sum)>1]
-pit.com$pb[pit.com$pb!=0] <- 1
-pit.com$chew[pit.com$chew!=0] <- 1
-pit.com <- as.matrix(pit.com)
+if (binned.species){
+  pb <- apply(pit.com[,1:7],1,sum)
+  pit.com <- cbind(pb,pit.com[,-1:-7])
+  pit.com <- cbind(pit.com[,-c(2,3)],chew=apply(pit.com[,2:3],1,sum))
+  pit.com <- pit.com[,apply(pit.com,2,sum)>1]
+  pit.com$pb[pit.com$pb!=0] <- 1
+  pit.com$chew[pit.com$chew!=0] <- 1
+  pit.com <- as.matrix(pit.com)
+}else{}
 
 ###Stand level
 pit.dnet <- dep.net(pit.com)
@@ -35,8 +41,22 @@ mgp2(pit.dnet,(apply(pit.com,2,sum)/max(apply(pit.com,2,sum)))+1,log.scale=FALSE
 pit.l <- split(pit.com,paste(pit$tree,pit$geno))
 geno <- as.character(unlist(sapply(names(pit.l),function(x) strsplit(x,split=' ')[[1]][2])))
                                         #co-occurrence
-pit.ses <- dget('../data/acn_tree_ses.Rdata')
-pit.pval <- dget('../data/acn_tree_pval.Rdata')
+if (binned.species){
+  pit.ses <- dget('../data/acn_tree_ses.Rdata')
+  pit.pval <- dget('../data/acn_tree_pval.Rdata')
+                                        #remove 1007
+  g.ses <- as.character(unlist(sapply(names(pit.ses),function(x) strsplit(x,split=' ')[[1]][2])))
+  pit.ses <- pit.ses[g.ses!='1007']
+  pit.pval <- pit.pval[g.ses!='1007']
+}else{
+  pit.ses <- dget('../data/acn_tree_ses_nb.Rdata')
+  pit.pval <- dget('../data/acn_tree_pval_nb.Rdata')
+                                        #remove 1007
+  g.ses <- as.character(unlist(sapply(names(pit.ses),function(x) strsplit(x,split=' ')[[1]][2])))
+  pit.ses <- pit.ses[g.ses!='1007']
+  pit.pval <- pit.pval[g.ses!='1007']
+}
+
 pit.pval[pit.ses>0] <- 1 - pit.pval[pit.ses>0] 
 pit.ses.zp <- pit.ses
 pit.ses.zp[pit.pval>0.05] <- 0
@@ -45,13 +65,16 @@ hist(pit.ses.zp)
 plot(pit.ses,pit.pval)
 plot(pit.ses.zp,pit.pval)
 summary(aov(pit.ses~geno))
+par(mfrow=c(1,2))
 plot(pit.ses~factor(geno))
-
                                         #plots
 par(mfrow=c(1,2))
 mgp2(pit.dnet,(apply(pit.com,2,sum)/max(apply(pit.com,2,sum)))+1,log.scale=FALSE)
 plot(pit.ses~factor(geno),xlab='Genotype',ylab='SES')
 
+                                        #genotype sensitivity
+net.rnd <- dget(file='../data/acn_net_rnd.Rdata')
+net.grm <- dget(file='../data/acn_net_grm.Rdata')
 
 mark
 

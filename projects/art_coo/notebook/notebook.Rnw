@@ -25,9 +25,13 @@
 \section{6 Nov 2013}
 
 \begin{enumerate}
-\item Decide on species groups
+\item Decide on species groups 
 \item Re-run analyses
 \item Collect senescing and leaf litter data
+\item Identify to species using Randy's notebook
+\item Look into Gina's time paper
+\item Serphid and Chanamyid flies
+
 \end{enumerate}
 
 \section{5 Nov 2013}
@@ -113,6 +117,9 @@ Running preliminary analyses.
 \item shaded leaves were avoided
 \item abscising leaves were avoided
 \item 5 leaves per shoot (n=10) for each tree starting from the bottom of the whorl at the first full sized leaf
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%Leaf Modifier Descriptions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \item The following leaf modifiers were assessed:
   \begin{itemize}
   \item p.upper (number): Pemphigus opening on upper side of leaf

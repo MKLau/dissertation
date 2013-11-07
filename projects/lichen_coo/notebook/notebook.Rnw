@@ -37,6 +37,14 @@ source('~/projects/dissertation/projects/onc_lichen/src/pit.r')
 
 @ 
 
+\section{07 Nov 2013}
+
+\begin{itemize}
+\item Start integrating comments from lab meeting into manuscript
+\item Ask Cameron and Rikke for input on lichen-lichen interactions
+
+\end{itemize}
+
 \section{28 Oct 2013}
 
 \textbf{Wild Stand Analysis Summary}

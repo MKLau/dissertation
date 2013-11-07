@@ -66,17 +66,25 @@ Meeting with Tom:
   \begin{itemize}
   \item Prelim results
   \item Binning species groups
-  \item Tree traits
+  \item Next data collection: focus on species that are connected in
+    the green leaf model?
   \end{itemize}
 \item Effective Community Diversity Chapter
   \begin{itemize}
-  \item ???
+  \item Data driven chapter?
+  \item Population level dynamics?
+  \item Real networks?
+    \begin{itemize}
+    \item Assume a 1:1 mapping of ecological to evolutionary network
+    \item Compile a set of ecological network models
+    \item Calculate ECD and Opportunity for Selection
+    \end{itemize}
   \end{itemize}
 \item Dissertation
   \begin{itemize}
-  \item Sign outstanding paperwork
-  \item Committee meeting in January?
-  \item Target to finish?
+  \item Sign outstanding paperwork (done)
+  \item Committee meeting in January? 
+  \item Target to finish? (April 17)
   \end{itemize}
 \end{itemize}
 
