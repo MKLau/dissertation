@@ -44,13 +44,13 @@ n <- round(mean(table(geno)),0)*k
 perm <- 5000
 for (i in 1:perm){
                                         #randomly remove trees across genotypes
-  rnd.geno <- sample(unique(geno),n)
-  rnd.tree <- character(n)
-  for (j in 1:n){
-    rnd.tree[j] <- as.character(sample(unique(pit$tree[pit$geno==rnd.geno[j]]),1))
+  rnd.tree <- sample(pit$tree,n)
+  geno.pc <- table(pit$gen[match(rnd.tree,pit$tree)])/sum(table(pit$gen[match(rnd.tree,pit$tree)]))
+  while (any(geno.pc >= 0.5)){
+      rnd.tree <- sample(pit$tree,n)
+      geno.pc <- table(pit$gen[match(rnd.tree,pit$tree)])/sum(table(pit$gen[match(rnd.tree,pit$tree)]))
   }
-  net.rnd[[i]] <- dep.net(pit.com[(pit$tree%in%rnd.tree==FALSE),])
+  net.rnd[[i]] <- dep.net(pit.com[-match(rnd.tree,pit$tree),])
 }
-dput(net.rnd,file=paste('../data/acn_net_rnd_',k,'_.Rdata',sep=''))
-
+dput(net.rnd,file=paste('../data/acn_net_rnd_',k,'.Rdata',sep=''))
 }
