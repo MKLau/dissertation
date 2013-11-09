@@ -22,6 +22,14 @@
 \begin{document}
 \maketitle
 
+\section{7 Nov 2013}
+
+\begin{itemize}
+\item Running genotype sensitivity analysis
+\item Not significantly different when removing just one genotype
+\item Try removing more genotypes
+\end{itemize}
+
 \section{6 Nov 2013}
 
 \begin{enumerate}

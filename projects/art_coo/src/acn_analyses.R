@@ -56,7 +56,7 @@ if (binned.species){
   pit.ses <- pit.ses[g.ses!='1007']
   pit.pval <- pit.pval[g.ses!='1007']
 }
-
+                                        #
 pit.pval[pit.ses>0] <- 1 - pit.pval[pit.ses>0] 
 pit.ses.zp <- pit.ses
 pit.ses.zp[pit.pval>0.05] <- 0
@@ -73,8 +73,39 @@ mgp2(pit.dnet,(apply(pit.com,2,sum)/max(apply(pit.com,2,sum)))+1,log.scale=FALSE
 plot(pit.ses~factor(geno),xlab='Genotype',ylab='SES')
 
                                         #genotype sensitivity
-net.rnd <- dget(file='../data/acn_net_rnd.Rdata')
-net.grm <- dget(file='../data/acn_net_grm.Rdata')
+net.all <- pit.dnet
+net.rnd <- dget(file='../data/acn_net_rnd.Rdata') #random removal stratified by genotype (5 trees)
+net.grm <- dget(file='../data/acn_net_grm.Rdata') #genotype removal (number of trees equals genotype replicate)
+                                        #
+rnd.ncor <- numeric()
+for (i in 1:length(net.rnd)){
+  rnd.ncor[i] <- netCor(net.all,net.rnd[[i]])
+}
+                                        #
+grm.ncor <- numeric()
+for (i in 1:length(net.grm)){
+  grm.ncor[[i]] <- netCor(net.all,net.grm[[i]])
+}
+hist(rnd.ncor)
+abline(v=grm.ncor)
+names(net.grm)[grm.ncor==min(grm.ncor)]
+                                        #
+rnd.ndist <- numeric()
+for (i in 1:length(net.rnd)){
+  rnd.ndist[i] <- sqrt(sum((net.all-net.rnd[[i]])^2))
+}
+                                        #
+grm.ndist <- numeric()
+for (i in 1:length(net.grm)){
+  grm.ndist[[i]] <- sqrt(sum((net.all-net.grm[[i]])^2))
+}
+hist(rnd.ndist)
+abline(v=grm.ndist)
+names(net.grm)[grm.ndist==min(grm.ndist)]
+grm.pval <- numeric()
+for (i in 1:length(grm.ndist)){
+  grm.pval[i] <- length(rnd.ndist[rnd.ndist>grm.ndist[i]])/length(rnd.ndist)
+}
 
 mark
 

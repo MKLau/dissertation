@@ -37,9 +37,11 @@ pit.dnet <- dep.net(pit.com)
                                         #Genotype sensitivity
                                         #Random tree removal
 net.all <- pit.dnet
+ng <- 5
+for (k in 1:ng){
 net.rnd <- list()
-n <- round(mean(table(geno)),0)
-perm <- 1000
+n <- round(mean(table(geno)),0)*k
+perm <- 5000
 for (i in 1:perm){
                                         #randomly remove trees across genotypes
   rnd.geno <- sample(unique(geno),n)
@@ -49,11 +51,6 @@ for (i in 1:perm){
   }
   net.rnd[[i]] <- dep.net(pit.com[(pit$tree%in%rnd.tree==FALSE),])
 }
-dput(net.rnd,file='../data/acn_net_rnd.Rdata')
-                                        #remove tres of each genotype
-net.grm <- list()
-for (i in 1:length(unique(geno))){
-  net.grm[[i]] <- dep.net(pit.com[geno!=unique(geno)[i],])
+dput(net.rnd,file=paste('../data/acn_net_rnd_',k,'_.Rdata',sep=''))
+
 }
-names(net.grm) <- unique(geno)
-dput(net.rnd,file='../data/acn_net_grm.Rdata')

@@ -1,5 +1,6 @@
-###cross hair plots
 
+
+###cross hair plots
 
 ch.plot <- function(x,g,cex=1,buffer=0.1,plot.legend=TRUE,loc='topleft'){
   mu <- apply(x,2,function(x,g) tapply(x,g,mean),g=g)
@@ -109,4 +110,8 @@ netDist <- function(dn.t){
   }
   net.d <- as.dist(net.d)
   return(net.d)
+}
+
+netCor <- function(net1,net2){
+  ncor <- cor(net1[net1!=0|net2!=0],net2[net1!=0|net2!=0])
 }
