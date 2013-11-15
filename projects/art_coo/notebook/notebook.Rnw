@@ -22,6 +22,25 @@
 \begin{document}
 \maketitle
 
+\section{11 Nov 2013}
+
+\begin{itemize}
+\item Group woodies with non-woody
+\item How do you handle the absence of senescent leaves?
+\item What about the affect of Pemphigus loads on individual leaves or
+  on trees?
+\end{itemize}
+
+\textbf{Senescent Leaf Data Collection Notes}
+
+\begin{itemize}
+\item Double check and correct np3.36 genotype from Master Sheet
+\item Pb.upper = gall opening is on the upper side of the leaf
+\item Fungal = necrotic tissue
+\item Think about fungal from previous observations, maybe just call
+  it necrosis
+\end{itemize}
+
 \section{7 Nov 2013}
 
 \begin{itemize}

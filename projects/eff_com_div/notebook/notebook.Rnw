@@ -43,6 +43,35 @@
 \end{enumerate}
 
 
+\section{14 Nov 2013}
+
+\textbf{Take-Home from Meeting}
+\begin{itemize}
+\item Build a simulator
+\item Look into relating Araujo's P(a,b) to Cijk
+\item Look into Baiser's metabolism model
+\item Develop network perspective for ecological to evolutionary
+  network mapping
+\item Setup weekly meeting with Steve
+\end{itemize}
+
+
+\textbf{Outline for Meeting}
+\begin{itemize}
+\item What are our goals and what pieces do we need?
+\item Baiser, Whitaker and Ellison Submitted and Code in Archive
+\item Define fitness and selection
+\item Go over your understanding of Kim's goals
+\item Outline your goals
+\item Outline needs of the ECD
+\item Outline your additions to the ECD
+\item Set target goals
+\end{itemize}
+
+
+
+
+
 \section{13 Sep 2013}
 
 Understanding the math.

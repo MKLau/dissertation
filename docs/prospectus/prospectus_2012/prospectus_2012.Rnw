@@ -19,7 +19,7 @@
 
 \title{The Evolution of Ecological Interactions in Complex Ecosystems}
 \author{M.K. Lau}
-%\date{}                                           % Activate to display a given date or no date
+\date{7 May 2012}                                           % Activate to display a given date or no date
 
 \begin{document}
 \maketitle
