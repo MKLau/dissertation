@@ -41,7 +41,6 @@ mgp2(pit.dnet,(apply(pit.com,2,sum)/max(apply(pit.com,2,sum)))+1,log.scale=FALSE
 pit.l <- split(pit.com,paste(pit$tree,pit$geno))
 tree <- as.character(unlist(sapply(names(pit.l),function(x) strsplit(x,split=' ')[[1]][1])))
 geno <- as.character(unlist(sapply(names(pit.l),function(x) strsplit(x,split=' ')[[1]][2])))
-
                                         #co-occurrence
 if (binned.species){
   pit.ses <- dget('../data/acn_tree_ses.Rdata')

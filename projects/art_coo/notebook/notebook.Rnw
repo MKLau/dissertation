@@ -22,6 +22,24 @@
 \begin{document}
 \maketitle
 
+\textbf{Tasks}
+\begin{itemize}
+\item Update script with addition of 'leaves' column
+\item 
+\end{itemize}
+
+\section{26 Nov 2013}
+
+
+
+\section{15 Nov 2013}
+\begin{itemize}
+\item Wait to process litter leaves, they are mixed with other leaves
+  and would need to be sorted
+\item Moving them into Bio340
+\item Transporting senescing leaves back to Cambridge
+\end{itemize}
+
 \section{11 Nov 2013}
 
 \begin{itemize}
@@ -153,7 +171,8 @@ Running preliminary analyses.
   \item p.lower (number): Pemphigus opening on lower side
   \item p.nec (number): Pemphigus with necrosis
   \item p.hole (number): Pemphigus with chow hole
-  \item p.woody (number): woody Pemphigus gall
+  \item p.woody (number): woody Pemphigus gall (likely a different
+    species, check senescent leaves for opening location)
   \item p.open (number): Pemphigus that has been opened
   \item chew.edge (presence): chewing at the edge
   \item chew.holes (presence): chewing holes not at edge

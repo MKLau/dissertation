@@ -27,7 +27,21 @@
 \setcounter{tocdepth}{3}  %%activate to number sections
 \tableofcontents
 
-\section{Outline}
+\section{26 Nov 2013}
+
+Need to review species interaction network literature, focusing on
+simulations:
+
+\begin{itemize}
+\item Baiser's metabolic network
+\item Allesina's networks
+\item Sala's networks
+\end{itemize}
+
+
+\section{Before 26 Nov 2013}
+
+\subsection*{Outline}
 \begin{itemize}
 \item Main Question: how does the structure of ecological networks
   influence the evolution of species in the community?
