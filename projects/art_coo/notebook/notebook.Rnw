@@ -25,7 +25,62 @@
 \textbf{Tasks}
 \begin{itemize}
 \item Update script with addition of 'leaves' column
-\item 
+\item Deal with collapsing species
+\item Analyses:
+  \begin{enumerate}
+  \item Overall network model for senescing
+  \item Co-occurrence for senescing
+  \item Co-occurrence by genotype paired
+  \item 
+  \end{enumerate}
+\end{itemize}
+
+\section{2 Dec 2013}
+
+Results of analysis of liv and sen
+\begin{itemize}
+\item Greater percent pemphigus on sen than live (t = 5.4687, df = 34, p-value = 4.226e-06)
+\item No difference in fungus (t = -1.8687, df = 34, p-value = 0.07031)
+\item Networks are sparse but show distinct differences, need to
+  figure out how to compare models
+\item Currently running co-occurrence modeling
+\end{itemize}
+
+\textbf{Dataset Alterations}
+\begin{enumerate}
+\item Check the following
+  \begin{enumerate}
+  \item np5.5 doesn't exist but "NP6-5  1023       1   M"
+  \item np13.10 1017_live - "235 NP13-10  1017       1   M"
+  \item np2.4 1023_live - "199 NP2-4 1000C       0   F"
+  \item "np3.36 1000_live"  "np3.36 11_sen" - "168 NP3-36  1000       0   F"
+  \item np4.23 1023_sen - "147 NP4-23  1023       1   M"
+  \end{enumerate}
+\item np5.5 does not exist in the pit dataset, changing to np6.5
+\item np3.36 is genotype 1000, changing in dataset from 11 to 1000 for sen
+\item np2.4 is 1000, but there is no np2.4 in the senescing dataset,
+  make np2.4 into np4.23.
+\item np13.10 missing in senescing dataset, make np13.10 sen zero.
+\item All passed the following test:
+\begin{verbatim}
+    all(sort(unique(paste(test[[1]]$geno,test[[1]]$tree)))==sort(unique(paste(test[[2]]$geno,test[[2]]$tree))))
+\end{verbatim}
+\end{enumerate}
+
+Notes from samples:
+
+\begin{itemize}
+\item NP2-10 996 tree: almost all leaves from one branch, which
+  appeared to be dying back.
+\item NP8.22 T6 tree: "weird"
+\item NP6.05 1023 tree: check tree number. Could be NP5.05.
+\item np2.21 1000 tree: pair of green leaves with galls and leaf tier
+\item np4.23 1023 tree: should it be np4.27?
+\item np5.25 996 tree: yellow leaf with gall tied to one green leaf
+  (no gall), which fell apart
+\item np3.12 1000 tree: fungal branch infection on most branches. Most
+  leaves from 3 branches
+\item np3.36 11 tree: 1000? check litter and garden info
 \end{itemize}
 
 \section{26 Nov 2013}

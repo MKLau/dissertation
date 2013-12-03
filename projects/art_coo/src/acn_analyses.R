@@ -14,6 +14,14 @@ source('../../lichen_coo/src/seenetR.R')
 ###Data from Pit
 
 pit <- read.csv('~/projects/dissertation/projects/art_coo/data/arth_cooc_PIT_Lau.csv')
+                                        #remove trailing 0
+pit$tree <- sub('\\.0','\\.',pit$tree)
+                                        #data verification of trees and genotypes
+pg <- read.csv('~/projects/dissertation/docs/garden_information/PIT_garden_tree_information.csv')
+pg <- pg[pg$Row!='DEAD',]
+pg.tree <- as.character(pg$Row)
+pg.tree <- sub('-','.',pg.tree)
+pg.tree <- sub('NP','np',pg.tree)
                                         #genotype remove 1007
 pit <- pit[pit$geno!='1007',]
 
@@ -21,20 +29,43 @@ pit <- pit[pit$geno!='1007',]
                                         #na to zeros
 pit[is.na(pit)] <- 0
                                         #merge categories
-pit.com <- pit[,-c(1,2,3,4,5)]
-if (binned.species){
-  pb <- apply(pit.com[,1:7],1,sum)
-  pit.com <- cbind(pb,pit.com[,-1:-7])
-  pit.com <- cbind(pit.com[,-c(2,3)],chew=apply(pit.com[,2:3],1,sum))
-  pit.com <- pit.com[,apply(pit.com,2,sum)>1]
-  pit.com$pb[pit.com$pb!=0] <- 1
-  pit.com$chew[pit.com$chew!=0] <- 1
-  pit.com <- as.matrix(pit.com)
-}else{}
+                                        #pemphigus mergers
+pit$pb.upper <- pit$pb.upper + pit$pb.woody
+pit$pb.pred <- pit$pb.pred + pit$pb.hole + pit$pb.woody.pred
+pit <- pit[,colnames(pit)!='pb.woody'&colnames(pit)!='pb.woody.pred'&colnames(pit)!='pb.hole'&colnames(pit)!='mite']
+                                        #remove species with less than 20 observations
+pit.com <- pit[,-1:-6]
+pit.com <- pit.com[,apply(pit.com,2,sum)>17]
+                                        #separate live and senescing leaves
+liv <- pit.com[pit[,1]=='live',]
+sen <- pit.com[pit[,1]=='sen',]
+                                        #make a list for each
+liv.tl <- split(liv,pit$tree[pit[,1]=='live'])
+sen.tl <- split(sen,pit$tree[pit[,1]=='sen'])
+all(names(liv.tl)==names(sen.tl))
+###Pemphigus patterns
+                                        #pemphigus abundances
+pb.liv <- unlist(lapply(liv.tl,function(x) sum(x$pb.upper)/length(x$pb.upper)))
+pb.sen <- unlist(lapply(sen.tl,function(x) sum(x$pb.upper)/length(x$pb.upper)))
+plot(pb.sen~pb.liv)
+abline(lm(pb.sen~pb.liv))
+hist((pb.sen-pb.liv))
+t.test((pb.sen-pb.liv))
+                                        #fungal
+fung.liv <- unlist(lapply(liv.tl,function(x) sum(x$fungal)/length(x$fungal)))
+fung.sen <- unlist(lapply(sen.tl,function(x) sum(x$fungal)/length(x$fungal)))
+plot(fung.sen~fung.liv)
+abline(lm(fung.sen~fung.liv))
+hist((fung.sen-fung.liv))
+t.test((fung.sen-fung.liv))
 
+###Live leaves
 ###Stand level
-pit.dnet <- dep.net(pit.com)
-mgp2(pit.dnet,(apply(pit.com,2,sum)/max(apply(pit.com,2,sum)))+1,log.scale=FALSE)
+par(mfrow=c(1,2))
+liv.dnet <- dep.net(liv)
+coord <- mgp2(liv.dnet,(apply(liv,2,sum)/max(apply(liv,2,sum)))+1,log.scale=FALSE)
+sen.dnet <- dep.net(sen)
+mgp2(sen.dnet,(apply(sen,2,sum)/max(apply(sen,2,sum)))+1,log.scale=FALSE,my.coord=coord)
 
 ###Tree level
                                         #separate trees
