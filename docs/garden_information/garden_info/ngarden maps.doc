@@ -1,0 +1,585 @@
+{\rtf1\ansi \ansicpg1252 \deff1\deflang1033{\fonttbl{\f0\fnil\fcharset0\fprq0 Tahoma;}{\f1\froman\fcharset0\fprq0 Tahoma;}{\f2\froman\fcharset2\fprq0 Symbol;}{\f3\fswiss\fcharset0\fprq0 Tahoma;}{\f4\froman\fcharset161\fprq0 Times New Roman;}{\f5\froman\fcharset238\fprq0 Times New Roman;}{\f6\froman\fcharset204\fprq0 Times New Roman;}{\f7\fswiss\fcharset161\fprq0 Tahoma;}{\f8\fswiss\fcharset238\fprq0 Tahoma;}{\f9\fswiss\fcharset204\fprq0 Tahoma;}{\f10\fnil\fcharset2\fprq2 Wingdings;}{\f11\fswiss\fcharset204\fprq2  ;}}{\colortbl;\red0\green0\blue0;\red128\green128\blue128;\red192\green192\blue192;\red255\green255\blue255;\red255\green0\blue0;\red0\green255\blue0;\red0\green0\blue255;\red0\green255\blue255;\red255\green0\blue255;\red255\green255\blue0;\red128\green0\blue0;\red0\green128\blue0;\red0\green0\blue128;\red0\green128\blue128;\red128\green0\blue128;\red128\green128\blue0;}
+\plain \f1 \fs20 \f1 \f3 \ri37 \'4e\'6f\'72\'74\'68\'20\'47\'61\'72\'64\'65\'6e\'2c\'20\'4f\'67\'64\'65\'6e\'20\'4e\'61\'74\'75\'72\'65\'20\'43\'65\'6e\'74\'65\'72\'2e\'20\'20\'55\'70\'64\'61\'74\'65\'64\'20\'32\'2f\'20\'31\'38\'2f\'30\'30\'20\'20\'20\'20\'20\'66\'69\'6c\'65\'3a\'20\'6b\'69\'74\'74\'79\'5c\'44\'5c\'50\'4a\'4d\'34\'5c\'67\'61\'72\'64\'65\'6e\'73\'5c\b \'6e\'67\'61\'72\'64\'65\'6e
+\par 
+\plain \fs20 \f1 \f3 \'2a\'73\'6f\'6d\'65\'20\'74\'72\'75\'65\'20\'46\'72\'65\'6d\'6f\'6e\'74\'73\'20\'68\'61\'76\'65\'20\'3c\'20\'33\'35\'20\'6d\'61\'72\'6b\'65\'72\'73\'20\'62\'79\'20\'61\'63\'63\'69\'64\'65\'6e\'74\'28\'65\'67\'20\'30\'30\'33\'31\'29
+\par 
+\f1 \f3 \ri0 
+\par 
+\plain \fs20 \f1 \b \f3 \ri37 \'52\'6f\'77\'20\'31\'20\'20\'28\'61\'67\'61\'69\'6e\'73\'74\'20\'66\'65\'6e\'63\'65\'29
+\par 
+\plain \fs20 \f1 \b \f3 \ri0 \'49\'44\'20\'20\'20\'20\'20\'20\'43\'6c\'6f\'6e\'65\'20\'20\'20\'79\'65\'61\'72\'20\'20\'23\'46\'52\'20\'20\'20\'20\tab \'53\'65\'78\tab \b0 \tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'34\'35\tab \'48\'45\'20\'34\tab \'28\'27\'39\'36\'29\tab \'31\tab \tab \'3f\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'34\'34\tab \'57\'46\'20\'35\tab \'28\'27\'39\'33\'29\tab \'3f\tab \tab \'3f\tab \pard 
+\par 
+\pard \f1 \f3 \'4e\'31\'2d\'34\'33\tab \'44\'45\'41\'44\tab \'31\'37\tab \'33\'35\'20\'28\'46\'52\'29\tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'34\'32\tab \'31\'39\'37\'39\tab \'28\'27\'39\'35\'29\tab \'31\'33\'20\'28\'46\'31\'20\'4d\'52\'50\'48\'29\tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'34\'31\tab \'45\'43\'20\'31\tab \'28\'27\'39\'33\'29\tab \'32\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'34\'30\tab \'52\'4c\'20\'36\tab \'20\'20\'20\'22\tab \'33\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'33\'39\tab \'44\'45\'41\'44\tab \'30\'30\'33\'31\tab \'32\'38\'20\'28\'46\'52\'29\tab \'3f\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'33\'38\tab \'44\'45\'41\'44\'20\tab \'28\'39\'39\'36\'29\tab \tab \tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'33\'37\tab \'48\'4d\'20\'31\tab \'28\'27\'39\'31\'29\tab \'33\'31\'20\'28\'46\'31\'29\tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'33\'36\tab \'31\'31\tab \'28\'27\'39\'32\'29\tab \'36\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'33\'35\tab \'31\'39\'39\'34\tab \'28\'27\'39\'31\'29\tab \'33\'34\'20\'28\'46\'31\'29\tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'33\'34\tab \'39\'39\'36\tab \'20\'20\'20\'22\tab \'31\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'33\'33\tab \'31\'37\tab \'28\'27\'39\'32\'29\tab \'33\'35\'20\'28\'46\'52\'29\tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'33\'32\tab \'31\'39\'39\'34\tab \'28\'27\'39\'31\'29\tab \'33\'34\'20\'28\'46\'31\'29\tab \'46\'3f\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'33\'31\tab \'31\'30\'30\'38\tab \'20\'20\'20\'22\tab \'30\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'33\'30\tab \'44\'45\'41\'44\'20\tab \'28\'31\'39\'33\'35\'29\tab \tab \tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'32\'39\tab \'45\'43\'20\'31\tab \'28\'27\'39\'31\'29\tab \'32\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'32\'38\tab \'39\'39\'39\tab \'28\'27\'39\'33\'29\tab \'34\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'32\'37\tab \'31\'30\'32\'33\tab \'20\'20\'20\'22\tab \'31\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'32\'36\tab \'48\'31\tab \'28\'27\'39\'31\'29\tab \'33\'30\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'32\'35\tab \'44\'45\'41\'44\'20\tab \'28\'48\'31\'37\'29\tab \tab \tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'32\'34\tab \'31\'30\'31\'37\tab \'28\'27\'39\'31\'29\tab \'31\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'32\'33\tab \'39\'38\'39\'2d\'33\tab \'20\'20\'20\'22\tab \'33\'31\'20\'28\'46\'31\'29\tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'32\'32\tab \'4b\'53\'39\'20\'34\tab \'20\'20\'20\'22\tab \'32\'36\'20\'28\'46\'31\'20\'4d\'52\'50\'48\'29\tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'32\'31\tab \'44\'45\'41\'44\'20\tab \'28\'39\'39\'36\'29\tab \tab \tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'32\'30\tab \'31\'30\'31\'37\tab \'28\'27\'39\'31\'29\tab \'31\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'31\'39\tab \'39\'38\'39\'2d\'33\tab \'20\'20\'20\'22\tab \'33\'31\'20\'28\'46\'31\'29\tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'31\'38\tab \'39\'39\'36\tab \'20\'20\'20\'22\tab \'31\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'31\'37\tab \'39\'38\'39\tab \'20\'20\'20\'22\tab \'33\'31\'20\'28\'46\'31\'29\tab \'3f\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'31\'36\tab \'31\'30\'31\'37\tab \'20\'20\'20\'22\tab \'31\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'31\'35\tab \'33\'32\'30\'30\tab \'28\'27\'39\'32\'29\tab \'32\tab \tab \'4d\'3f\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'31\'34\tab \'39\'38\'39\'2d\'33\tab \'28\'27\'39\'31\'29\tab \'33\'31\'20\'28\'46\'31\'29\tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'31\'33\tab \'57\'48\'2d\'31\'32\tab \'28\'27\'39\'33\'29\tab \'32\'37\'20\'28\'46\'31\'20\'4d\'52\'50\'48\'29\'20\'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'31\'32\tab \'54\'2d\'31\'35\tab \'28\'27\'39\'31\'29\tab \'30\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'31\'31\tab \'54\'36\'2d\'42\tab \'20\'20\'20\'22\tab \'3f\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'31\'30\tab \'39\'39\'36\tab \'20\'20\'20\'22\tab \'31\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'39\tab \'31\'30\'31\'32\tab \'20\'20\'20\'22\tab \'31\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'38\tab \'31\'30\'31\'37\tab \'20\'20\'20\'22\tab \'31\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'37\tab \'54\'47\'2d\'42\tab \'20\'20\'20\'22\tab \'3f\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'36\tab \'31\'30\'31\'39\tab \'20\'20\'20\'22\tab \'30\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'35\tab \'54\'47\'2d\'43\tab \'20\'20\'20\'22\tab \'3f\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'34\tab \'31\'30\'31\'37\tab \'20\'20\'20\'22\tab \'31\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'33\tab \'31\'39\'37\'36\tab \'20\'20\'20\'22\tab \'33\'33\'20\'28\'46\'31\'29\tab \'3f\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'32\tab \'31\'30\'30\'30\tab \'20\'20\'20\'22\tab \'30\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'31\'2d\'31\tab \'31\'30\'31\'37\tab \'20\'20\'20\'22\tab \'31\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \tab \tab \tab \tab \tab \pard 
+\par 
+\pard\plain \fs20 \f1 \sl-280 \slmult0 \b \f3 \tab \'52\'6f\'77\'20\'32\'20\tab \pard \sl-280 \slmult0 \'72\'74\'20\'6f\'66\'20\tab \'70\'61\'74\'68\tab \b0 \tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \tab \tab \tab \tab \tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'34\'36\tab \'39\'39\'36\tab \'28\'27\'39\'31\'29\'20\'20\'20\tab \'31\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'34\'35\tab \'31\'30\'31\'32\tab \'20\'20\'20\'22\tab \'31\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'34\'34\tab \'52\'6c\'2d\'36\tab \'28\'27\'39\'33\'29\tab \'33\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'34\'33\tab \'44\'45\'41\'44\tab \'48\'45\'2d\'31\tab \'32\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'34\'32\tab \'31\'37\tab \'28\'27\'39\'32\'29\tab \'33\'35\'20\'28\'46\'52\'29\tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'34\'31\tab \'31\'39\'33\'37\tab \'28\'27\'39\'31\'29\tab \'33\'30\'20\'28\'44\'45\'4c\'54\'3f\'29\tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'34\'30\tab \'48\'4d\'20\'31\tab \'20\'20\'20\'22\tab \'33\'31\'20\'28\'46\'31\'29\tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'33\'39\tab \'4b\'48\'20\'38\tab \'20\'20\'20\'22\tab \'33\'35\'20\'28\'46\'52\'29\tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'33\'38\tab \'57\'43\'20\'34\tab \'20\'20\'20\'22\tab \'33\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'33\'37\tab \'54\'20\'31\'35\tab \'20\'20\'20\'22\tab \'30\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'33\'36\tab \'50\'57\'20\'36\'20\tab \'20\'20\'20\'3f\tab \'3f\tab \tab \'3f\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'33\'35\tab \'31\'31\tab \'28\'27\'39\'33\'29\tab \'36\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'33\'34\tab \'44\'45\'41\'44\tab \'28\'57\'43\'20\'31\'29\tab \tab \tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'33\'33\tab \'31\'31\tab \'28\'27\'39\'31\'29\tab \'36\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'33\'32\tab \'44\'45\'41\'44\tab \'4b\'53\'55\'31\'38\tab \tab \tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'33\'31\tab \'57\'43\'20\'35\tab \'28\'27\'39\'33\'29\tab \'30\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'33\'30\tab \'44\'45\'41\'44\'20\tab \'57\'53\'55\'36\tab \'58\'20\'39\'39\'36\tab \tab \'3f\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'32\'39\tab \'39\'39\'36\tab \'28\'27\'39\'33\'29\tab \'31\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'32\'38\tab \'57\'43\'20\'35\tab \'20\'20\'20\'22\tab \'30\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'32\'37\tab \'54\'20\'31\'35\tab \'28\'27\'39\'31\'29\tab \'30\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'32\'36\tab \'4b\'53\'32\'20\'31\tab \'28\'27\'39\'36\'29\tab \'44\'45\'41\'44\tab \tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'32\'35\tab \'31\'30\'30\'38\tab \'28\'27\'39\'31\'29\tab \'30\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'32\'34\tab \'41\'53\'50\'45\'4e\tab \pard \sl-280 \slmult0 \tab \tab \tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'32\'33\tab \'4b\'53\'43\'52\'31\tab \'28\'27\'39\'31\'29\tab \'33\'35\'20\'28\'46\'52\'29\tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'32\'32\tab \'39\'39\'36\tab \'20\'20\'20\'22\tab \'31\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'32\'31\tab \'39\'38\'39\'20\'33\tab \'20\'20\'20\'22\tab \'33\'31\'20\'28\'46\'31\'29\tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'32\'30\tab \'31\'30\'31\'32\tab \'20\'20\'20\'22\tab \'31\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'31\'39\tab \'31\'39\'39\'37\tab \'20\'20\'20\'22\tab \'33\'34\'20\'28\'46\'31\'29\tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'31\'38\tab \'31\'37\tab \'20\'20\'20\'22\tab \'33\'35\'20\'28\'46\'52\'29\tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'31\'37\tab \'31\'30\'31\'32\tab \'20\'20\'20\'22\tab \'31\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'31\'36\tab \'39\'39\'36\tab \'20\'20\'20\'22\tab \'31\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'31\'35\tab \'31\'30\'31\'37\tab \'20\'20\'20\'22\tab \'31\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'31\'34\tab \'31\'30\'32\'33\tab \'20\'20\'20\'22\tab \'31\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'31\'33\tab \'44\'45\'41\'44\tab \'31\'30\'31\'32\tab \'31\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'31\'32\tab \'31\'30\'32\'33\tab \'20\'20\'20\'22\tab \'31\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'31\'31\tab \'31\'30\'31\'32\tab \'20\'20\'20\'22\tab \'31\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'31\'30\tab \'39\'39\'36\tab \'20\'20\'20\'22\tab \'31\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'39\tab \'31\'31\'20\'46\'47\tab \'20\'20\'20\'22\tab \'36\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'38\tab \'33\'32\'30\'30\tab \'20\'20\'20\'22\tab \'32\tab \tab \'4d\'3f\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'37\tab \'31\'39\'39\'34\tab \'20\'20\'20\'22\tab \'33\'34\'20\'28\'46\'31\'29\tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'36\tab \'48\'4d\'20\'31\tab \'20\'20\'20\'22\tab \'33\'31\'20\'28\'46\'31\'29\tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'35\tab \'39\'38\'39\'20\'33\tab \'20\'20\'20\'22\tab \'33\'31\'20\'28\'46\'31\'29\tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'34\tab \'39\'39\'36\tab \'20\'20\'20\'22\tab \'31\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'33\tab \'31\'30\'31\'37\tab \'20\'20\'20\'22\tab \'31\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'32\tab \'31\'39\'38\'31\tab \'20\'20\'20\'22\tab \'33\'34\'20\'28\'46\'31\'29\tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'32\'2d\'31\tab \'48\'45\'20\'31\'30\tab \'20\'20\'20\'22\tab \'30\tab \tab \'3f\tab \pard 
+\par 
+\pard\plain \fs20 \f1 \sl-280 \slmult0 \b \f3 \tab \'52\'4f\'57\'20\'33\'20\tab \'4c\'74\'20\'20\'6f\'66\'20\'20\'20\tab \'50\'61\'74\'68\tab \b0 \tab \pard 
+\par 
+\pard\plain \fs20 \f1 \sl-280 \slmult0 \b \f3 \tab \tab \tab \b0 \tab \tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'34\'33\tab \'44\'45\'41\'44\tab \'48\'45\'2d\'31\tab \'32\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'34\'32\tab \'44\'45\'41\'44\tab \'3f\tab \tab \tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'34\'31\tab \'31\'39\'33\'37\tab \'28\'27\'39\'31\'29\tab \'33\'30\'20\'28\'44\'45\'4c\'54\'3f\'29\tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'34\'30\tab \'44\'45\'41\'44\'20\tab \'31\'39\'37\'39\tab \tab \tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'33\'39\tab \'32\'30\'31\'37\tab \'28\'27\'39\'36\'29\tab \'32\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'33\'38\tab \'44\'45\'41\'44\tab \'39\'38\'39\tab \tab \tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'33\'37\tab \'4e\'55\'4e\tab \'28\'27\'39\'35\'29\tab \'32\tab \tab \'3f\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'33\'36\tab \'57\'48\'2d\'31\'32\tab \'28\'27\'39\'32\'29\tab \'32\'37\'20\'28\'46\'31\'20\'4d\'52\'50\'48\'29\'20\'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'33\'35\tab \'30\'30\'33\'31\tab \'28\'27\'39\'35\'29\tab \'32\'38\'20\'28\'46\'52\'29\tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'33\'34\tab \'48\'4d\'2d\'31\tab \'28\'27\'39\'31\'29\tab \'33\'31\'20\'28\'46\'31\'29\tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'33\'33\tab \'39\'38\'39\tab \'28\'27\'39\'31\'29\tab \'33\'31\'20\'28\'46\'31\'29\tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'33\'32\tab \'39\'39\'36\tab \'28\'27\'39\'33\'29\tab \'31\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'33\'31\tab \'31\'30\'30\'37\tab \'20\'20\'20\'22\tab \'31\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'33\'30\tab \'44\'45\'41\'44\tab \'4b\'48\'2d\'38\tab \tab \tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'32\'39\tab \'31\'30\'32\'30\tab \'28\'27\'39\'33\'29\tab \'30\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'32\'38\tab \'52\'4c\'2d\'31\tab \'20\'20\'20\'22\tab \'31\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'32\'37\tab \'39\'39\'36\tab \'20\'20\'20\'22\tab \'31\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'32\'36\tab \'4d\'48\'32\tab \'20\'20\'20\'3f\'20\'20\'20\'20\'20\'20\'20\'20\'20\tab \'33\'31\tab \'3f\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'32\'35\tab \'44\'45\'41\'44\tab \'58\'48\'2d\'34\tab \tab \tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'32\'34\tab \'52\'4d\'2d\'37\tab \'28\'27\'39\'33\'29\tab \'31\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'32\'33\tab \'57\'53\'55\'2d\'36\tab \'28\'27\'39\'35\'29\tab \'33\'34\tab \'3f\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'32\'32\tab \'31\'30\'30\'38\tab \'28\'27\'39\'33\'29\tab \'30\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'32\'31\tab \'44\'45\'41\'44\tab \'54\'2d\'32\'31\tab \'30\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'32\'30\tab \'43\'4f\'41\'4c\'33\tab \'28\'27\'39\'33\'29\tab \'30\tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'31\'39\tab \'31\'38\tab \'28\'27\'39\'31\'29\tab \'37\'20\'28\'46\'31\'4d\'52\'50\'48\'29\tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'31\'38\tab \'39\'39\'38\tab \'28\'27\'39\'33\'29\tab \'31\tab \tab \'3f\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'31\'37\tab \'31\'30\'30\'38\tab \'28\'27\'39\'31\'29\tab \'30\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'31\'36\tab \'4b\'53\'43\'52\'31\tab \'20\'20\'20\'22\tab \'33\'35\'20\'28\'46\'52\'29\tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'31\'35\tab \'39\'39\'36\tab \'28\'27\'39\'33\'29\tab \'31\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'31\'34\tab \'4b\'53\'43\'52\'31\tab \'28\'27\'39\'32\'29\tab \'33\'35\'20\'28\'46\'52\'29\tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'31\'33\tab \'31\'30\'31\'37\tab \'28\'27\'39\'31\'29\tab \'31\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'31\'32\tab \'45\'43\'2d\'33\tab \'20\'20\'20\'22\tab \'31\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'31\'31\tab \'30\'30\'33\'31\tab \'28\'27\'39\'33\'29\tab \'32\'38\'20\'28\'46\'52\'29\tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'31\'30\tab \'31\'39\'39\'37\tab \'28\'27\'39\'32\'29\tab \'33\'34\'20\'28\'46\'31\'29\tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'39\tab \'48\'45\'2d\'37\tab \'28\'27\'39\'31\'29\tab \'3f\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'38\tab \'30\'30\'33\'31\tab \'20\'20\'20\'22\tab \'32\'38\'20\'28\'46\'52\'29\tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'37\tab \'31\'39\'37\'36\tab \'20\'20\'20\'22\tab \'33\'33\'20\'28\'46\'31\'29\tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'36\tab \'39\'39\'36\tab \'20\'20\'20\'22\tab \'31\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'35\tab \'4b\'48\'2d\'38\tab \'20\'20\'20\'22\tab \'33\'35\'20\'28\'46\'52\'29\tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'34\tab \'31\'39\'38\'31\tab \'20\'20\'20\'22\tab \'33\'34\'20\'28\'46\'31\'29\tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'33\tab \'31\'30\'30\'37\tab \'20\'20\'20\'22\tab \'31\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'32\tab \'31\'31\tab \'20\'20\'20\'22\tab \'36\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'31\tab \'48\'2d\'31\'34\tab \'20\'20\'20\'22\tab \'33\'34\'20\'28\'46\'52\'29\tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'33\'2d\'30\'30\tab \'48\'2d\'31\'30\tab \'3f\'3f\tab \'32\tab \tab \'3f\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \tab \tab \tab \tab \tab \tab \tab \tab \tab \tab \pard 
+\par 
+\pard\plain \fs20 \f1 \sl-280 \slmult0 \keepn \b \f3 \tab \'52\'4f\'57\'20\'34\tab \pard \sl-280 \slmult0 \b0 \tab \tab \tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \tab \tab \tab \tab \tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'34\'2d\'33\'30\tab \'44\'45\'41\'44\tab \'50\'32\tab \'32\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'34\'2d\'32\'39\tab \'31\'31\tab \'28\'27\'39\'31\'29\tab \'36\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'34\'2d\'32\'38\tab \'4b\'53\'43\'52\'31\tab \'28\'27\'39\'32\'29\tab \'33\'35\'20\'28\'46\'52\'29\tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'34\'2d\'32\'37\tab \'4b\'53\'55\'36\'20\tab \'3f\'3f\tab \tab \tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \tab \'44\'45\'41\'44\tab \tab \'58\'48\'39\'2d\'31\'39\tab \tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'34\'2d\'32\'36\tab \'39\'39\'39\tab \'28\'27\'39\'31\'29\tab \'34\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'34\'2d\'32\'35\tab \'31\'39\'37\'39\tab \'28\'27\'39\'36\'29\tab \'31\'33\'20\'28\'46\'31\'20\'4d\'52\'50\'48\'29\tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'34\'2d\'32\'34\tab \'31\'30\tab \'28\'27\'39\'31\'29\tab \'20\'32\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'34\'2d\'32\'33\tab \'31\'39\'37\'39\tab \'28\'27\'39\'35\'29\tab \'31\'33\'20\'28\'46\'31\'20\'4d\'52\'50\'48\'29\tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'34\'2d\'32\'32\tab \'31\'30\'31\'39\tab \'28\'27\'39\'31\'29\tab \'30\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'34\'2d\'32\'31\tab \'52\'4c\'2d\'32\tab \'20\'20\'20\'22\tab \'32\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'34\'2d\'32\'30\tab \'31\'30\'32\'33\tab \'20\'20\'20\'22\tab \'31\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'34\'2d\'31\'39\tab \'54\'32\tab \'20\'20\'20\'3f\tab \'32\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'34\'2d\'31\'38\tab \'31\'30\'30\'37\tab \'28\'27\'39\'31\'29\tab \'31\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'34\'2d\'31\'37\tab \'54\'2d\'31\'35\tab \'20\'20\'20\'22\tab \'30\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'34\'2d\'31\'36\tab \'48\'2d\'31\'30\tab \'20\'20\'20\'22\tab \'32\tab \tab \'3f\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'34\'2d\'31\'35\tab \'50\'45\'4f\'41\'32\tab \'20\'20\'20\'22\tab \'31\tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'34\'2d\'31\'34\tab \'31\'30\'30\'38\tab \'20\'20\'20\'22\tab \'30\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'34\'2d\'31\'33\tab \'58\'53\'55\'2d\'31\tab \'20\'20\'20\'3f\tab \'30\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'34\'2d\'31\'32\tab \'57\'43\'2d\'35\tab \'28\'27\'39\'31\'29\tab \'30\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'34\'2d\'31\'31\tab \'48\'45\'2d\'38\'4d\tab \'20\'20\'20\'22\tab \'3f\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'34\'2d\'31\'30\tab \'4e\'55\'4c\tab \'20\'20\'20\'22\tab \'35\tab \tab \'3f\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'34\'2d\'39\tab \'52\'4d\'2d\'31\tab \'20\'20\'20\'22\tab \'3f\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'34\'2d\'38\tab \'31\'39\'33\'35\tab \'20\'20\'20\'22\tab \'33\'34\'20\'28\'46\'31\'29\tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'34\'2d\'37\tab \'52\'4d\'2d\'37\tab \'20\'20\'20\'22\tab \'31\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'34\'2d\'36\tab \'52\'4d\'2d\'34\tab \'20\'20\'20\'22\tab \'30\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'34\'2d\'35\tab \'31\'38\tab \'20\'20\'20\'22\tab \'37\'20\'28\'46\'31\'4d\'52\'50\'48\'29\tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'34\'2d\'34\tab \'52\'4d\'2d\'32\tab \'20\'20\'20\'22\tab \'30\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'34\'2d\'33\tab \'57\'43\'33\'4e\'4d\tab \pard \sl-280 \slmult0 \'28\'27\'39\'32\'29\tab \'3f\tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'34\'2d\'32\tab \'48\'45\'2d\'37\tab \'28\'27\'39\'31\'29\tab \'3f\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'34\'2d\'31\tab \'57\'43\'2d\'34\tab \'20\'20\'20\'22\tab \'33\tab \tab \'46\tab \tab \tab \tab \tab \tab \pard 
+\par 
+\pard \f1 \f3 \tab \tab \tab \tab \tab \pard 
+\par 
+\pard\plain \fs20 \f1 \sl-280 \slmult0 \keepn \b \f3 \tab \'52\'4f\'57\'20\'35\tab \pard \sl-280 \slmult0 \b0 \tab \tab \tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \tab \tab \tab \tab \tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'35\'2d\'32\'36\tab \'39\'39\'39\tab \'28\'27\'39\'36\'29\tab \'34\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'35\'2d\'32\'35\tab \'44\'45\'41\'44\tab \'28\'58\'48\'2d\'34\'29\tab \tab \tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'35\'2d\'32\'34\tab \'31\'39\'39\'37\tab \'28\'27\'39\'32\'29\tab \'33\'34\'28\'46\'31\'29\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'35\'2d\'32\'33\tab \'31\'39\'33\'37\tab \'28\'27\'39\'31\'29\tab \'33\'30\'20\'28\'44\'45\'4c\'54\'3f\'29\tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'35\'2d\'32\'32\tab \'44\'45\'41\'44\tab \'31\'39\'33\'35\tab \'33\'34\'20\'28\'46\'31\'29\tab \'3f\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'35\'2d\'32\'31\tab \'57\'53\'39\'31\'20\'78\tab \'20\'20\'58\'53\'55\'31\tab \'44\'45\'41\'44\'20\tab \'3f\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'35\'2d\'32\'30\tab \'48\'4d\'2d\'31\tab \'28\'27\'39\'31\'29\tab \'33\'31\'20\'28\'46\'31\'29\tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'35\'2d\'31\'39\tab \'48\'45\'2d\'37\tab \'20\'20\'20\'22\tab \'3f\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'35\'2d\'31\'38\tab \'31\'37\tab \'20\'20\'20\'22\tab \'33\'35\'20\'28\'46\'52\'29\tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'35\'2d\'31\'37\tab \'31\'30\tab \'20\'20\'20\'22\tab \'32\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'35\'2d\'31\'36\tab \'30\'30\'33\'31\tab \'28\'27\'39\'32\'29\tab \'32\'38\'20\'28\'46\'52\'29\tab \'3f\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'35\'2d\'31\'35\tab \'45\'43\'2d\'31\tab \'28\'27\'39\'31\'29\tab \'32\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'35\'2d\'31\'34\tab \'45\'43\'2d\'34\tab \'20\'20\'20\'22\tab \'31\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'35\'2d\'31\'33\tab \'31\'30\'30\'35\tab \'20\'20\'20\'22\tab \'32\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'35\'2d\'31\'32\tab \'31\'30\'30\'35\tab \'20\'20\'20\'22\tab \'32\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'35\'2d\'31\'31\tab \'48\'2d\'31\tab \'20\'20\'20\'22\tab \'33\'30\'20\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'35\'2d\'31\'30\tab \'31\'39\'39\'37\tab \'20\'20\'20\'22\tab \'33\'34\'20\'28\'46\'31\'29\tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'35\'2d\'39\tab \'58\'53\'39\'2d\'31\'34\tab \'3f\tab \'36\'20\'28\'46\'31\'20\'4d\'52\'50\'48\'29\tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'35\'2d\'38\tab \'44\'45\'41\'44\tab \'54\'2d\'32\tab \'32\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'35\'2d\'37\tab \'45\'43\'2d\'34\tab \'28\'27\'39\'31\'29\tab \'31\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'35\'2d\'36\tab \'48\'45\'2d\'32\tab \'20\'20\'20\'22\tab \'32\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'35\'2d\'35\tab \'31\'30\'30\'35\tab \'20\'20\'20\'22\tab \'32\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'35\'2d\'34\tab \'31\'39\'37\'36\tab \'20\'20\'20\'22\tab \'33\'33\'20\'28\'46\'31\'29\tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'35\'2d\'33\tab \'52\'4c\'2d\'32\tab \'20\'20\'20\'22\tab \'32\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'35\'2d\'32\tab \'31\'30\'32\'30\tab \'20\'20\'20\'22\tab \'3f\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'35\'2d\'31\tab \'31\'33\tab \'20\'20\'20\'22\tab \'33\tab \tab \'3f\tab \pard 
+\par 
+\pard \f1 \f3 \tab \tab \tab \tab \tab \pard 
+\par 
+\pard\plain \fs20 \f1 \sl-280 \slmult0 \keepn \b \f3 \tab \'52\'4f\'57\'20\'36\tab \pard \sl-280 \slmult0 \b0 \tab \tab \tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \tab \tab \tab \tab \tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'36\'2d\'32\'35\tab \'31\'39\'33\'37\tab \'28\'27\'39\'36\'29\tab \'33\'30\'20\'28\'44\'45\'4c\'54\'3f\'29\tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'36\'2d\'32\'34\tab \'31\'30\'31\'39\'20\'78\tab \'58\'53\'55\'31\'20\tab \'20\'20\'28\'27\'39\'36\'29\'20\'20\'20\'28\'30\'20\'78\'20\'30\'29\tab \'3f\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'36\'2d\'32\'33\tab \'48\'45\'2d\'34\tab \'28\'27\'39\'36\'29\tab \'31\tab \tab \'3f\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'36\'2d\'32\'32\tab \'31\'30\tab \'28\'27\'39\'31\'29\tab \'32\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'36\'2d\'32\'31\tab \'31\'39\'33\'37\tab \'20\'20\'20\'22\tab \'33\'30\'20\'28\'44\'45\'4c\'54\'3f\'29\tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'36\'2d\'32\'30\tab \'39\'38\'39\tab \'28\'27\'39\'36\'29\tab \'33\'31\'20\'28\'46\'31\'29\tab \'3f\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'36\'2d\'31\'39\tab \'45\'43\'2d\'31\tab \'28\'27\'39\'31\'29\tab \'32\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'36\'2d\'31\'38\tab \'31\'39\'33\'37\tab \'28\'27\'39\'32\'29\tab \'33\'30\'20\'28\'44\'45\'4c\'54\'3f\'29\tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'36\'2d\'31\'37\tab \'39\'39\'36\tab \'28\'27\'39\'33\'29\tab \'31\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'36\'2d\'31\'36\tab \'52\'4c\'2d\'36\tab \'28\'27\'39\'31\'29\tab \'33\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'36\'2d\'31\'35\tab \'31\'39\'37\'36\tab \'20\'20\'20\'22\tab \'33\'33\'20\'28\'46\'31\'29\tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'36\'2d\'31\'34\tab \'45\'43\'2d\'33\tab \'20\'20\'20\'22\tab \'31\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'36\'2d\'31\'33\tab \'48\'45\'2d\'31\tab \'28\'27\'39\'33\'29\tab \'32\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'36\'2d\'31\'32\tab \'52\'4d\'2d\'32\tab \'28\'27\'39\'31\'29\tab \'30\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'36\'2d\'31\'31\tab \'31\'39\'33\'35\tab \'20\'20\'20\'22\tab \'33\'34\'20\'28\'46\'31\'29\'20\tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'36\'2d\'31\'30\tab \'31\'30\tab \'20\'20\'20\'22\tab \'32\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'36\'2d\'39\tab \'39\'39\'39\tab \'20\'20\'20\'22\tab \'3f\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \highlight10\f3 \'4e\'36\'2d\'38\tab \'57\'48\'2d\'32\tab \'20\'20\'20\'3f\tab \'31\'32\'20\'28\'46\'31\'6d\'6f\'72\'70\'68\'3f\'29\tab \'4d\tab \pard 
+\par 
+\pard \highlight0\f1 \sl-280 \slmult0 \f3 \'4e\'36\'2d\'37\tab \'48\'45\'2d\'31\'30\tab \'28\'27\'39\'31\'29\tab \'30\tab \tab \'3f\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'36\'2d\'36\tab \'31\'30\'30\'35\tab \'20\'20\'20\'22\tab \'32\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'36\'2d\'35\tab \'54\'2d\'34\'38\tab \'20\'20\'20\'22\tab \'32\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'36\'2d\'34\tab \'48\'2d\'31\'30\tab \'20\'20\'20\'22\tab \'32\tab \tab \'3f\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'36\'2d\'33\tab \'48\'45\'2d\'31\tab \'20\'20\'20\'22\tab \'32\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'36\'2d\'32\tab \'48\'4d\'2d\'31\tab \'28\'27\'39\'33\'29\tab \'3f\'20\'28\'46\'31\'4d\'52\'50\'48\'29\tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'36\'2d\'31\tab \'31\'39\'39\'32\tab \'28\'27\'39\'31\'29\tab \'31\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \f3 \tab \tab \tab \tab \tab \pard 
+\par 
+\pard\plain \fs20 \f1 \sl-280 \slmult0 \keepn \b \f3 \tab \'52\'4f\'57\'20\'37\tab \pard \sl-280 \slmult0 \b0 \tab \tab \tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \tab \tab \tab \tab \tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'37\'2d\'32\'33\tab \'31\'39\'33\'37\tab \'28\'27\'39\'32\'29\tab \'33\'30\'20\'28\'44\'45\'4c\'54\'3f\'29\tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'37\'2d\'32\'32\tab \'31\'30\'31\'32\tab \'28\'27\'39\'33\'29\tab \'31\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'37\'2d\'32\'31\tab \'50\'45\'4f\'41\'32\tab \'28\'27\'39\'31\'29\tab \'31\tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'37\'2d\'32\'30\tab \'4e\'55\'4e\tab \'20\'20\'20\'22\tab \'32\tab \tab \'3f\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'37\'2d\'31\'39\tab \'52\'4d\'2d\'32\tab \'20\'20\'20\'22\tab \'30\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'37\'2d\'31\'38\tab \'39\'38\'34\tab \'20\'20\'20\'22\tab \'33\'34\'20\'28\'46\'31\'29\tab \'3f\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'37\'2d\'31\'37\tab \'54\'2d\'32\'31\tab \'20\'20\'20\'22\tab \'30\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'37\'2d\'31\'36\tab \'52\'4c\'2d\'31\tab \'20\'20\'20\'22\tab \'31\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'37\'2d\'31\'35\tab \'54\'33\'32\'30\'30\tab \'28\'27\'39\'33\'29\tab \'32\'3f\tab \tab \'3f\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'37\'2d\'31\'34\tab \'48\'45\'2d\'31\'30\tab \'28\'27\'39\'31\'29\tab \'30\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'37\'2d\'31\'33\tab \'31\'39\'39\'34\tab \'20\'20\'20\'22\tab \'33\'34\'20\'28\'46\'31\'29\tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'37\'2d\'31\'32\tab \'31\'39\'33\'37\tab \'28\'27\'39\'32\'29\tab \'33\'30\'20\'28\'44\'45\'4c\'54\'3f\'29\tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'37\'2d\'31\'31\tab \'44\'45\'41\'44\tab \'39\'38\'38\tab \tab \tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'37\'2d\'31\'30\tab \'31\'30\tab \'28\'27\'39\'31\'29\tab \'32\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'37\'2d\'39\tab \'4b\'53\'43\'52\'31\tab \'28\'27\'39\'32\'29\tab \'33\'35\'20\'28\'46\'52\'29\tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'37\'2d\'38\tab \'57\'43\'35\tab \'28\'27\'39\'31\'29\tab \'30\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'37\'2d\'37\tab \'48\'2d\'31\'30\tab \'20\'20\'20\'22\tab \'32\tab \tab \'3f\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'37\'2d\'36\tab \'31\'30\'30\'30\tab \'20\'20\'20\'22\tab \'30\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'37\'2d\'35\tab \'48\'45\'2d\'38\tab \'20\'20\'20\'22\tab \'30\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'37\'2d\'34\tab \'31\'33\tab \'20\'20\'20\'22\tab \'33\tab \tab \'3f\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'37\'2d\'33\tab \'31\'30\'32\'30\tab \'20\'20\'20\'22\tab \'3f\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'37\'2d\'32\tab \'45\'43\'2d\'32\tab \'20\'20\'20\'22\tab \'33\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'37\'2d\'31\tab \'43\'4f\'41\'4c\'33\tab \'20\'20\'20\'22\tab \'30\tab \'46\tab \pard 
+\par 
+\pard \f1 \f3 \tab \tab \tab \tab \tab \pard 
+\par 
+\pard\plain \fs20 \f1 \sl-280 \slmult0 \keepn \b \f3 \tab \'52\'4f\'57\'20\'38\tab \pard \sl-280 \slmult0 \b0 \tab \tab \tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \tab \tab \tab \tab \tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'38\'2d\'37\tab \'4b\'53\'43\'52\'31\tab \'28\'27\'39\'32\'29\tab \'33\'35\'20\'28\'46\'52\'29\tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'38\'2d\'36\tab \'45\'43\'2d\'33\tab \'28\'27\'39\'31\'29\tab \'31\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'38\'2d\'35\tab \'31\'38\tab \'20\'20\'20\'22\tab \'37\'20\'28\'46\'31\'4d\'52\'50\'48\'29\tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'38\'2d\'34\tab \'44\'45\'41\'44\tab \'31\'30\'31\'34\tab \'33\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'38\'2d\'33\tab \'44\'45\'41\'44\tab \'31\'30\'32\'33\tab \tab \tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'38\'2d\'32\tab \'31\'30\'30\'38\tab \'28\'27\'39\'33\'29\tab \'30\tab \tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'38\'2d\'31\tab \'31\'31\tab \'20\'20\'20\'22\tab \'36\tab \tab \'4d\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \tab \tab \tab \tab \tab \tab \tab \tab \tab \tab \pard 
+\par 
+\pard\plain \fs20 \f1 \sl-280 \slmult0 \keepn \b \f3 \tab \'52\'4f\'57\'20\'39\tab \pard \sl-280 \slmult0 \b0 \tab \tab \tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \tab \tab \tab \tab \tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'39\'2d\'33\tab \'57\'43\'33\'4d\tab \'28\'27\'39\'33\'29\tab \'3f\tab \tab \'3f\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'39\'2d\'32\tab \'31\'39\'37\'39\tab \'28\'27\'39\'36\'29\tab \'31\'33\'20\'28\'46\'31\'20\'4d\'52\'50\'48\'29\tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'4e\'39\'2d\'31\tab \'31\'39\'37\'36\tab \'28\'27\'39\'31\'29\tab \'33\'33\'20\'28\'46\'31\'29\tab \'46\tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \tab \tab \tab \tab \tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \tab \tab \tab \tab \tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \tab \tab \tab \tab \tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \tab \tab \tab \tab \tab \pard 
+\par 
+\pard \f1 \sl-280 \slmult0 \f3 \'20\'20\'20\'20\'20\'20\'20\'20\'20\'20\'20\'20
+\par 
+\f1 \f3 
+\par 
+\f1 \f3 
+\par 
+\f1 \f3 
+\par 
+\f1 \f3 
+\par 
+\f1 \f3 
+\par 
+\plain \fs20 \f1 \fs22 \f3 
+\par 
+\plain \fs20 \f1 \f3 \'20\'20\'20\'20\'20
+\par 
+\f1 \f3 
+\par 
+\f1 
+\par }
