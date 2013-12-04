@@ -21,9 +21,10 @@ pit$pb.pred <- pit$pb.pred + pit$pb.hole + pit$pb.woody.pred
 pit <- pit[,colnames(pit)!='pb.woody'&colnames(pit)!='pb.woody.pred'&colnames(pit)!='pb.hole'&colnames(pit)!='mite'&colnames(pit)!='pb.upper'&colnames(pit)!='pb.lower']
                                         #remove fungal
 pit <- pit[,colnames(pit)!='fungal']
-                                        #remove species with less than 17 observations
+                                        #remove species with less than 10 observations
 pit.com <- pit[,-1:-6]
-pit.com <- pit.com[,apply(pit.com,2,sum)>17]
+pit.com <- pit.com[,apply(pit.com,2,sum)>10]
+print(colnames(pit.com))
                                         #separate live and senescing leaves
 sen <- pit.com[pit[,1]=='sen',]
 pit.l <- split(sen,paste(pit$tree[pit[,1]=='sen'],pit$geno[pit[,1]=='sen']))
