@@ -15,9 +15,13 @@ pit[is.na(pit)] <- 0
                                         #merge categories
                                         #pemphigus mergers
 pit$pb.upper <- pit$pb.upper + pit$pb.woody
+pb <- pit$pb.upper + pit$pb.lower
+pit <- cbind(pit,pb=pb)
 pit$pb.pred <- pit$pb.pred + pit$pb.hole + pit$pb.woody.pred
-pit <- pit[,colnames(pit)!='pb.woody'&colnames(pit)!='pb.woody.pred'&colnames(pit)!='pb.hole'&colnames(pit)!='mite']
-                                        #remove species with less than 20 observations
+pit <- pit[,colnames(pit)!='pb.woody'&colnames(pit)!='pb.woody.pred'&colnames(pit)!='pb.hole'&colnames(pit)!='mite'&colnames(pit)!='pb.upper'&colnames(pit)!='pb.lower']
+                                        #remove fungal
+pit <- pit[,colnames(pit)!='fungal']
+                                        #remove species with less than 17 observations
 pit.com <- pit[,-1:-6]
 pit.com <- pit.com[,apply(pit.com,2,sum)>17]
                                         #separate live and senescing leaves
