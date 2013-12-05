@@ -24,31 +24,44 @@
 
 \textbf{Tasks}
 \begin{itemize}
-\item Update script with addition of 'leaves' column
-\item Deal with collapsing species
-\item Analyses:
-  \begin{enumerate}
-  \item Overall network model for senescing
-  \item Co-occurrence for senescing
-  \item Co-occurrence by genotype paired
-  \item Running cnm without fungus
-  \end{enumerate}
+\item Test for number of senescing leaves correlation with Pb
+\item Think about direct versus indirect genetic effects on community
+\item Test genotype effect on all species
+\item Get genetic distance data (RFLP?), maybe ask Zaccheus
+\item Think about genetic basis of leaf abscision/senescence
+\end{itemize}
+
+\section{4 Dec 2013}
+Notes from meeting with Tom:
+
+\begin{itemize}
+\item P. betae phenology likely done by late June (see Williams and Whitham)
+\item Test for number of senescing leaves correlation with Pb
+\item Think about direct versus indirect genetic effects on community
+\item Test genotype effect on all species
+\item Get genetic distance data (RFLP?), maybe ask Zaccheus
+\item Think about genetic basis of leaf abscision/senescence
 \end{itemize}
 
 \section{2 Dec 2013}
 
 Results of analysis of liv and sen
 \begin{itemize}
-\item Greater percent pemphigus on sen than live (t = 5.4687, df = 34, p-value = 4.226e-06)
-\item No difference in fungus (t = -1.8687, df = 34, p-value = 0.07031)
 \item Networks are sparse but show distinct differences, need to
   figure out how to compare models
+\item Co-occurrence
+%%%Arthropods only
+
+%%%Arthropods and Fungi
 \item Co-occurrence increases after senescence (t = 2.1951, df = 30, p-value = 0.03603)
 \item Genotype effect live: geno.ses     6  22.46   3.743   1.006  0.441
 \item Genotype effect sen: geno.ses     6  33.59   5.599   4.699
   0.002 **geno.ses     6  33.59   5.599   4.699  0.002 **
 \item Genotype mean ses shift from some positive to all negative going
   from sen to liv
+
+\item Greater percent pemphigus on sen than live (t = 5.4687, df = 34, p-value = 4.226e-06)
+\item No difference in fungus (t = -1.8687, df = 34, p-value = 0.07031)
 \end{itemize}
 
 \textbf{Dataset Alterations}
