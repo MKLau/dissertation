@@ -37,8 +37,12 @@ source('~/projects/dissertation/projects/onc_lichen/src/pit.r')
 
 @ 
 
-\section{04 Dec 2013}
-
+\section{05 Dec 2013}
+Editing:
+\begin{itemize}
+%%%
+\item 
+\end{itemize}
 
 \section{07 Nov 2013}
 
