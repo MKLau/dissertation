@@ -10,6 +10,9 @@
 
 ###lichen data
 x <- read.csv('~/projects/dissertation/projects/lichen_coo/data/lco_Apr2012.csv')
+                                        #remove notes
+x <- x[,colnames(x)!='NOTES.']
+                                        #
 x <- na.omit(x)
                                         #remove gnu.44 = FREMONT
 x <- x[x$tree!='gnu.44',]
@@ -18,7 +21,7 @@ x <- x[x$tree!='ll.6',]
                                         #condense species
 lec.spp <- apply(x[,c(6,8,10,18)],1,function(x) sign(any(x!=0)))
 phy.spp <- apply(x[,c(13,14,15,16)],1,function(x) sign(any(x!=0)))
-x <- cbind(x[,-ncol(x)],lec=lec.spp,phy=phy.spp,NOTES=x[,ncol(x)])
+x <- cbind(x,lec=lec.spp,phy=phy.spp)
 x <- x[,-c(6,8,10,18,13,14,15,16)]
                                         #break into quadrat list (x.q)
 quads <- paste(x$tree,x$quadrat)
@@ -66,7 +69,6 @@ wenv$lon <- lon
 library(fossil)
 geo.dist <- earth.dist(data.frame(lon,lat))
 range(geo.dist * 1000)
-hist(geo.dist * 1000)
 
 ###Tree id definitely influences the communities
 ###Accounting for tree autocorrelation of observations
@@ -81,13 +83,22 @@ adonis(com.~tid)
 ht <- sapply(rownames(com.),function(x) strsplit(x,split='_')[[1]][2])
 adonis(com.~ht)
 
+##Species accumulation curves
+sac.com <- list()
+for (i in 1:length(unique(env$Tree.ID))){
+  sac.com[[i]] <- apply(com.[env$Tree.ID==unique(env$Tree.ID)[i],],2,sum)
+}
+sac.com <- do.call(rbind,sac.com)
+plot(specaccum(sac.com),add=TRUE,col=2)
+
 ###Co-occurrence C-score
 
 ##Whole Stand
 source('../src/seenetR.R')
 library(sna)
-                                        #scn <- dep.net(x[,((1:ncol(x))[colnames(x)=='xgal']):((1:ncol(x))[colnames(x)=='phy'])])
-scn <- dget(file='~/projects/dissertation/projects/lichen_coo/results/scn.Rdata')
+scn <- dep.net(x[,((1:ncol(x))[colnames(x)=='xgal']):((1:ncol(x))[colnames(x)=='phy'])])
+                                        #
+                                        #scn <- dget(file='~/projects/dissertation/projects/lichen_coo/results/scn.Rdata')
 scn <- scn[rownames(scn)!='folio_grey_black',colnames(scn)!='folio_grey_black']
 e.col <- sign(scn)
 e.col[e.col==1] <- 'grey'
@@ -129,7 +140,6 @@ x.t <- split(x,x.split)
 x.t <- split(x,x.split)
 x.t <- lapply(x.t,function(x) x[,-c(1:4,ncol(x))])
 cs <- unlist(lapply(x.t,cscore))
-
 tid <- unlist(sapply(names(cs),function(x) strsplit(x,split='_')[[1]][1]))
                                         #co-occurrence nets
 dn.t <- lapply(x.t,dep.net) #dependency networks
