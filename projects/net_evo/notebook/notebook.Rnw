@@ -30,7 +30,12 @@
 \section{6 Dec 2013}
 
 What does the co.net tell us?
+Significant co-occurrences in units of standard deviations by default.
+
 What does the dep.net tell us?
+Significant conditional probability of co-occurrence of one species
+given another. Conditional probability is the co-occurrence
+probability divided by the occurrence probability of one species.
 
 Apply network modeling to Lonsdorf output:
 

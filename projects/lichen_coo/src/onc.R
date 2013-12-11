@@ -50,7 +50,7 @@ for (i in 1:length(unique(env$tree))){
   sac.com[[i]] <- apply(com[env$tree==unique(env$tree)[i],],2,sum)
 }
 sac.com <- do.call(rbind,sac.com)
-plot(specaccum(sac.com),ylim=c(0,10),ylab='Species Richness',xlab='Trees Sampled')
+plot(specaccum(sac.com),ylim=c(0,10),ylab='Species Richness',xlab='Trees Sampled',font.lab=2)
 legend('topright',legend=c('Garden','Wild'),lty=c(1,1),col=c(1,2))
 
 ###modeling

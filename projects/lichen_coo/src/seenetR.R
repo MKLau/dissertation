@@ -1,6 +1,8 @@
 ###Functions for the SEEnetR package
 ###Spatial, Ecological and Evolutionary Networks in R
 ###25 Sep 2013
+require(vegan)
+require(igraph)
 
 ###Spatial
 
@@ -94,12 +96,20 @@ calcDepend <- function(a,b){
   return(length(a[(a+b)==2])/sum(a)) #intersection of a with b divided by the total of a
 }
 
+negDepend <- function(a,b){
+  return(length(a[a==1&b==0])/sum(a))
+}
+
 ###Dependency Network
-dep.net <- function(x='species in cols',zero.na=TRUE,prune=TRUE,diag.zero=TRUE){
+dep.net <- function(x='species in cols',zero.na=TRUE,prune=TRUE,diag.zero=TRUE,pos=TRUE){
   out <- matrix(NA,nrow=ncol(x),ncol=ncol(x))
   for (i in 1:ncol(x)){
     for (j in 1:ncol(x)){
-      out[i,j] <- calcDepend(x[,i],x[,j])
+      if (pos){
+        out[i,j] <- calcDepend(x[,i],x[,j])
+      }else{
+        out[i,j] <- negDepend(x[,i],x[,j])
+      }
     }
   }
   if (prune){
@@ -110,6 +120,68 @@ dep.net <- function(x='species in cols',zero.na=TRUE,prune=TRUE,diag.zero=TRUE){
   rownames(out) <- colnames(out) <- colnames(x)
   if (zero.na){out[is.na(out)] <- 0}
   return(out)
+}
+
+netSym <- function(x='dependency network',zero.na=TRUE){
+  out <- x * 0
+  for (i in 1:nrow(x)){
+    for (j in 1:ncol(x)){
+      out[i,j] <- abs(x[i,j]-x[j,i])/max(c(x[i,j],x[j,i]))
+    }
+  }
+  if (zero.na){out[is.na(out)] <- 0}
+  return(out)
+}
+
+percThreshold <- function(x='network matrix',step.size=0.01){
+  no.c <- no.clusters(graph.adjacency(x,weighted=TRUE))
+  step <- 1
+  while (no.c==1){
+    x[x<=(step*step.size)] <- 0
+    no.c <- no.clusters(graph.adjacency(x,weighted=TRUE))
+    step <- step + 1
+  }
+  out <- list(threshold=((step-1)*step.size),isolated.nodes=colnames(x)[clusters(graph.adjacency(x,weighted=TRUE))$membership==2])
+  return(out)
+}
+
+
+CoNetwork <- function(x,plot.net=TRUE,scalar=3,min.vsize=0.1){
+###Runs all steps of the process for modeling
+###Co-occurrence networks described by Araujo et al. 2011.
+###It depends on the seenetR.R script which contains both the
+###Araujo functions and related co-occurrence null modeling
+###functions.
+
+###Inputs: 
+#x = matrix of co-occurrence with species in columns
+#plot.net = logical. Should the network be plotted?
+#scalar = scales the size of all vertices
+#min.vsize = sets the minimum size for vertices
+
+#Step 1. Calculate a Bray-Curtis distance matrix
+
+bc.d <- as.matrix(vegdist(t(x)))
+
+#Step 2. Prune distance matrix based on co-occurrence probabilities
+
+prune <- co.net(x)
+bc.d[prune==0] <- 0
+
+#Step 3. Reduce to percolation threshold
+thresh <- percThreshold(bc.d)$threshold
+pruned.net <- bc.d
+pruned.net[d.net<thresh] <- 0
+
+if (plot.net){
+  v.cex <- apply(x,2,sum) #scaling node size by the log of species frequencies
+  v.cex <- (((v.cex/sum(v.cex))/max((v.cex/sum(v.cex))))*scalar)+min.vsize
+  gplot(abs(pruned.net),displaylabels=TRUE,gmode='graph',pad=1.5,
+        edge.lwd=(abs(pruned.net)),vertex.cex=v.cex,vertex.col='grey')
+}
+
+return(pruned.net)
+
 }
 
 
@@ -132,7 +204,7 @@ cscore <- function(x,cu.mat=FALSE){
   if (cu.mat){return(cu)}else{return(mean(cu))}
 }
 
-require(vegan)
+
 
 nullCom <- function(com,method='r1',nits=5000,burn=500,thin=10){
                                         #force binary

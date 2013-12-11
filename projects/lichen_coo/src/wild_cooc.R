@@ -51,6 +51,16 @@ source('~/projects/dissertation/projects/lichen_coo/src/seenetR.R')
 ## stand.p <- length(stand.cs[stand.cs<stand.obs])/length(stand.obs)
 ## stand.out <- cbind(stand.ses=stand.ses,stand.p=stand.p)
 ## write.csv(stand.out,file='~/projects/dissertation/projects/lichen_coo/results/wild_coo_results.csv')
+
+##Condensed stand level
+## com <- do.call(rbind,lapply(x.t,function(x) apply(x,2,sum)))
+## cond.ncs <- nullCom(com)
+## cond.ncs <- unlist(lapply(cond.ncs,cscore))
+## cond.ocs <- cscore(com)
+## cond.ses <- (cond.ocs-mean(cond.ncs))/sd(cond.ncs)
+## cond.p <- length(cond.ncs[cond.ncs<=cond.ocs])/length(cond.ncs)
+
+
 #Tree scale
 nits <- 5000
 x.t. <- lapply(x.t,function(x) x[,-1:-4])

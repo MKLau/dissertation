@@ -89,60 +89,53 @@ for (i in 1:length(unique(env$Tree.ID))){
   sac.com[[i]] <- apply(com.[env$Tree.ID==unique(env$Tree.ID)[i],],2,sum)
 }
 sac.com <- do.call(rbind,sac.com)
-plot(specaccum(sac.com),add=TRUE,col=2)
+plot(specaccum(sac.com),add=FALSE,col=2)
 
 ###Co-occurrence C-score
 
 ##Whole Stand
 source('../src/seenetR.R')
-library(sna)
-scn <- dep.net(x[,((1:ncol(x))[colnames(x)=='xgal']):((1:ncol(x))[colnames(x)=='phy'])])
-                                        #
-                                        #scn <- dget(file='~/projects/dissertation/projects/lichen_coo/results/scn.Rdata')
-scn <- scn[rownames(scn)!='folio_grey_black',colnames(scn)!='folio_grey_black']
-e.col <- sign(scn)
-e.col[e.col==1] <- 'grey'
-e.col[e.col==-1] <- 'red'
-v.cex <- apply(com,2,sum)[colnames(com)!='folio_grey_black']
-v.cex <- log(v.cex,10)
-v.cex <- v.cex * (1/min(v.cex))
-v.cex <- v.cex/2
-gplot(abs(scn),displaylabels=TRUE,gmode='graph',pad=1.5,
-      edge.col=e.col,edge.lwd=abs(scn),
-      vertex.cex=v.cex,vertex.col='lightblue')
+scn <- CoNetwork(x[,((1:ncol(x))[colnames(x)=='xgal']):((1:ncol(x))[colnames(x)=='phy'])])
 
 ##Centrality analysis
+detach(package:igraph)
+library(sna)
 scn.centrality <- degree(scn)
-scn.abund <- apply(com,2,sum)
-scn.rel <- scn.abund/sum(scn.abund)*100
+scn.abund <- apply(x[,((1:ncol(x))[colnames(x)=='xgal']):((1:ncol(x))[colnames(x)=='phy'])],2,sum)
 names(scn.rel)[4] <- 'fgb'
                                         #
 par(mfrow=c(1,2))
-plot(scn.centrality~scn.rel[c(-4)])
-abline(lm(scn.centrality~scn.rel[c(-4)]))
-summary(lm(scn.centrality~scn.rel[c(-4)]))
-                                        #
-plot(scn.centrality[-1]~scn.rel[c(-1,-4)])
-abline(lm(scn.centrality[-1]~scn.rel[c(-1,-4)]))
-summary(lm(scn.centrality[-1]~scn.rel[c(-1,-4)]))
-                                        #
-par(mfrow=c(1,2))
-barplot(scn.centrality[order(scn.centrality,decreasing=TRUE)],
-        names=rownames(scn)[order(scn.centrality,decreasing=TRUE)],
-        las=2,ylab='Node Level Centrality')
-barplot(scn.rel[order(scn.rel,decreasing=TRUE)],
-        names=names(scn.rel)[order(scn.rel,decreasing=TRUE)],
-        las=2,ylab='Relative Total Abundance')
+plot(log(scn.centrality+1)~scn.abund)
+abline(lm(log(scn.centrality+1)~scn.abund))
+summary(lm(log(scn.centrality+1)~scn.abund))
 
+plot(scn.centrality[scn.centrality!=0]~scn.abund[scn.centrality!=0])
+abline(lm(scn.centrality[scn.centrality!=0]~scn.abund[scn.centrality!=0]))
+summary(lm(scn.centrality[scn.centrality!=0]~scn.abund[scn.centrality!=0]))
+                                        #
+##Condensed stand level
+x.t <- split(x,x.split)
+x.t <- split(x,x.split)
+x.t <- lapply(x.t,function(x) x[,-1:-4])
+com <- do.call(rbind,lapply(x.t,function(x) apply(x,2,sum)))
+cond <- com
+cond[cond!=0] <- 1
+cond.ncs <- nullCom(com)
+cond.ncs <- unlist(lapply(cond.ncs,cscore))
+cond.ocs <- cscore(com)
+cond.ses <- (cond.ocs-mean(cond.ncs))/sd(cond.ncs)
+cond.p <- length(cond.ncs[cond.ncs<=cond.ocs])/length(cond.ncs)
+cond.net <- dep.net(cond)
+adonis(com~prb,permutations=10000)
+com.rel <- apply(com,2,function(x) x/max(x))
+adonis(com.rel~prb,permutations=10000)
 
 ##Tree scale
-x.t <- split(x,x.split)
-x.t <- split(x,x.split)
-x.t <- lapply(x.t,function(x) x[,-c(1:4,ncol(x))])
 cs <- unlist(lapply(x.t,cscore))
 tid <- unlist(sapply(names(cs),function(x) strsplit(x,split='_')[[1]][1]))
                                         #co-occurrence nets
-dn.t <- lapply(x.t,dep.net) #dependency networks
+source('../src/seenetR.R')
+dn.t <- lapply(x.t,CoNetwork) #Co-occurrence networks
 net.d <- matrix(0,nrow=length(dn.t),ncol=length(dn.t))
 rownames(net.d) <- colnames(net.d) <- names(dn.t)
 for (i in 1:nrow(net.d)){
@@ -151,7 +144,31 @@ for (i in 1:nrow(net.d)){
   }
 }
 net.d <- as.dist(net.d)
+                                        #averaged network structure
+avg.dnet <- dn.t[[1]]
+for (i in 2:length(dn.t)){
+  avg.dnet <- avg.dnet + dn.t[[i]]
+}
+avg.dnet <- avg.dnet / length(avg.dnet)
+
+par(mfrow=c(1,2))
+v.cex <- apply(x[-1:-4],2,sum) #scaling node size by the log of species frequencies
+v.cex <- (((v.cex/sum(v.cex))/max((v.cex/sum(v.cex))))*3)+0.1
+coord <- gplot(abs(scn),displaylabels=TRUE,gmode='graph',pad=1.5,
+               edge.lwd=(abs(scn)),vertex.cex=v.cex,vertex.col='grey')
+gplot(abs(avg.dnet),displaylabels=TRUE,gmode='graph',pad=1.5,
+      edge.lwd=(abs(avg.dnet)),vertex.cex=v.cex,vertex.col='grey',
+      coord=coord)
+
+                                        #wild ses scores
+ses.t <- dget('../data/wild_tree_ses.Rdata')
+ses.t[is.na(ses.t)] <- 0
+ses.p <- dget('../data/wild_tree_pval.Rdata')
+ses.ncs <- dget('../data/wild_tree_ncs.Rdata')
+ses.ocs <- dget('../data/wild_tree_ocs.Rdata')
+names(ses.t) <- names(ses.ocs)
                                         #centrality
+detach(package:igraph)
 cen.t <- unlist(lapply(dn.t,function(x) centralization(x,FUN='degree')))
                                         #degree
 deg.t <- unlist(lapply(dn.t,function(x) sum(sign(abs(x)))))
@@ -163,49 +180,9 @@ adonis(net.d~cen.t)
 summary(lm(cen.t~deg.t))
 summary(lm(deg.t~prb))
 summary(lm(cen.t~prb))
-summary(lm(ses.zp~deg.t))
-                                        #
-plot(cs~prb)
-abline(lm(cs~prb))
-summary(lm(cs~prb))
+summary(lm(ses.t~deg.t))
+summary(lm(ses.t~prb))
                                         #SES values
-library(vegan)
-library(pbapply)
-#x.sim <- pblapply(x.t,nullCom)
-#x.cs <- pblapply(x.sim,function(x) lapply(x,cscore))
-#x.cs <- pblapply(x.cs,unlist)
-                                        #dput(x.cs,file='~/projects/dissertation/projects/lichen_coo/results/x_cs.txt')
-test <- dget(file='~/projects/dissertation/projects/lichen_coo/results/x_cs.txt')
-x.cs <- test
-ses <- cs*0
-for (i in 1:length(ses)){
-  ses[i] <- (cs[i] - mean(x.cs[[i]])) / sd(x.cs[[i]])
-}
-ses[is.na(ses)] <- 0
-                                        #
-par(mfrow=c(4,4))
-for (i in 1:length(x.cs)){
-  if (cs[i]<min(x.cs[[i]])){
-    plot(density(x.cs[[i]]),main=names(cs)[i],xlab='C-Score',xlim=c(cs[i],max(x.cs[[i]])))
-    abline(v=cs[i],lty=1,col='red')
-  }else if (cs[i]>max(x.cs[[i]])){
-    plot(density(x.cs[[i]]),main=names(cs)[i],xlab='C-Score',,xlim=c(min(x.cs[[i]]),cs[i]))
-    abline(v=cs[i],lty=1,col='red')
-  }
-  else{
-    plot(density(x.cs[[i]]),main=names(cs)[i],xlab='C-Score')
-    abline(v=cs[i],lty=1,col='red')
-  }
-}
-
-wild.p <- cs*0
-for (i in 1:length(wild.p)){
-  wild.p[i] <- length(x.cs[[i]][x.cs[[i]]<=cs[i]])/length(x.cs[[i]])
-}
-
-wild.coa <- cbind(ses=ses,p=wild.p)
-write.csv(wild.coa,file='~/projects/dissertation/projects/lichen_coo/results/tables/wild_coa_table.csv')
-
 ###SES roughness, age, abundance, richness
 height <- as.character(sapply(rownames(com),function(x) strsplit(x,split='_')[[1]][2]))
 com.4555 <- com[height=='n45.55',]
@@ -220,26 +197,23 @@ adonis((com.t)~age,permutation=5000)
 mantel(vegdist(com.t)~geo.dist)
 mantel(vegdist(com.t)~net.d+geo.dist)
                                         #
-plot(ses~prb,xlab='Mean Percent Roughness',ylab='SES',pch=19,
+plot(ses.t~prb,xlab='Mean Percent Roughness',ylab='SES',pch=19,
      cex=1.5,font.lab=2,cex.lab=1.25,font.axis=2)
-my.line(prb,ses,lwd=3)
-summary(lm(ses~prb))
+my.line(prb,ses.t,lwd=3)
+summary(lm(ses.t~prb))
                                         #
-ses.zp <- ses; ses.zp[wild.coa[,2]>0.05] <- 0 #zeroed ses based on p-value
-plot((ses.zp~prb),xlab='Mean Percent Roughness',ylab='SES',pch=19,font.lab=2)
-abline(lm(ses.zp~prb))
-summary(lm(ses.zp~prb))
+plot((ses.t~total.abundance),xlab='Total Abundance',ylab='SES',pch=19,font.lab=2)
+abline(lm(ses.t~total.abundance))
+summary(lm(ses.t~total.abundance))
                                         #
-plot((ses~total.abundance),xlab='Total Abundance',ylab='SES',pch=19,font.lab=2)
-abline(lm(ses~total.abundance))
-summary(lm(ses~total.abundance))
-                                        #
-plot((ses~species.richness),xlab='Species Richness',ylab='SES',pch=19,font.lab=2)
-abline(lm(ses~species.richness))
-summary(lm(ses~species.richness))
+plot((ses.t~species.richness),xlab='Species Richness',ylab='SES',pch=19,font.lab=2)
+abline(lm(ses.t~species.richness))
+summary(lm(ses.t~species.richness))
                                         #Ageage <- read.csv('~/projects/dissertation/projects/lichen_coo/data/UintaMaster_LichenHeritNL_FallSpring_2012_ForLau.csv')
                                         #
 age <- read.csv('~/projects/dissertation/projects/lichen_coo/data/UintaMaster_LichenHeritNL_FallSpring_2012_ForLau.csv')
+dbh <- age$DBH.cm_01
+age.final <- age$AgeFinal.U
 age <- data.frame(tree.id=age[,1],age.final=age$AgeFinal.U)
 age[,1] <- tolower(age[,1])
 age[,1] <- sub('_','\\.',age[,1])
@@ -247,34 +221,32 @@ age[,1] <- sub('-','\\.',age[,1])
 age[,1] <- sub('\\?','',age[,1])
 age[,1] <- sub('\\.0','\\.',age[,1])
 age[age[,1]=='gnu.85.1ftaway',1] <- 'gnu.85'
-all(names(ses)%in%age[,1])
                                         #
                                         #predict age
-gnu19.dbh <- age$DBH.cm_01[34]
-new <- data.frame(DBH.cm_01=seq(min(age$DBH.cm_01),max(age$DBH.cm_01),by=0.1))
-age <- na.omit(age)
-pred.age <- predict(lm(AgeFinal.U~DBH.cm_01,data=age),new)
+gnu19.dbh <- dbh[age$tree.id=='gnu.19']
+new <- data.frame(dbh=seq(min(dbh),max(dbh),by=0.1))
+age.final <- na.omit(age.final)
+pred.age <- predict(lm(age.final~dbh,data=age),new)
 plot(pred.age~new[,1])
 gnu19.age <- as.numeric(pred.age[new[,1]==gnu19.dbh])
-
                                         #
-tree.age <- numeric(length(ses))
-tree.age <- age[match(names(ses),age[,1]),2]
+tree.age <- numeric(length(ses.t))
+tree.age <- age[match(names(ses.t),age[,1]),2]
 tree.age[is.na(tree.age)] <- gnu19.age
-names(tree.age) <- age[match(names(ses),age[,1]),1]
+names(tree.age) <- age[match(names(ses.t),age[,1]),1]
                                         #
 par(mfrow=c(1,2))
 plot(prb~tree.age,xlab='Tree Age (years)',ylab='Percent Bark Roughness',font.lab=2,pch=19)
 abline(lm(prb~tree.age))
 summary(lm(prb~tree.age))
-plot(ses~tree.age)
-abline(lm(ses~tree.age))
-summary(lm(ses~tree.age))
+plot(ses.t~tree.age)
+abline(lm(ses.t~tree.age))
+summary(lm(ses.t~tree.age))
                                         #
 library(sem)
 ###tree.age -> prb -> ses
 model.sem <- specifyModel(file='~/projects/dissertation/projects/lichen_coo/src/sem_model.txt')
-   sem.data <- na.omit(cbind(tree.age,prb,ses))
+   sem.data <- na.omit(cbind(tree.age,prb,ses=ses.t))
                                         #transforms
 ###
                                         #sem fitting and analysis
@@ -293,15 +265,14 @@ pathDiagram(sem.fit,file='~/projects/dissertation/projects/lichen_coo/results/se
 ###Tree characters predict network structure (deg.t) and co-occurrence patterns (ses.zp)
                                         #roughness (prb)
 summary(lm(deg.t~prb))
-summary(lm(ses~prb))
-summary(aov(ses.zp~prb))
+summary(lm(ses.t~prb))
                                         #cover (canopy.n)/96
 cover <- (wenv$canopy.n/96)*100
 summary(lm(cover~tree.age))
 summary(lm(deg.t~cover))
-summary(lm(ses.zp~cover))
+summary(lm(ses.t~cover))
                                         #height
-summary(lm(ses.zp~wenv$hieght.m))
+summary(lm(ses.t~wenv$hieght.m))
 
 ###################################
 ###Final analyses
@@ -313,21 +284,20 @@ gplot(abs(scn),displaylabels=TRUE,gmode='graph',pad=1.5,
       vertex.cex=v.cex,vertex.col='lightblue')
                                         #tree scale
                                         #affect of PRB on SES
-summary(lm(ses~prb))
-shapiro.test(residuals(summary(lm(ses~prb))))
+summary(lm(ses.t~prb))
+shapiro.test(residuals(summary(lm(ses.t~prb))))
                                         #affect of age on ses
-summary(lm(ses~prb))
-shapiro.test(residuals(summary(lm(ses~prb))))
+summary(lm(ses.t~tree.age))
+shapiro.test(residuals(summary(lm(ses.t~tree.age))))
                                         #mantels
                                         #microsite
                                         # geographic distance
                                         # elevation
-mantel(dist(ses)~dist(prb)+dist(tree.age)+geo.dist)
-mantel(dist(ses)~dist(tree.age)+geo.dist+dist(prb))
+mantel(dist(ses.t)~dist(prb)+dist(tree.age)+geo.dist)
+mantel(dist(ses.t)~dist(tree.age)+geo.dist+dist(prb))
 mantel(dist(prb)~dist(tree.age)+geo.dist)
 mantel(dist(prb)~geo.dist)
 mantel(dist(tree.age)~geo.dist)
-mantel(dist(ses)~dist(cover))
                                         #SEM for reduced model
 library(sem)
 ###tree.age -> prb -> ses
