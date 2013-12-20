@@ -1,6 +1,7 @@
 ###Functions for the SEEnetR package
 ###Spatial, Ecological and Evolutionary Networks in R
 ###25 Sep 2013
+
 require(vegan)
 require(igraph)
 
@@ -96,10 +97,6 @@ calcDepend <- function(a,b){
   return(length(a[(a+b)==2])/sum(a)) #intersection of a with b divided by the total of a
 }
 
-negDepend <- function(a,b){
-  return(length(a[a==1&b==0])/sum(a))
-}
-
 ###Dependency Network
 dep.net <- function(x='species in cols',zero.na=TRUE,prune=TRUE,diag.zero=TRUE,pos=TRUE){
   out <- matrix(NA,nrow=ncol(x),ncol=ncol(x))
@@ -118,17 +115,6 @@ dep.net <- function(x='species in cols',zero.na=TRUE,prune=TRUE,diag.zero=TRUE,p
   }else{}
   if (diag.zero){diag(out) <- 0}
   rownames(out) <- colnames(out) <- colnames(x)
-  if (zero.na){out[is.na(out)] <- 0}
-  return(out)
-}
-
-netSym <- function(x='dependency network',zero.na=TRUE){
-  out <- x * 0
-  for (i in 1:nrow(x)){
-    for (j in 1:ncol(x)){
-      out[i,j] <- abs(x[i,j]-x[j,i])/max(c(x[i,j],x[j,i]))
-    }
-  }
   if (zero.na){out[is.na(out)] <- 0}
   return(out)
 }
@@ -171,7 +157,7 @@ bc.d[prune==0] <- 0
 #Step 3. Reduce to percolation threshold
 thresh <- percThreshold(bc.d)$threshold
 pruned.net <- bc.d
-pruned.net[d.net<thresh] <- 0
+pruned.net[bc.d<thresh] <- 0
 
 if (plot.net){
   v.cex <- apply(x,2,sum) #scaling node size by the log of species frequencies
@@ -182,6 +168,30 @@ if (plot.net){
 
 return(pruned.net)
 
+}
+
+###Araujo network statistics
+
+#species strength
+coStrength <- function(x='dependency network',direction='in'){
+  if (direction=='in'){
+    return(apply(x,2,sum))    
+  }else{
+    return(apply(x,1,sum))
+  }
+}
+
+#symmetry
+coSym <- function(x='dependency network',zero.na=TRUE){
+  out <- x * 0
+  for (i in 1:nrow(x)){
+    for (j in 1:ncol(x)){
+      if (max(c(x[i,j],x[j,i]))==0){}else{
+        out[i,j] <- abs(x[i,j]-x[j,i])/max(c(x[i,j],x[j,i]))
+      }
+    }
+  }
+  return(out)
 }
 
 

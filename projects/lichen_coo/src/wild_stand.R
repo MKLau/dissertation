@@ -73,7 +73,7 @@ range(geo.dist * 1000)
 ###Tree id definitely influences the communities
 ###Accounting for tree autocorrelation of observations
 com <- split(x,paste(x$tree,x$quadrat,sep='_'))
-com <- lapply(com,function(x) apply(x[,-c(1:4,ncol(x))],2,sum))
+com <- lapply(com,function(x) apply(x[,-1:-4],2,sum))
 com <- do.call(rbind,com)
 library(vegan)
 com. <- cbind(com,ds=rep(1,nrow(com)))
@@ -95,20 +95,18 @@ plot(specaccum(sac.com),add=FALSE,col=2)
 
 ##Whole Stand
 source('../src/seenetR.R')
+library(sna)
 scn <- CoNetwork(x[,((1:ncol(x))[colnames(x)=='xgal']):((1:ncol(x))[colnames(x)=='phy'])])
 
 ##Centrality analysis
 detach(package:igraph)
-library(sna)
 scn.centrality <- degree(scn)
 scn.abund <- apply(x[,((1:ncol(x))[colnames(x)=='xgal']):((1:ncol(x))[colnames(x)=='phy'])],2,sum)
-names(scn.rel)[4] <- 'fgb'
                                         #
 par(mfrow=c(1,2))
 plot(log(scn.centrality+1)~scn.abund)
 abline(lm(log(scn.centrality+1)~scn.abund))
 summary(lm(log(scn.centrality+1)~scn.abund))
-
 plot(scn.centrality[scn.centrality!=0]~scn.abund[scn.centrality!=0])
 abline(lm(scn.centrality[scn.centrality!=0]~scn.abund[scn.centrality!=0]))
 summary(lm(scn.centrality[scn.centrality!=0]~scn.abund[scn.centrality!=0]))
@@ -129,6 +127,46 @@ cond.net <- dep.net(cond)
 adonis(com~prb,permutations=10000)
 com.rel <- apply(com,2,function(x) x/max(x))
 adonis(com.rel~prb,permutations=10000)
+                                        #network stats from Araujo
+net.sim <- coSym(dep.net(x[,((1:ncol(x))[colnames(x)=='xgal']):((1:ncol(x))[colnames(x)=='phy'])]))
+mean(net.sim[upper.tri(net.sim)])
+
+                                        #max network plot
+max.order <- order(prb,decreasing=TRUE)
+net <- scn
+max.com <- com[max.order,]
+rownames(max.com) <- 1:nrow(max.com)
+max.loc <- function(x){
+  x[x!=max(x)] <- 0
+  x[x==max(x)] <- max(x)
+  return(x)
+}
+max.t <- apply(max.com,2,max.loc)
+max.pos <- rep(3,ncol(max.t))
+max.xy <- array(NA,dim=c(ncol(max.t),2))
+rownames(max.xy) <- colnames(max.t)
+                                        #plotting
+par(mfrow=c(1,1))
+plot(c(0,max(max.t))~c(0,nrow(max.t)+0.5),type='n',ylab='Maximum Abundance',xaxt='n',xlab='Tree (Ranked by Roughness)',font.lab=2)
+axis(1,at=seq(0.5,nrow(max.t),length=nrow(max.t)),label=rownames(max.t),las=1)
+for (i in 1:ncol(max.t)){
+  x <- seq(0.5,nrow(max.t),length=nrow(max.t))[max.t[,i]!=0]
+  if (i==6){x <- x + 0.2}
+  y <- max.t[max.t[,i]!=0,i]
+  max.xy[i,] <- c(x,y)
+  points(x,y,pch=19)
+  text(x,y,colnames(max.t)[i],pos=max.pos[i])
+}
+                                        #networking
+for (i in 1:nrow(net)){
+  for (j in 1:ncol(net)){
+    if (net[i,j]!=0){
+      lines(c(max.xy[rownames(max.xy)==rownames(net)[i],1],max.xy[rownames(max.xy)==colnames(net)[j],1]),
+            c(max.xy[rownames(max.xy)==rownames(net)[i],2],max.xy[rownames(max.xy)==colnames(net)[j],2]),
+            col='grey')
+    }
+  }
+}
 
 ##Tree scale
 cs <- unlist(lapply(x.t,cscore))

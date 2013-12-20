@@ -27,6 +27,67 @@
 \setcounter{tocdepth}{3}  %%activate to number sections
 \tableofcontents
 
+\section{18 Dec 2013}
+Sent outline (see Docs) to Steve. Check back with him in a couple of
+days. 
+
+
+\section{17 Dec 2013}
+
+\begin{enumerate}
+\item Conducting network modeling
+\end{enumerate}
+
+\section{16 Dec 2013}
+
+Results
+\begin{itemize}
+\item Lonsdorf model produces nested biparite genotype-species networks at high
+  levels of genetic effects
+\item Lonsdorf model also produces co-occurrence network structure at
+  high levels of genetic effects
+\end{itemize}
+
+Look at Jelle's models of stability.
+
+Check Lonsdorf's model output with your R cod output.
+
+Analyze the simulation output from two perspectives: 1) bipartaite
+network structure of tree species and 2) co-occurrence patterns in
+dependent communities. 
+
+From the bipartite perspective, if we assume nestedness, how will
+networks evolve.
+
+From the co-occurrence perspective, what network patterns arise given
+different amounts of influence of genetics versus environment. The
+interaction context comes in the form of co-occurrences influencing
+encounter rates, which are the rate limiting step for interactions.
+
+Also from both of these perspectives, keep in mind the possibility of
+actually looking at interactions among species. 
+
+Notes on Lonsdorf Code
+\begin{itemize}
+\item Line 30 "art_r" doesn't match any other variables in the code,
+  most likely a typo and shoulg be art_g
+\item 
+\end{itemize}
+
+
+\section{11 Dec 2013}
+
+Strategy for Chap3
+\begin{verbatim}
+- seeNets package on CRAN
+- seeNets pub MEE
+* Make sure to email Araujo et al.
+- add simulator, which will show the development of networks along a
+genetic gradient
+* This can be based on the Shuster 2006 paper so that you don't scoop
+the Lonsdorf manuscript
+\end{verbatim}
+
 \section{6 Dec 2013}
 
 What does the co.net tell us?

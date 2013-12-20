@@ -4,6 +4,8 @@
 reps <- 10 #number of times to run simulation
 ### tree genotypic values - range from 11 to 21
 trees2 <- read.csv('../data/trees.txt')
+
+
 ###generate arthropod alleles for 25 species
 insects <- matrix(NA,nrow=25,ncol=2)
 insects[,1] <- runif(25,5,21) #heterozygote value between 5 and 21
