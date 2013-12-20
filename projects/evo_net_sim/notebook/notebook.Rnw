@@ -27,6 +27,11 @@
 \setcounter{tocdepth}{3}  %%activate to number sections
 \tableofcontents
 
+\section{20 Dec 2013}
+Add data from Gina, Art, Rikke and Cam, Adrian?
+
+The idea being to simulate but then observe patterns in real data.
+
 \section{18 Dec 2013}
 Sent outline (see Docs) to Steve. Check back with him in a couple of
 days. 
