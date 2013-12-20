@@ -1,0 +1,33 @@
+General
+Q. Does genetics influence composition
+- Composition PerMANOVA for genotype
+Q. Do individuals contribute to bipartite network structure?
+- Bipartite network (whole and condensed)
+Q. Does genetics contribute to interaction network structure by
+influencing interaction frequency?
+- Stand level unipartite networks (whole and condensed)
+- Tree level unipartite networks (tree and net average)
+- Co-occurrence analyses
+Q. Do these networks have a characteristic sturcture?
+- Network statistics (node, module and network)
+- QAP test
+- Node correlations
+
+ENS (Ecological Network Simulation)
+
+- generate communities with varying genetics
+- analyze composition
+- model bipartite network using trees as reps
+- test nestedness using equiprobable-equiprobable
+- model unipartite network
+- test for network structural differences
+- test for correlation between degree and strength of selection
+
+LCO
+- test for the effect of height
+- test compositional effect using tree level sums
+- construct 
+
+ACN
+
+

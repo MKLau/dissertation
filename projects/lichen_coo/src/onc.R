@@ -7,7 +7,7 @@
 
 rm(list=ls())
 library(sna)
-source('./helper_funcs.R')
+source('~/projects/ComGenR_development/src/helper_funcs.R')
 
 ###Garden Analysis
 garden.data <- read.csv('~/projects/dissertation/projects/lichen_coo/data/LCO_data_ONC_PIT.csv')
@@ -55,9 +55,20 @@ legend('topright',legend=c('Garden','Wild'),lty=c(1,1),col=c(1,2))
 
 ###modeling
 library(pbapply)
-source('./seenetR.R')
+source('~/projects/ComGenR_development/src/seenetR.R')
+
 ###Co-occurrences
 ##stand level
+                                        #bipartite network
+
+bpn.l <- split(onc[,7:ncol(onc)],onc$Tree)
+bpn <- do.call(rbind,lapply(bpn.l,function(x) apply(x,2,sum)))
+bpn.sort <- bpn[order(apply(bpn,1,function(x) sum(sign(x))),decreasing=TRUE),order(apply(bpn,2,function(x) sum(sign(x))),decreasing=TRUE)]
+plotweb(bpn.sort,method='normal')
+visweb(bpn.sort)
+nest.r0 <- oecosimu(bpn,nestedtemp,method='r0',nsimul=1000,burnin=100)
+nest.r1 <- oecosimu(bpn,nestedtemp,method='r1',nsimul=1000,burnin=100)
+
                                         #onc network
 onc.cn <- co.net(onc[,7:ncol(onc)])
 onc.dn <- dep.net(onc[,7:ncol(onc)])
@@ -115,10 +126,10 @@ all(names(onc.deg)==names(onc.ses))
 ###Analyses
                                         #community composition
 onc.com <- do.call(rbind,lapply(onc.q,function(x) apply(x,2,sum)))
-onc.com <- (onc.com/100)
+                                        #onc.com <- (onc.com/100)
 onc.com <- cbind(onc.com,ds=rep(min(onc.com[onc.com!=0])/10,nrow(onc.com)))
 adonis(onc.com~factor(genotype),permutations=10000)
-adonis(onc.com~avg.rough+factor(genotype),permutations=10000)
+adonis(onc.com~factor(genotype)+avg.rough,permutations=10000)
                                         #indicator species analysis
 ## library(labdsv)
 ## indval(onc.com[,-ncol(onc.com)],genotype)

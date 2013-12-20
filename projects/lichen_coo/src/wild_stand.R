@@ -98,6 +98,15 @@ source('../src/seenetR.R')
 library(sna)
 scn <- CoNetwork(x[,((1:ncol(x))[colnames(x)=='xgal']):((1:ncol(x))[colnames(x)=='phy'])])
 
+##Bipartite network (trees and species)
+bpn.l <- split(x,as.character(x$tree))
+bpn.l <- lapply(bpn.l,function(x) x[,-1:-4])
+bpn <- do.call(rbind,lapply(bpn.l,function(x) apply(x,2,sum)))
+bpn.sort <- bpn[order(apply(bpn,1,function(x) sum(sign(x))),decreasing=TRUE),order(apply(bpn,2,function(x) sum(sign(x))),decreasing=TRUE)]
+plotweb(bpn.sort,method='normal')
+nest.r0 <- oecosimu(bpn,nestedtemp,method='r0',nsimul=1000,burnin=100)
+nest.r1 <- oecosimu(bpn,nestedtemp,method='r1',nsimul=1000,burnin=100)
+
 ##Centrality analysis
 detach(package:igraph)
 scn.centrality <- degree(scn)
