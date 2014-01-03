@@ -2,14 +2,19 @@ General
 Q. Does genetics influence composition
 - Composition PerMANOVA for genotype
 Q. Do individuals contribute to bipartite network structure?
-- Bipartite network (whole and condensed)
+- Bipartite network (whole)
+- Bipartite network (condensed)
 Q. Does genetics contribute to interaction network structure by
 influencing interaction frequency?
-- Stand level unipartite networks (whole and condensed)
-- Tree level unipartite networks (tree and net average)
+- Stand level unipartite networks (whole)
+- Stand level unipartite networks (condensed)
+- Tree level unipartite networks (tree)
+- Tree level unipartite networks (net average)
 - Co-occurrence analyses
 Q. Do these networks have a characteristic sturcture?
-- Network statistics (node, module and network)
+- Network statistics (node)
+- Network statistics (module)
+- Network statistics (network)
 - QAP test
 - Node correlations
 
@@ -26,8 +31,40 @@ ENS (Ecological Network Simulation)
 LCO
 - test for the effect of height
 - test compositional effect using tree level sums
-- construct 
+- construct bipartite network 
+- construct unipartite stand level network (all trees)
+- construct unipartite stand level netwwork (condensed)
+- construct tree level networks (tree level)
+- average tree level networks
+- conduct tree level co-occurrence analyses
+- analyze network characteristics (nodes, modules, network)
 
 ACN
+- test compositional effect using tree level sums
+- construct bipartite network 
+- construct unipartite stand level network (all trees)
+- construct unipartite stand level netwwork (condensed)
+- construct tree level networks (tree level)
+- average tree level networks
+- conduct tree level co-occurrence analyses
+- analyze network characteristics (nodes, modules, network)
 
+Sunset Lichen
+- test compositional effect using tree level sums
+- construct bipartite network 
+- construct unipartite stand level network (all trees)
+- construct unipartite stand level netwwork (condensed)
+- construct tree level networks (tree level)
+- average tree level networks
+- conduct tree level co-occurrence analyses
+- analyze network characteristics (nodes, modules, network)
 
+Adrian, Gina, Art's Tree level Data
+- test compositional effect using tree level sums
+- construct bipartite network 
+- construct unipartite stand level network (all trees)
+- construct unipartite stand level netwwork (condensed)
+- construct tree level networks (tree level)
+- average tree level networks
+- conduct tree level co-occurrence analyses
+- analyze network characteristics (nodes, modules, network)

@@ -42,7 +42,6 @@
   \end{enumerate}
 \item Bark Lichen Co-occurrence
   \begin{enumerate}
-  \item Enter data from last Spring
   \item Analyze data
   \item Write
   \end{enumerate}
@@ -62,13 +61,12 @@
 \section{20 Dec 2013}
 
 Network Analysis Outline
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%Look at dissertation/net_anal_outline.txt
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Look at the current scripts for ACN and LCO
 %Decide on the most useful questions
 %Outline the analytical flow below
-
-\begin{enumerate}
-\item 
-\end{enumerate}
 
 
 \section{6 Nov 2013}
