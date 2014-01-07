@@ -32,6 +32,17 @@
 %on the second page
 
 
+\textbf{Overarching Story}
+
+\begin{enumerate}
+\item Intraspecific variation creates environmental heterogeneity
+\item Environmental heterogeneity contributes to co-occurrence
+  patterns
+\item Since interaction are a function of co-occurrence, intraspecific
+  variation structures interaction networks
+\end{enumerate}
+
+
 \section{Project List}
 \begin{enumerate}
 \item Simulation of ecological network evolution
@@ -47,14 +58,20 @@
   \end{enumerate}
 \item Rock Lichen Co-occurrence
   \begin{enumerate}
-  \item Need to incorporate analyses into SCRL1
-  \item Analyze co-occurrence patterns for SCRL2
+  \item Results:
+    \subitem Phenotype predicts composition
+    \subitem Network significantly nested
+  \item Model unipartite networks
   \end{enumerate}
-\item Arthropod Co-occurrence
+\item Arthropod Leaf Mod Co-occurrence
   \begin{enumerate}
   \item Get data from leaves (senescing and litter)
   \item Enter data
   \item Analyze
+  \end{enumerate}
+\item Arthropod Bipartite network
+  \begin{enumerate}
+  \item 
   \end{enumerate}
 \end{enumerate}
 
