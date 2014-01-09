@@ -27,6 +27,35 @@
 \setcounter{tocdepth}{3}  %%activate to number sections
 \tableofcontents
 
+\section{9 Jan 2014}
+Developing the manuscript, package and vignette for lab meeting. 
+
+Package
+\begin{enumerate}
+\item Debug current set of functions
+\item Populate help files
+\item Check --as-cran
+\item Build as v1.0
+\item Post to github
+\item Post to cran
+\end{enumerate}
+
+Vignette
+\begin{enumerate}
+\item Write body text
+\item Set figures
+\item Proof
+\end{enumerate}
+
+Manuscript
+\begin{enumerate}
+\item Two articles 1) Methods in Ecology and Evolution = Vignette and 2)
+  Ecography = Modeling and Data
+\item Summarize results
+\item Write outline
+\end{enumerate}
+
+
 \section{7 Jan 2014}
 
 <<>>=
