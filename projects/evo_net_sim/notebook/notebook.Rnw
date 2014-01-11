@@ -59,48 +59,7 @@ Manuscript
 \section{7 Jan 2014}
 
 <<>>=
-library(ComGenR)
-trees <- gpmTrees()
-com <- cgSim(tree.pheno=trees,reps=1,YY=30,GG=8)
-geno <- factor(trees[,1])
-test <- lapply(com,function(x,g) lapply(x,function(x,g) lapply(x,function(x,g) adonis(cbind(x,rep(1,nrow(x)))~g,permutations=1),g=g),g=g),g=geno)
-test <- test[[1]]
-r2 <- array(NA,dim=c(length(test),length(test[[1]])))
-rownames(r2) <- paste('YY',1:length(test),sep='')
-colnames(r2) <- paste('GG',1:length(test[[1]]),sep='')
-for (i in 1:nrow(r2)){
-  for (j in 1:ncol(r2)){
-    r2[i,j] <- test[[i]][[j]]$aov.tab[1,5]
-  }
-}
-net.l <- array(NA,dim=c(length(com[[1]]),length(com[[1]][[1]])))
-rownames(net.l) <- paste('YY',1:length(com[[1]]),sep='')
-colnames(net.l) <- paste('GG',1:length(com[[1]][[1]]),sep='')
-for (i in 1:nrow(net.l)){
-  for (j in 1:ncol(net.l)){
-    com. <- com[[1]][[i]][[j]]
-    com.[com.<=10] <- 0
-    net <- CoNetwork(com.,plot.net=FALSE)
-    net.l[i,j] <- length(net[net!=0])/2
-  }
-}
-print('Done!')
-par(mfrow=c(1,2))
-r2. <- r2
-r2.[r2<=0.25] <- 0
-image(t(r2),ylab='Ve',xlab='Vg',add=FALSE,font.lab=2)
-contour(t(r2.),add=TRUE,nlevels=10,labcex=1,font.type=2)
-title(main='PERMANOVA R2')
-image(t(net.l),ylab='Ve',xlab='Vg',add=FALSE,font.lab=2)
-contour(t(net.l),add=TRUE,nlevels=20,labcex=1,font.type=2)
-title(main='Network Degree')
-                                        #
-com. <- com[[1]][[5]][[8]]
-com.[com.<=10] <- 0
-net <- CoNetwork(com.,plot.net=FALSE)
-mgp(net,com.,v.min=0.0001,displaylabels=TRUE)
-heatmap(com.)
-
+###Moved to src/een_sim.R
 
 @ 
 
