@@ -73,6 +73,29 @@ for (i in 1:length(com.sim)){
 }
 com.nest <- unlist(lapply(com.sim.,function(x) nestedtemp(x)$statistic))
 V.g <- unlist(lapply(tp.l,function(x) var(x[,2])))
+                                        #Correlation between H2Cnms~Vg and H2Cperm~Vg
+cs.nms1d <- list()
+cs.stress <- list()
+for (i in 1:length(com.sim.)){
+  cs.nms1d[[i]] <- nmds(vegdist(com.sim.[[i]]),1,1)
+  cs.stress[[i]] <- min(cs.nms1d[[i]]$stress)
+  cs.nms1d[[i]] <- nmds.min(cs.nms1d[[i]])[,1]
+}
+h2c.nms <- lapply(cs.nms1d,getH2C,g=as.character(tp.l[[1]][,1]))
+h2c.nms <- do.call(rbind,h2c.nms)[,2]
+h2c.adonis <- pblapply(com.sim.,function(x,g) adonis(x~g),g=as.character(tp.l[[1]][,1]))
+h2c.perm <- unlist(lapply(h2c.adonis,function(x) x$aov.tab[1,5]))
+summary(lm(h2c.nms~V.g))
+summary(lm(h2c.perm~V.g))
+plot(h2c.nms~V.g,pch=19,xlab='Vg',ylab='H2C',col='grey',ylim=c(0,0.85),font.lab=2)
+points(h2c.perm~V.g,pch=19,col='black')
+abline(lm(h2c.nms~V.g),col='grey',lty=2)
+abline(lm(h2c.perm~V.g),col='black')
+legend('topleft',legend=c('NMDS','PerMANOVA'),col=c('grey','black'),pch=19)
+h2c.ancova <- data.frame(vg=c(V.g,V.g),
+                         type=c(rep('nms',length(h2c.nms)),rep('perm',length(h2c.perm))),
+                         h2c=c(h2c.nms,h2c.perm))
+summary(lm(h2c~vg+type,data=h2c.ancova))
                                         #
 par(mfrow=c(1,2))
 plot(density(tp.l[[1]][,2]),main='',xlab='Tree Phenotype',xlim=c(5,27),ylim=c(0,1),col=0)

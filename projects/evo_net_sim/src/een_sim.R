@@ -5,7 +5,7 @@
 library(ComGenR)
 trees <- gpmTrees()
 ###com <- cgSim(tree.pheno=trees,reps=1,YY=30,GG=8)
-com <- dget('../data/cgsim_com.Rdata')
+com <- dget('data/cgsim_com.Rdata')
 geno <- factor(trees[,1])
 test <- lapply(com,function(x,g) lapply(x,function(x,g) lapply(x,function(x,g) adonis(cbind(x,rep(1,nrow(x)))~g,permutations=1),g=g),g=g),g=geno)
 test <- test[[1]]
@@ -95,4 +95,7 @@ title(main='Network Degree')
 image(t(h2r2.dif),ylab='Ve',xlab='Vg',add=FALSE,font.lab=2)
 contour(t(min.stress),add=TRUE,nlevels=20,labcex=1,font.type=2)
 title(main='H2C - R2P')
+
+###Correlations with genetic variance
+#get the genetic variance values for 
 

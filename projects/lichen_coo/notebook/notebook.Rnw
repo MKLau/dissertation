@@ -37,6 +37,65 @@ source('~/projects/dissertation/projects/onc_lichen/src/pit.r')
 
 @ 
 
+\section{15 Jan 2014}
+
+Examining nestedness.
+
+<<>>=
+library(ComGenR)
+garden.data <- read.csv('~/projects/dissertation/projects/lichen_coo/data/LCO_data_ONC_PIT.csv')
+                                        #remove genotype RL6 and N1.31
+garden.data <- garden.data[garden.data$Geno!='RL6',]
+garden.data <- garden.data[garden.data$Tree!='N1.31',]
+                                        #separate onc
+garden.data[,1] <- as.character(garden.data[,1])
+g1 <- substr(garden.data[,1],2,2)
+g1[g1!='P'] <- 'onc'
+onc <- garden.data[g1=='onc',]
+onc <- split(onc,onc$Tree)
+onc.pam <- lapply(onc,function(x) x[,-1:-6]) #presence absence matrices = PAM
+onc.com <- do.call(rbind,lapply(onc.pam,function(x) apply(x,2,sum))) #binned PAM
+onc.geno <- as.character(unlist(lapply(onc,function(x) x[1,2])))
+onc.gc <- mean.g(onc.com,onc.geno)
+                                        #
+par(mfrow=c(1,2))
+plotweb(onc.com[order(apply(onc.com,1,function(x) sum(sign(x))),decreasing=TRUE),
+                order(apply(onc.com,2,function(x) sum(sign(x))),decreasing=TRUE)],
+        method='normal',text.rot=90,labsize=2)
+plotweb(onc.gc[order(apply(onc.gc,1,function(x) sum(sign(x))),decreasing=TRUE),
+                order(apply(onc.gc,2,function(x) sum(sign(x))),decreasing=TRUE)],
+        method='normal',text.rot=90,labsize=2)
+nt.r00 <- oecosimu(onc.com, nestfun="nestedtemp", "r00",nsimul = 999,burnin=50)
+nt.r1 <- oecosimu(onc.com, nestfun="nestedtemp", "r1",nsimul = 999,burnin=50)
+nt.gc.r00 <- oecosimu(mean.g(onc.com,onc.geno), nestfun="nestedtemp", "r00",nsimul = 999,burnin=50)
+nt.gc.r1 <- oecosimu(mean.g(onc.com,onc.geno), nestfun="nestedtemp", "r1",nsimul = 999,burnin=50)
+
+###Wild
+x <- read.csv('~/projects/dissertation/projects/lichen_coo/data/lco_Apr2012.csv')
+                                        #remove notes and NA
+x <- x[,colnames(x)!='NOTES.']
+x <- na.omit(x)
+                                        #remove gnu.44 = FREMONT and ll.6 = weird
+x <- x[x$tree!='gnu.44',]
+x <- x[x$tree!='ll.6',]
+                                        #condense species
+lec.sp <- apply(x[,c(6,8,10,18)],1,function(x) sign(any(x!=0)))
+## phy.spp <- apply(x[,c(13,14,15,16)],1,function(x) sign(any(x!=0)))
+##x <- cbind(x,lec=lec.spp,phy=phy.spp)
+x <- cbind(x,lec=lec.sp)
+## x <- x[,-c(6,8,10,18,13,14,15,16)]
+x <- x[,-c(6,8,10,18)]
+x.t <- split(x,as.character(x$tree))
+x.pam <- lapply(x.t,function(x) x[,-1:-4])
+wild.com <- do.call(rbind,lapply(x.pam,function(x) apply(x,2,sum)))
+nt.r00.w <- oecosimu(wild.com, nestfun="nestedtemp", "r00",nsimul = 999,burnin=50)
+nt.r1.w <- oecosimu(wild.com, nestfun="nestedtemp", "r1",nsimul = 999,burnin=50)
+plotweb(wild.com[order(apply(wild.com,1,function(x) sum(sign(x))),decreasing=TRUE),
+                order(apply(wild.com,2,function(x) sum(sign(x))),decreasing=TRUE)],
+        method='normal',text.rot=90,labsize=2)
+
+@ 
+
 \section{05 Dec 2013}
 Editing:
 \begin{itemize}
