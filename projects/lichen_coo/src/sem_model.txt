@@ -1,5 +1,0 @@
-tree.age -> prb, g.1.2, NA
-prb -> ses, g.1.3, NA
-tree.age <-> tree.age, e.1.1, NA
-prb <-> prb, e.2.2, NA
-ses <-> ses, e.3.3, NA
