@@ -27,6 +27,40 @@
 \setcounter{tocdepth}{3}  %%activate to number sections
 \tableofcontents
 
+\section{23 Jan 2014}
+Working on the final EEN analyses:
+
+\begin{enumerate}
+\item Simulate networks with varying levels of genotypic effects and a
+  percent genetic variance equivalent to published community
+  heritability estimates
+\item In an appendix, develop the use of permanova R2, inlcuding:
+  \begin{enumerate}
+  \item Calculation using Anderson's method
+  \item Comparison to NMDS method in Shuster 2006
+  \end{enumerate}
+\item Measure nestedness and examine correlation between genetic
+  variance and nestedness
+\item Conduct Removal experiments (random vs targeted removal):
+  \begin{enumerate}
+  \item Random removal
+  \item Genotype removal based on phenotpic similarity
+  \item Centralized species removal
+  \end{enumerate}
+\end{enumerate}
+
+Coding in source file, een.R. 
+
+\section{22 Jan 2014}
+
+Re-organized the flow for community simulation with cgSim.
+
+Added two new functions to support cgSim: simTrees and simSpp.
+
+Compared output (gamma and H2C) with Shuster 2006 output. Everything
+checks out with the exception of NMDS rotation error and slight
+numerical differences in H2C.
+
 \section{14 Jan 2014}
 
 Does genetic variation contribute to nestedness in ecological networks?

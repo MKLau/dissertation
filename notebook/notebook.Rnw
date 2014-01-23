@@ -86,6 +86,14 @@ Network Analysis Outline
 %Outline the analytical flow below
 
 
+\section{23 Jan 2014}
+Chapter Strategy
+- EEN = simulations examining the genetic basis of nestedness and
+robustness, using Gina and Art's data
+- ACN + LCN + SCRL + Adrian = genetic effects on nestedness 
+- LCN = Genotypic effects on co-occurrence patterns
+
+
 \section{21 Jan 2014}
 5 pages per day across all manuscripts
 
