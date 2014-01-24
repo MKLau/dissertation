@@ -29,7 +29,11 @@
 
 \section{24 Jan 2014}
 
-Final EEN analyses continued.
+Final EEN analyses continued. Currently running on romer. Two scripts:
+een_sym.R and een_asym.R. Both use species rounding to whole
+numbers. Output is saved to two different folders. Both use the same
+trees and insects (these are saved to the data folder). Started at
+about 12:15pm.
 
 \section{23 Jan 2014}
 Working on the final EEN analyses:

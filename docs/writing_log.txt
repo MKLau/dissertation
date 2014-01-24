@@ -6,14 +6,20 @@
 %%%Turn off email
 %%%Log the current number of pages at the end of each day
 
-21 Jan 2014
+24 Jan 2014
+Restructured chapters and initiated new files for them
+sgn = simulated genetics networks 
+gsn = genotype-species networks 
+gin = genetics of interaction networks 
+
+23 Jan 2014
 Review = 25
 LCN =  12
 ACN =  11
 EEN =  12
 ComGenR = 43
 
-21 Jan 2014
+22 Jan 2014
 Review = 25
 LCN =  12
 ACN =  11
