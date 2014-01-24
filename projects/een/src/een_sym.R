@@ -8,9 +8,10 @@
 ## Whitham et al. 2013 (H2C ~ 65% for arthropods)
 ## Tree clonal phenotype heritability (52% from Lamit's Roughness, similar to tannins from NRG2006)
 
-output.loc <- '../results/een_exp/'
+output.loc <- '../results/een_exp_sym/'
 unlink(output.loc,recursive=TRUE)
 dir.create(output.loc)
+round.sim <- TRUE
 
 library(ComGenR)
 tree.gpm <- gpmTrees(reps=10)
@@ -18,11 +19,15 @@ tree.gpm <- gpmTrees(reps=10)
 trees <- simTrees(tree.gpm,VeT=7.5);h2b <- getH2C(trees,tree.gpm[,1],method='nmds')[2]
 while (h2b<0.55|h2b>0.60){trees <- simTrees(tree.gpm,VeT=7.5);h2b <- getH2C(trees,tree.gpm[,1],method='nmds')[2]}
 insects <- simSpp()
+                                        #write trees and insects out
+write.csv(tree.gpm,file='../data/tree_gpm.csv',row.names=FALSE)
+write.csv(trees,file='../data/trees.csv',row.names=FALSE)
+write.csv(insects,file='../data/insects.csv',row.names=FALSE)
                                         #generate communities
 cg.sim <- out <- list()
 for (i in 1:9){
   for (j in 1:10){
-    out[[j]] <- cgSim(trees=trees,insects=insects,z=i,Ve=0.1,VeN=3,k.asym=TRUE)
+    out[[j]] <- cgSim(trees=trees,insects=insects,z=i,Ve=0.1,VeN=3,k.asym=FALSE)
     print(paste(i,j))
   }
   cg.sim[[i]] <- out
@@ -33,15 +38,14 @@ for (i in 1:length(cg.sim)){
   for (j in 1:length(cg.sim[[1]])){
     out[[j]] <- cg.sim[[i]][[j]]$art_pop
     out[[j]][out[[j]]<threshold] <- 0
+    if (round.sim){out[[j]] <- round(out[[j]],0)}else{}
   }
   com.sim[[i]] <- out
 }
 
-
 ###For an appendix, develop the use of permanova R2, inlcuding:
 ##Calculation using Anderson method
 ##Comparison to NMDS method in Shuster 2006
-
 g <- tree.gpm[,1]
 h2c.shuster <- lapply(com.sim,function(x) lapply(x,function(x,g) getH2C(x,g,method='nmds'), g=g))
 h2c.perm <- pblapply(com.sim,function(x) lapply(x,function(x,g) getH2C(x,g,method='permanova'), g=g))
@@ -61,7 +65,7 @@ for (i in 1:length(x)){
   out[[i]] <- cargo
 }
 
-nest.sim <- cbind(nestedtemp=as.numeric(unlist(out)),z=as.numeric(gl(length(out),length(out[[1]]))))
+nest.sim <- cbind(z=as.numeric(gl(length(out),length(out[[1]]))),nestedtemp=as.numeric(unlist(out)))
 write.csv(nest.sim,file=paste(output.loc,'nest_sim.csv',sep=''),row.names=FALSE)
 
 ###Conduct Removal experiments (random vs targeted removal):
@@ -104,5 +108,3 @@ for (i in 1:length(com.sim)){
 }
 typ.rm <- unlist(typ.rm)
 write.csv(cbind(rnd.rm,deg.rm,typ.rm),file=paste(output.loc,'removal_results.csv',sep=''))
-
-

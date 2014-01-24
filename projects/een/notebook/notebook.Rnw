@@ -27,6 +27,10 @@
 \setcounter{tocdepth}{3}  %%activate to number sections
 \tableofcontents
 
+\section{24 Jan 2014}
+
+Final EEN analyses continued.
+
 \section{23 Jan 2014}
 Working on the final EEN analyses:
 
