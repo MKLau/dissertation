@@ -2,6 +2,7 @@
 
 library(vegan)
 library(bipartite)
+library(pbapply)
 ###Sourcing ComGenR on hoth
 oldwd <- getwd()
 setwd('../../../../ComGenR/R/')
