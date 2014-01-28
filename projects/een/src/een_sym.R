@@ -100,7 +100,7 @@ deg.rm <- unlist(deg.rm)
 typ.rm <- list()
 for (i in 1:length(com.sim)){
   for (j in 1:length(com.sim[[i]])){
-    cargo[[j]] <- rmTrees(com.sim[[i]][[j]],method='type',type=g,nits=rm.nits)
+    cargo[[j]] <- rmTrees(com.sim[[i]][[j]],method='type',type=tree.gpm[,2],nits=rm.nits)
     names(cargo)[j] <- paste(i,j)
   }
   typ.rm[[i]] <- unlist(cargo)

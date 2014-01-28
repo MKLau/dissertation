@@ -27,6 +27,127 @@
 \setcounter{tocdepth}{3}  %%activate to number sections
 \tableofcontents
 
+\section{25 Jan 2014}
+
+Debugging error in rmTrees for type.
+
+\begin{verbatim}
+
+"Error in sample.int(length(x), size, replace, prob) :
+  too few positive probabilities"
+
+\end{verbatim}
+
+\section{27 Jan 2014}
+
+Making figures
+
+<<>>=
+library(ComGenR)  
+sim.s <- dget('../results/een_exp_sym/comsim_sym.rdata')
+sim.a <- dget('../results/een_exp_asym/comsim_asym.rdata')
+
+###
+
+###Nestedness by genetic variance
+
+
+@ 
+
+
+Appendix 1. Comparing nmds and ipd.
+
+<<>>=
+h2c.nmds <- read.csv('../results/een_exp_asym/h2c_shuster.csv')
+h2c.ipd <- read.csv('../results/een_exp_asym/h2c_perm.csv')
+h2c.nmds <- as.numeric(apply(h2c.nmds,2,function(x) x[2]))
+h2c.ipd <- unlist(matrix(h2c.ipd,ncol=3,byrow=TRUE)[,2])
+selection <- as.numeric(gl(9,10))
+h2c.dat <- cbind(Selection=selection,h2c.nmds,h2c.ipd)
+h2c.dat <- h2c.dat[1:79,]
+                                        #
+par(mfrow=c(1,3))
+plot(h2c.nmds~Selection,data=h2c.dat,ylab='H2C NMDS')
+abline(lm(h2c.nmds~Selection,data=data.frame(h2c.dat)))
+plot(h2c.ipd~Selection,data=h2c.dat,ylab='H2C IPD')
+abline(lm(h2c.ipd~Selection,data=data.frame(h2c.dat)))
+plot(h2c.nmds~h2c.ipd,data=h2c.dat,xlab='H2C IPD',ylab='H2C NMDS')
+abline(lm(h2c.nmds~h2c.ipd,data=data.frame(h2c.dat)))
+
+@ 
+
+\section{26 Jan 2014}
+
+Looking at een experiments from yesterday
+
+<<>>=
+ex.sym.rm <- data.frame(read.csv('../results/een_exp_sym/rm_rnd.csv'),read.csv('../results/een_exp_sym/rm_deg.csv')[,-1],read.csv('../results/een_exp_sym/rm_type.csv')[,-1])
+names(ex.sym.rm) <- c('sel','rnd','deg','typ')
+                                        #
+ex.asym.rm <- data.frame(read.csv('../results/een_exp_asym/rm_rnd.csv'),read.csv('../results/een_exp_asym/rm_deg.csv')[,-1],read.csv('../results/een_exp_asym/rm_type.csv')[,-1])
+names(ex.asym.rm) <- c('sel','rnd','deg','typ')
+###Remove selection level 9
+ex.sym.rm <- ex.sym.rm[-81:-90,]
+ex.asym.rm <- ex.asym.rm[-81:-90,]
+                                        #
+par(mfrow=c(1,2))
+pairs(data.frame(ex.sym.rm,ex.asym.rm))
+                                        #
+exp <- c(rep('sym',nrow(ex.sym.rm)),rep('asym',nrow(ex.asym.rm)))
+een.exp <- rbind(ex.sym.rm,ex.asym.rm)
+sel <- as.numeric(sapply(as.character(een.exp[,1]),function(x) strsplit(x,split=' ')[[1]][1]))
+een.exp <- data.frame(exp=exp,selection=sel,een.exp[,-1])
+colnames(een.exp)
+                                        #
+summary(lm(rnd~exp*selection,data=een.exp))
+summary(lm(deg~exp*selection,data=een.exp))
+summary(lm(typ~exp*selection,data=een.exp))
+                                        #plot each experiment together by the removal
+par(mfrow=c(1,3))
+plot(rnd~selection,data=een.exp,col=as.numeric(een.exp$exp))
+plot(deg~selection,data=een.exp,col=as.numeric(een.exp$exp))
+plot(typ~selection,data=een.exp,col=as.numeric(een.exp$exp))
+                                        #plot each removal type to compare
+par(mfrow=c(1,3))
+plot(rnd~deg,data=een.exp,col=as.numeric(een.exp$exp))
+plot(rnd~typ,data=een.exp,col=as.numeric(een.exp$exp))
+plot(deg~typ,data=een.exp,col=as.numeric(een.exp$exp))
+                                        #density plots
+ex.split <- split(een.exp,een.exp$exp)
+par(mfrow=c(1,3))
+plot(density(ex.split[[1]]$rnd),main='',col=1,ylim=c(0,20));lines(density(ex.split[[2]]$rnd),col=2)
+plot(density(ex.split[[1]]$deg),main='',col=1,ylim=c(0,20));lines(density(ex.split[[2]]$deg),col=2)
+plot(density(ex.split[[1]]$typ),main='',col=1,ylim=c(0,20));lines(density(ex.split[[2]]$typ),col=2)
+                                        #selection
+par(mfrow=c(1,2))
+plot(rnd~jitter(selection),data=ex.split[[1]],col='red',ylab='Percent Nodes Removed')
+points(deg~jitter(selection),data=ex.split[[1]],col='green')
+points(typ~jitter(selection),data=ex.split[[1]],col='blue')
+plot(rnd~jitter(selection),data=ex.split[[2]],col='red',ylim=c(0.85,1),ylab='Percent Nodes Removed')
+points(deg~jitter(selection),data=ex.split[[2]],col='green')
+points(typ~jitter(selection),data=ex.split[[2]],col='blue')
+
+@ 
+
+Networks with assymetric species distributions are more susceptible to
+remvovals overall, but this susceptibility is driven by the species abundances
+and not the effect of genotype. When species abundances are even, then
+the effect of selection on a genetically based phenotype has a strong
+impact on the robustness of the community.
+
+\section{25 Jan 2014}
+
+Debugged een_exp_sym and een_exp_asym as well as rmTrees. The
+experiment scripts both needed the removal experiments to be written
+to file. Also the number of iterations for the individual removals was
+several orders of magnitude too high. Reduced to 100. Also, the input
+to type in rmTrees was genotype when it should be phenotype.
+
+rmTrees type was selecting trees at random even though it was
+selecting a phenotype. Each step chose a random type and then a random
+tree, which made the algorithm equaivalent to selecting a tree at
+random. 
+
 \section{24 Jan 2014}
 
 Final EEN analyses continued. Currently running on romer. Two scripts:
