@@ -53,8 +53,8 @@ sim.a <- dget('../results/een_exp_asym/comsim_asym.rdata')
 tree.gpm <- read.csv('../data/tree_gpm_een_sim.csv')
 tree.pheno <- read.csv('../data/trees_een_sim.csv')
 insects <- read.csv('../data/insects_een_sim.csv')
-selection <- (0.00007924*2.511886^((1:8)-1))
-plot(tree.pheno[,1]~tree.gpm[,2])
+sim.nest <- read.csv('../results/een_exp_sym/nest_sim.csv')
+selection <- (0.00007924*2.511886^((sim.nest[,1])-1))
 
 ###Plot of phenotypes
 plot(density(tree.pheno[tree.gpm[,1]==unique(tree.gpm[,1])[1],1]),ylim=c(0,0.25),
@@ -64,13 +64,24 @@ for (i in 2:length(unique(tree.gpm[,1]))){
         main='',col=1)
 }
 
-sto
-
 ###
 
-###Nestedness by genetic variance
+###Nestedness by selection intensity
+plot(sim.nest[1:79,2]~selection[1:79],xlab='Selection',ylab='Nestedness Temperature')
+nest.mu <- tapply(sim.nest[1:79,2],factor(selection[1:79]),mean)
+lines(spline(as.numeric(names(nest.mu)),nest.mu))
 
+###Ordination of community
+ord <- nmds.min(nmds(vegdist(sim.a[[9]][[1]])))
+ch.plot(ord,tree.gpm[,1])
 
+###Evenness
+##Using pielous eveness = H / log(specnumber(com))
+even <- function(x){diversity(x)/log(specnumber(x))}
+even.sym <- lapply(sim.s,function(x) lapply(x,even));even.sym <- unlist(lapply(even.sym,function(x) lapply(x,mean)))
+even.asym <- lapply(sim.a,function(x) lapply(x,even));even.asym <- unlist(lapply(even.asym,function(x) lapply(x,mean)))
+mean(even.sym-even.asym)
+t.test((even.sym-even.asym))
 
 @ 
 
@@ -82,7 +93,7 @@ h2c.nmds <- read.csv('../results/een_exp_asym/h2c_shuster.csv')
 h2c.ipd <- read.csv('../results/een_exp_asym/h2c_perm.csv')
 h2c.nmds <- as.numeric(apply(h2c.nmds,2,function(x) x[2]))
 h2c.ipd <- unlist(matrix(h2c.ipd,ncol=3,byrow=TRUE)[,2])
-selection <- as.numeric(gl(9,10))
+#selection <- as.numeric(gl(9,10))
 h2c.dat <- cbind(Selection=selection,h2c.nmds,h2c.ipd)
 h2c.dat <- h2c.dat[1:79,]
                                         #
@@ -116,6 +127,7 @@ pairs(data.frame(ex.sym.rm,ex.asym.rm))
 exp <- c(rep('sym',nrow(ex.sym.rm)),rep('asym',nrow(ex.asym.rm)))
 een.exp <- rbind(ex.sym.rm,ex.asym.rm)
 sel <- as.numeric(sapply(as.character(een.exp[,1]),function(x) strsplit(x,split=' ')[[1]][1]))
+sel <- (0.00007924*2.511886^((as.numeric(sel))-1))
 een.exp <- data.frame(exp=exp,selection=sel,een.exp[,-1])
 colnames(een.exp)
                                         #
@@ -140,12 +152,12 @@ plot(density(ex.split[[1]]$deg),main='',col=1,ylim=c(0,20));lines(density(ex.spl
 plot(density(ex.split[[1]]$typ),main='',col=1,ylim=c(0,20));lines(density(ex.split[[2]]$typ),col=2)
                                         #selection
 par(mfrow=c(1,2))
-plot(rnd~jitter(selection),data=ex.split[[1]],col='red',ylab='Percent Nodes Removed')
-points(deg~jitter(selection),data=ex.split[[1]],col='green')
-points(typ~jitter(selection),data=ex.split[[1]],col='blue')
-plot(rnd~jitter(selection),data=ex.split[[2]],col='red',ylim=c(0.85,1),ylab='Percent Nodes Removed')
-points(deg~jitter(selection),data=ex.split[[2]],col='green')
-points(typ~jitter(selection),data=ex.split[[2]],col='blue')
+plot(rnd~jitter(selection,factor=10),data=ex.split[[1]],col='red',ylab='Percent Nodes Removed',xlab='Selection')
+points(deg~jitter(selection,factor=10),data=ex.split[[1]],col='green')
+points(typ~jitter(selection,factor=10),data=ex.split[[1]],col='blue')
+plot(rnd~jitter(selection,factor=10),data=ex.split[[2]],col='red',ylim=c(0.85,1),ylab='Percent Nodes Removed',xlab='Selection')
+points(deg~jitter(selection,factor=10),data=ex.split[[2]],col='green')
+points(typ~jitter(selection,factor=10),data=ex.split[[2]],col='blue')
 
 @ 
 

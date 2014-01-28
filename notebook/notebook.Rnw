@@ -33,7 +33,7 @@
 
 \section{28 Jan 2014}
 
-Continuing to work on figures and SGN manuscript.
+Finished with figures. Still need to input co-occurrence values.
 
 \section{27 Jan 2014}
 
