@@ -31,6 +31,10 @@
 %\setcounter{secnumdepth}{-1}  %activate to start numbering from one
 %on the second page
 
+\section{28 Jan 2014}
+
+Continuing to work on figures and SGN manuscript.
+
 \section{27 Jan 2014}
 
 Working on making figures for the SGN manuscript.
