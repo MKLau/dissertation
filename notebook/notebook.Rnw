@@ -31,6 +31,32 @@
 %\setcounter{secnumdepth}{-1}  %activate to start numbering from one
 %on the second page
 
+\section{29 Jan 2014}
+
+Running stats on the co-occurrence values from hoth yesterday. een_get_ses.R.
+
+
+Run a quick simulation of h2c now that you are using the ems from permanova.
+
+<<>>=
+library(ComGenR)
+z <- seq(0,8,by=0.1)
+sim <- list()
+trees <- simTrees(gpmTrees())
+insects <- simSpp()
+for (i in 1:length(z)){
+  sim[[i]] <- cgSim(z=z[i],artpop.only=TRUE,trees=trees,insects=insects,Ve=1)
+  print(round((i/length(z)),2)*100)
+}
+nms <- lapply(sim,getH2C,method='nmds',g=gpmTrees()[,1])
+per <- lapply(sim,getH2C,method='permanova',g=gpmTrees()[,1])
+nms <- do.call(rbind,nms)
+per <- do.call(rbind,per)
+paired <- cbind(z,nmds=nms[,2],perm=per[,2])
+pairs(paired,upper.panel=panel.cor)
+
+@ 
+
 \section{28 Jan 2014}
 
 Finished with figures. Still need to input co-occurrence values.

@@ -27,6 +27,37 @@
 \setcounter{tocdepth}{3}  %%activate to number sections
 \tableofcontents
 
+\section{29 Jan 2014}
+
+SES exhibits complex patterns with respect to both nestedness and
+selection. 
+
+SES analyses:
+
+\begin{enumerate}
+\item Is ses correlated with selection?
+  \subitem As slection increases, SES first decreases strongly, then
+  begins to increase again. 
+\item Is ses correlated with nestedness?
+  \subitem Communities can exhibit high clustering (i.e. low ses
+  values), but not exhibit nestedness. This is possibly due to
+  selection first clustering species, but then sorting species out,
+  which increases nestedness.
+\end{enumerate}
+
+<<>>=
+sim.nest <- read.csv('../results/een_exp_sym/nest_sim.csv')
+ses <- read.csv('../results/een_ses.csv')[,-1]
+ses[is.na(ses)] <- 0
+ses <- as.vector(t(ses))
+selection <- (0.00007924*2.511886^(sim.nest[,1]-1))
+plot(ses~selection)
+plot(sim.nest[,2]~ses)
+pairs(cbind(ses,nest=sim.nest[,2],selection))
+
+@ 
+
+
 \section{25 Jan 2014}
 
 Debugging error in rmTrees for type.

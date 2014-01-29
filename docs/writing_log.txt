@@ -6,6 +6,12 @@
 %%%Turn off email
 %%%Log the current number of pages at the end of each day
 
+29 Jan 2014
+sgn = 16
+gsn = 11
+gin = 11
+ComGenR = 43
+
 25 Jan 2014
 sgn = 13
 gsn = 11
