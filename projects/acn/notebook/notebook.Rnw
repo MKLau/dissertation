@@ -31,6 +31,17 @@
 \item Think about genetic basis of leaf abscision/senescence
 \end{itemize}
 
+\section{29 Jan 2014}
+
+Analyze data for the following:
+
+- Genetic effect on P. betae \\
+- Genetic effect on composition \\
+- Genetic effect on SES \\
+- Co-occurrence network structure \\
+- Nestedness for live and senesced \\
+
+
 \section{4 Dec 2013}
 Notes from meeting with Tom:
 

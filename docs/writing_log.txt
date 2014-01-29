@@ -8,9 +8,11 @@
 
 29 Jan 2014
 sgn = 16
-gsn = 11
-gin = 11
-ComGenR = 43
+lcn = 23
+acn = 11
+ComGenR = 43 *note: Keep working to get this up on CRAN. Should count
+as a pub and should include the help files and vignette in your dissertation.
+
 
 25 Jan 2014
 sgn = 13
