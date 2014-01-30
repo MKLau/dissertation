@@ -61,7 +61,7 @@ Results Summary
   \begin{itemize}
   \item Both live and sen show similar tree total co-occurrence
     patterns (SESlive=-6.85,P=0.001,SESsen=-5.87,P=0.001)
-  \item 
+  \item Currently running ses and nest on hoth
   \end{itemize}
 \end{itemize}
 
