@@ -137,5 +137,5 @@ adonis(net.d~ls.geno*tree.leaf)
 ## Nestedness for live and senesced
 liv.gnet <- mean.g(liv.com,liv.geno)
 sen.gnet <- mean.g(sen.com,sen.geno)
-oecosimu(liv.gnet,method='r0',nestfun=nestedtemp,nits=1000,burn=50)
-oecosimu(sen.gnet,method='r0',nestfun=nestedtemp,nits=1000,burn=50)
+liv.nest <- read.csv('../results/nest_liv.csv')
+sen.nest <- read.csv('../results/nest_sen.csv')
