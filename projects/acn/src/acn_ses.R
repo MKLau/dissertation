@@ -56,7 +56,8 @@ pit.trees <- split(pit.com,paste(leaf.type,tree))
 
 ###SES values
 pit.trees <- split(pit.com,paste(leaf.type,tree))
-ses.trees <- lapply(pit.trees,function(x) if(sum(apply(sign(x),2,sum))<3){rep(NA,3)}else{cnm.test})
+print('Running SES')
+ses.trees <- lapply(pit.trees,function(x) if(sum(apply(sign(x),2,sum))<3){print('NA');rep(NA,3)}else{print('.');cnm.test(x)})
 ses.trees <- do.call(rbind,ses.trees)
 write.csv(ses.trees,'../data/acn_ses.csv')
 
