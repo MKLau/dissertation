@@ -31,6 +31,10 @@
 %\setcounter{secnumdepth}{-1}  %activate to start numbering from one
 %on the second page
 
+\section{30 Jan 2014}
+
+Finishing script to run final acn analyses (src/acn.R). 
+
 \section{29 Jan 2014}
 
 Running stats on the co-occurrence values from hoth yesterday. een_get_ses.R.

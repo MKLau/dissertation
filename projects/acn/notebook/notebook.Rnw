@@ -31,6 +31,40 @@
 \item Think about genetic basis of leaf abscision/senescence
 \end{itemize}
 
+\section{30 Jan 2014}
+
+Continuing to work on script.
+
+Results Summary
+
+\begin{itemize}
+\item PB effects: 
+  \begin{itemize}
+  \item PB (as percent) decreased from senescent to live leaves
+    (Paired t=-5.58,df=34,P=0.000003)
+  \item Genotype did not affect the change in PB as percent (REML:ch2=2.81,P=0.094)
+  \item Genotype affects (pb=liv+sen) (REML:chi2=4.20,P=0.040,df=1) 
+  \item Genotype affects liv (REML: chi2=6.75,P=0.009) but not sen
+    (REML: chi2=3.32,P=0.068) using percent abundances
+  \end{itemize}
+\item Composition
+  \begin{itemize}
+  \item Liv and Sen leaves were compositionally different (relativized)
+    (Multivariate Paired distance based t-test: t=23.74,df=34,P=2.2e-16)
+  \item Genotype did not affect the difference in composition between
+    live and sen (REML: chi2=0.53,P=0.465)
+  \item Genotype and tree type influenced community composition but
+    did not interact (PERM:
+    dfgeno=6,F=1.96,P=0.004,R2=0.14,dfleaf=1,F=10.71,P=0.001,R2=0.12,dfint=6,F=1.31,R2=0.09,P=0.125)
+  \end{itemize}
+\item Co-occurrence patterns
+  \begin{itemize}
+  \item Both live and sen show similar tree total co-occurrence
+    patterns (SESlive=-6.85,P=0.001,SESsen=-5.87,P=0.001)
+  \item 
+  \end{itemize}
+\end{itemize}
+
 \section{29 Jan 2014}
 
 Analyze data for the following:
