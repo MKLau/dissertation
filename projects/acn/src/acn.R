@@ -2,6 +2,11 @@
 ###29 Jan 2014
 ###To be run up on Hoth
 
+###Re-do labeling so that any thing at the:
+##cell scale is labeled c
+##quadrat scale is labeled q
+##tree scale is labeled t
+
 library(vegan)
 library(bipartite)
 library(pbapply)
@@ -129,7 +134,9 @@ rbind(all.ses,test.ses=apply(do.call(rbind,test),2,mean),liv.ses,sen.ses)
                                         #values from hoth script run
                                         #SES values ~ genotype
 acn.cnm <- read.csv('../data/acn_ses.csv')
-acn.ses <- na.omit(acn.cnm$SES)
+###Run another ses for each tree, but put sen and live together
+###call it acn_ses_ls.csv
+acn.ses <- acn.cnm$SES
 acn.ses[is.na(acn.ses)] <- 0
 cgREML(acn.ses,acn.geno)
 cgREML(acn.ses[tree.leaf=='live'],acn.geno[tree.leaf=='live'])
@@ -137,21 +144,52 @@ cgREML(acn.ses[tree.leaf=='sen'],acn.geno[tree.leaf=='sen'])
 summary(aov(acn.ses~acn.geno*tree.leaf))
 
 ###Building networks using tree level data
-build.bpn <- function(x,p=0.05){
-  out <- lapply(x,function(x) apply(x,2,binom.
+build.bpn <- function(x,alpha=0.05,p=0.05,adjust=FALSE){
+  p.out <- apply(x,2,function(x) as.numeric(unlist(binom.test(sum(sign(x)),length(x),p=p))[3]))
+  if (adjust){p.adjust(p.out,method='fdr')}
+  x.out <- apply(sign(x),2,sum)/nrow(x)
+  x.out[p.out<=alpha] <- 0
+  return(x.out)
 }
-acn.pbn <- do.call(rbind,lapply(pit.trees,function(x) apply(sign(x),2,sum)/nrow(x)))
-cgPlotweb(acn.pbn,acn.geno)
+acn.bpn <- do.call(rbind,lapply(pit.trees,build.bpn))
+acn.type <- substr(names(pit.trees),1,3)
+cgPlotweb(acn.bpn[acn.type=='liv',],liv.geno)
+cgPlotweb(acn.bpn[acn.type=='sen',],sen.geno)
+                                        #tree level
+nest.liv <- list()
+nest.liv[[1]] <- oecosimu(acn.bpn[acn.type=='liv',],nestfun='nestedtemp',method='r00',alternative='greater',nsimul=1000)
+nest.liv[[2]] <- oecosimu(acn.bpn[acn.type=='liv',],nestfun='nestedtemp',method='r0',alternative='greater',nsimul=1000)
+nest.liv[[3]] <- oecosimu(acn.bpn[acn.type=='liv',],nestfun='nestedtemp',method='c0',alternative='greater',nsimul=1000)
+nest.liv[[4]] <- oecosimu(acn.pbn[acn.type=='liv',],nestfun='nestedtemp',method='r1',alternative='greater',nsimul=1000)
+nest.sen <- list()
+nest.sen[[1]] <- oecosimu(acn.bpn[acn.type=='sen',],nestfun='nestedtemp',method='r00',alternative='greater',nsimul=1000)
+nest.sen[[2]] <- oecosimu(acn.bpn[acn.type=='sen',],nestfun='nestedtemp',method='r0',alternative='greater',nsimul=1000)
+nest.sen[[3]] <- oecosimu(acn.bpn[acn.type=='sen',],nestfun='nestedtemp',method='c0',alternative='greater',nsimul=1000)
+nest.sen[[4]] <- oecosimu(acn.bpn[acn.type=='sen',],nestfun='nestedtemp',method='r1',alternative='greater',nsimul=1000)
+                                        #results summary
+do.call(rbind,lapply(nest.liv,function(x)(x$'oecosimu')[c(6,2,1,3,5)]))
+do.call(rbind,lapply(nest.sen,function(x)(x$'oecosimu')[c(6,2,1,3,5)]))
+                                        #genotype level
+## gnest.liv <- list()
+## gnest.liv[[1]] <- oecosimu(mean.g(acn.bpn[acn.type=='liv',],liv.geno),nestfun='nestedtemp',method='r00',alternative='greater')
+## gnest.liv[[2]] <- oecosimu(mean.g(acn.bpn[acn.type=='liv',],liv.geno),nestfun='nestedtemp',method='r0',alternative='greater')
+## gnest.liv[[3]] <- oecosimu(mean.g(acn.bpn[acn.type=='liv',],liv.geno),nestfun='nestedtemp',method='c0',alternative='greater')
+## gnest.liv[[4]] <- oecosimu(mean.g(acn.bpn[acn.type=='liv',],liv.geno),nestfun='nestedtemp',method='r1',alternative='greater')
+## gnest.sen <- list()
+## gnest.sen[[1]] <- oecosimu(mean.g(acn.bpn[acn.type=='sen',],sen.geno),nestfun='nestedtemp',method='r00',alternative='greater')
+## gnest.sen[[2]] <- oecosimu(mean.g(acn.bpn[acn.type=='sen',],sen.geno),nestfun='nestedtemp',method='r0',alternative='greater')
+## gnest.sen[[3]] <- oecosimu(mean.g(acn.bpn[acn.type=='sen',],sen.geno),nestfun='nestedtemp',method='c0',alternative='greater')
+## gnest.sen[[4]] <- oecosimu(mean.g(acn.bpn[acn.type=='sen',],sen.geno),nestfun='nestedtemp',method='r1',alternative='greater')
 
 ## Co-occurrence network structure
 pit.trees <- split(pit.com,paste(leaf.type,tree))
 net.trees <- lapply(pit.trees,CoNetwork)
 net.d <- netDist(net.trees)
 adonis(net.d~ls.geno*tree.leaf)
+                                        #using the tested percent abundance values from bpn
+acn.net.liv <- CoNetwork(pit.com[leaf.type=='live',])
+acn.net.sen <- CoNetwork(pit.com[leaf.type=='sen',])
+par(mfrow=c(1,2))
+mgp(acn.net.liv,pit.com[leaf.type=='live',])
+mgp(acn.net.sen,pit.com[leaf.type=='sen',])
 
-## Nestedness for live and senesced
-liv.gnet <- mean.g(liv.com,liv.geno)
-sen.gnet <- mean.g(sen.com,sen.geno)
-liv.nest <- read.csv('../results/nest_liv.csv')
-sen.nest <- read.csv('../results/nest_sen.csv')
-rbind(liv.nest,sen.nest)

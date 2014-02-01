@@ -61,14 +61,13 @@ Results Summary
   \begin{itemize}
   \item Both live and sen show similar tree total co-occurrence
     patterns (SESlive=-6.85,P=0.001,SESsen=-5.87,P=0.001)
-  \item 
+  \item Sen and Liv show different patterns of co-occurrence
+  \item Do a paired analysis
   \end{itemize}
 \item Nestedness
-  \item Both live and sen communities are nested
-  \item Nestedness is significant when species totals are not
-    constrained but not when species totals are constrained. 
-  \item This suggests that nestedness is arising from the effects of
-    differing distributions of species.
+  \item R1 nestedness is only significant for Live leaves
+  \item R00 and R0 nestedness are significant for both
+  \item C0 nestedness is only signficant for Sen leaves
 \end{itemize}
 
 \section{29 Jan 2014}
