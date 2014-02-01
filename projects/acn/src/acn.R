@@ -45,6 +45,7 @@ sen.geno <- as.character(unlist(lapply(split(geno$sen,split(tree,pit[,1])$sen),f
 liv.com <- do.call(rbind,lapply(split(liv,split(tree,pit[,1])$liv),function(x) apply(x,2,sum)))
 sen.com <- do.call(rbind,lapply(split(sen,split(tree,pit[,1])$sen),function(x) apply(x,2,sum)))
 tree.geno <- as.character(unlist(lapply(split(unlist(geno),tree),function(x) x[1])))
+acn.geno <- c(liv.geno,sen.geno)
 leaf.type <- as.character(pit[,1])
 tree.leaf <- unlist(lapply(split(leaf.type,paste(leaf.type,tree)),function(x) x[1]))
 n.leaves <- unlist(lapply(split(pit.com,paste(leaf.type,tree)),function(x) nrow(x)))
@@ -52,7 +53,7 @@ liv.pc <- liv.com
 for (i in 1:nrow(liv.com)){liv.pc[i,] <- liv.com[i,]/split(n.leaves,tree.leaf)[[1]][i]}
 sen.pc <- sen.com
 for (i in 1:nrow(sen.com)){sen.pc[i,] <- sen.com[i,]/split(n.leaves,tree.leaf)[[2]][i]}
-
+pit.trees <- split(pit.com,paste(tree,leaf.type))
 
 ## Genetic effect on P. betae
                                         #total PB across live and senescent leaves
@@ -126,7 +127,21 @@ sen.ses <- cnm.test(sen.com,nits=1000)
 rbind(all.ses,test.ses=apply(do.call(rbind,test),2,mean),liv.ses,sen.ses)
                                         #test co-occurrence across trees
                                         #values from hoth script run
-ses.trees <- read.csv('../data/acn_ses.csv')
+                                        #SES values ~ genotype
+acn.cnm <- read.csv('../data/acn_ses.csv')
+acn.ses <- na.omit(acn.cnm$SES)
+acn.ses[is.na(acn.ses)] <- 0
+cgREML(acn.ses,acn.geno)
+cgREML(acn.ses[tree.leaf=='live'],acn.geno[tree.leaf=='live'])
+cgREML(acn.ses[tree.leaf=='sen'],acn.geno[tree.leaf=='sen'])
+summary(aov(acn.ses~acn.geno*tree.leaf))
+
+###Building networks using tree level data
+build.bpn <- function(x,p=0.05){
+  out <- lapply(x,function(x) apply(x,2,binom.
+}
+acn.pbn <- do.call(rbind,lapply(pit.trees,function(x) apply(sign(x),2,sum)/nrow(x)))
+cgPlotweb(acn.pbn,acn.geno)
 
 ## Co-occurrence network structure
 pit.trees <- split(pit.com,paste(leaf.type,tree))
@@ -139,3 +154,4 @@ liv.gnet <- mean.g(liv.com,liv.geno)
 sen.gnet <- mean.g(sen.com,sen.geno)
 liv.nest <- read.csv('../results/nest_liv.csv')
 sen.nest <- read.csv('../results/nest_sen.csv')
+rbind(liv.nest,sen.nest)

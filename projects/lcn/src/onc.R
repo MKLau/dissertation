@@ -2,11 +2,23 @@
 ###Taken out of the notebook.Rnw file chunk
 ###25 Sep 2013
 
-###Meta
-##?????
-
 rm(list=ls())
 library(ComGenR)
+library(lme4)
+cgREML <- function(x,g,cv='covariate'){
+  if (any(cv=='covariate')){
+    x.lmer <- lmer(x~(1|g))
+    x.lm <- lm(x~1)
+    chi2 <- -2*logLik(x.lm, REML=T) +2*logLik(x.lmer, REML=T)
+    p.chi2 <- pchisq(chi2,df=1,lower.tail=FALSE)
+  }else{
+    x.lmer <- lmer(x~(1|g)+cv)
+    x.lm <- lm(x~1)
+    chi2 <- -2*logLik(x.lm, REML=T) +2*logLik(x.lmer, REML=T)
+    p.chi2 <- pchisq(chi2,df=1,lower.tail=FALSE)
+  }
+  return(c(chi2=chi2,P.value=p.chi2))
+}
 
 ###Garden Analysis
 garden.data <- read.csv('~/projects/dissertation/projects/lcn/data/LCO_data_ONC_PIT.csv')
@@ -21,19 +33,40 @@ onc <- garden.data[g1=='onc',]
 					#tree overlap between years
 unique(onc$Tree[onc$Year=='2010']) %in% unique(onc$Tree[onc$Year=='2011'])
 unique(onc$Tree[onc$Year=='2011']) %in% unique(onc$Tree[onc$Year=='2010'])
+                                        #
+if (all(table(onc[,1])==100)){print('Good to go!')}else{for (i in 1:1000){print('Warning: check input data!!!')}}
+                                        #separate trees
+onc.q <- split(onc,paste(onc[,1],onc[,2]))
+onc.q <- lapply(onc.q,function(x) x[,7:ncol(x)])
+obs.cs <- unlist(lapply(onc.q,cscore))
+                                        #load ses values
+onc.ses <- dget('../data/onc_tree_ses.Rdata')
+onc.p <- dget('../data/onc_tree_pval.Rdata')
+onc.tn <- lapply(onc.q,CoNetwork) #tree level networks
+if (any(names(onc.q)=='')){names(onc.ses) <- names(onc.q)[names(onc.q)!='']}
+onc.ses[is.na(onc.ses)] <- 0
+                                        #get genotype
+onc.geno <- unlist(sapply(names(onc.q),function(x) strsplit(x,split=' ')[[1]][2]))
+                                        #Roughness in the Garden
+rough <- read.csv('../data/ONC_raw_roughness.csv')
+rough <- rough[as.character(rough[,1])!="",1:5]
+                                        #isolate north quadrats
+rough <- rough[sapply(rough[,3],function(x) substr(x,1,1)=='N'),]
+                                        #average roughness
+avg.rough <- tapply(rough[,5],rough[,1],mean)
+r.tree <- names(avg.rough)
+r.tree <- sub('-','\\.',r.tree)
+r.tree <- sub('\\.0','\\.',r.tree)
+names(avg.rough) <- r.tree
+                                        #match roughness to to ses values
+ses.tree <- as.character(sapply(names(onc.ses),function(x) unlist(strsplit(x,split=' '))[1]))
+onc.rough <- avg.rough[match(ses.tree,r.tree)]
+all(ses.tree==names(onc.rough))
+                                        #Microsat data from Nash
+gen.d <- read.csv(file='../data/ONC_MSAT_datafromnash.csv')[,-1]
+gen.d[is.na(gen.d)] <- 0
+gen.d <- as.dist((gen.d))
 
-###Microsat data from Nash
-## library(polysat)
-## library(xlsx)
-## gen.d <- read.xlsx(file='../data/ONC_MSAT_datafromnash.xlsx',sheetIndex=2,row.names=TRUE)
-## gen.d[is.na(gen.d)] <- 0
-## gen.d <- as.dist((gen.d))
-                                        #onc <- onc[onc$Year=='2011',]
-###Merge species groups
-#Phy <- apply(onc[,12:14],1,sum) #make phy out of pmel,pads,pund
-#onc. <- onc[,-12:-14]
-#onc <- data.frame(onc.,Phy)
-if (all(table(onc[,1])==100)){}else{for (i in 1:1000){print('Warning: check input data!!!')}}
 ###Composition with height
 library(vegan)
 com <- split(onc[,7:ncol(onc)],paste(onc[,1],onc[,3],onc[,4]))
@@ -49,9 +82,22 @@ for (i in 1:length(unique(env$tree))){
   sac.com[[i]] <- apply(com[env$tree==unique(env$tree)[i],],2,sum)
 }
 sac.com <- do.call(rbind,sac.com)
-plot(specaccum(sac.com),ylim=c(0,10),ylab='Species Richness',xlab='Trees Sampled',font.lab=2)
+plot(specaccum(sac.com),ylim=c(0,12),ylab='Species Richness',xlab='Trees Sampled',font.lab=2)
 legend('topright',legend=c('Garden','Wild'),lty=c(1,1),col=c(1,2))
 
+###Composition and richness analyses
+onc.com <- do.call(rbind,lapply(onc.q,function(x) apply(x,2,sum)))
+onc.R <- apply(sign(onc.com),1,sum)
+onc.H <- diversity(onc.com)
+onc.com <- apply(onc.com,2,function(x) x/max(x))
+onc.com <- cbind(onc.com,ds=rep(min(onc.com[onc.com!=0]),nrow(onc.com)))
+                                        #
+onc.nms <- nmds.min(nmds(vegdist(onc.com)))
+onc.rot <- procrustes(dist(onc.rough),onc.nms,scale=TRUE)
+onc.rot <- t(onc.rot$rotation)
+onc.rot <- onc.rot[,(1:2)[abs(cor(cbind(onc.rough,onc.rot))[1,2:3])==max(abs(cor(cbind(onc.rough,onc.rot))[1,2:3]))]]
+cgREML(onc.rot,onc.geno)
+                                        #
 ###modeling
 ###Co-occurrences
 ##stand level
@@ -103,38 +149,11 @@ stand.ses <- (cscore(onc[,7:ncol(onc)]) - mean(stand.null)) / sd(stand.null)
 stand.ses.p <- length(stand.null[stand.null<=stand.ses])/length(stand.null)
 c(stand.ses,stand.ses.p)
 ##tree level 
-                                        #separate trees
-onc.q <- split(onc,paste(onc[,1],onc[,2]))
-onc.q <- lapply(onc.q,function(x) x[,7:ncol(x)])
-obs.cs <- unlist(lapply(onc.q,cscore))
-                                        #load ses values
-onc.ses <- dget('../data/onc_tree_ses.Rdata')
-onc.p <- dget('../data/onc_tree_pval.Rdata')
-ses.zero.p <- FALSE;ses.zero.sd2 <- FALSE
-if (ses.zero.p){onc.ses[onc.p>0.05] <- 0}else{}
-if (ses.zero.sd2){onc.ses[abs(onc.ses) < 2] <- 0}else{}
-onc.tn <- lapply(onc.q,dep.net) #tree level networks
-names(onc.ses) <- names(onc.q)[names(onc.q)!='']
-onc.ses[is.na(onc.ses)] <- 0
-onc.ses <- onc.ses[is.na(names(onc.ses))!=TRUE]
+
 onc.cen <- unlist(lapply(onc.tn,function(x) centralization(x,FUN='degree')))
 onc.deg <- unlist(lapply(onc.tn,function(x) length(x[x!=0])))
 onc.netd <- netDist(onc.tn)
-###Roughness in the Garden
-rough <- read.csv('../data/ONC_raw_roughness.csv')
-rough <- rough[as.character(rough[,1])!="",1:5]
-                                        #isolate north quadrats
-rough <- rough[sapply(rough[,3],function(x) substr(x,1,1)=='N'),]
-                                        #average roughness
-avg.rough <- tapply(rough[,5],rough[,1],mean)
-r.tree <- names(avg.rough)
-r.tree <- sub('-','\\.',r.tree)
-r.tree <- sub('\\.0','\\.',r.tree)
-names(avg.rough) <- r.tree
-                                        #match roughness to to ses values
-ses.tree <- as.character(sapply(names(onc.ses),function(x) unlist(strsplit(x,split=' '))[1]))
-avg.rough <- avg.rough[match(ses.tree,r.tree)]
-all(ses.tree==names(avg.rough))
+
 ###Genotype
 genotype <- as.character(sapply(names(onc.q),function(x) unlist(strsplit(x,split=' '))[2]))
 
@@ -143,12 +162,7 @@ length(genotype)==length(avg.rough) & length(avg.rough)==length(onc.ses)
 all(names(avg.rough)==as.character(unlist(sapply(names(onc.ses),function(x) strsplit(x,split=' ')[[1]][1]))))
 all(names(onc.deg)==names(onc.ses))
 ###Analyses
-                                        #community composition
-onc.com <- do.call(rbind,lapply(onc.q,function(x) apply(x,2,sum)))
-                                        #onc.com <- (onc.com/100)
-onc.com <- cbind(onc.com,ds=rep(min(onc.com[onc.com!=0])/10,nrow(onc.com)))
-adonis(onc.com~factor(genotype),permutations=10000)
-adonis(onc.com~factor(genotype)+avg.rough,permutations=10000)
+
                                         #indicator species analysis
 ## library(labdsv)
 ## indval(onc.com[,-ncol(onc.com)],genotype)

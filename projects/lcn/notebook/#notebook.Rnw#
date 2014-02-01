@@ -36,7 +36,9 @@ Results:
 \item Garden
   \begin{itemize}
   \item Height doesn't influence composition (PERM: F=1.88,P=0.154,R2=0.017,n=999)
-  \item NMDS: stress = 0.1727378, r2 = 0.894879
+  \item Composition: ro
+  \item NMDS: stress = 0.1727378, r2 = 0.894879, genotype predicts
+    roughness 
   \end{itemize}
 \item Wild
   \begin{itemize}

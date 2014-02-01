@@ -6,10 +6,8 @@
 ##Site = Uintah, UT
 ##Study area = 225 * 463 = 104,175 m2 = 0.104175 km2
 
-
-
 ###lichen data
-x <- read.csv('~/projects/dissertation/projects/lichen_coo/data/lco_Apr2012.csv')
+x <- read.csv('~/projects/dissertation/projects/lcn/data/lco_Apr2012.csv')
                                         #remove notes
 x <- x[,colnames(x)!='NOTES.']
                                         #
@@ -20,14 +18,14 @@ x <- x[x$tree!='gnu.44',]
 x <- x[x$tree!='ll.6',]
                                         #condense species
 lec.spp <- apply(x[,c(6,8,10,18)],1,function(x) sign(any(x!=0)))
-phy.spp <- apply(x[,c(13,14,15,16)],1,function(x) sign(any(x!=0)))
-x <- cbind(x,lec=lec.spp,phy=phy.spp)
-x <- x[,-c(6,8,10,18,13,14,15,16)]
+                                        #phy.spp <- apply(x[,c(13,14,15,16)],1,function(x) sign(any(x!=0)))
+x <- cbind(x,lec=lec.spp)
+x <- x[,-c(6,8,10,18)]
                                         #break into quadrat list (x.q)
 quads <- paste(x$tree,x$quadrat)
 x.q <- split(x,quads)
                                         #data from lamit
-env <- read.csv('~/projects/dissertation/projects/lichen_coo/data/Uinta2012_all_data_from_Lamit.csv')
+env <- read.csv('~/projects/dissertation/projects/lcn/data/Uinta2012_all_data_from_Lamit.csv')
 env <- env[is.na(env$Pct.Roughness)==FALSE,]
 env[,1] <- sub('\\?','',sub('\\.0','\\.',sub('\\_','\\.',sub('\\-','\\.',tolower(as.character(env[,1]))))))
 env[env[,1]=='ll.6_(znu.29)',1] <- 'll.6'
@@ -50,7 +48,7 @@ x.split <- as.character(x$tree)
 env.split <- as.character(env$Tree.ID)
 prb <- tapply(env$Pct.Roughness,env.split,mean) #percent rough bark
                                         #environmental data from lamit
-wenv <- read.csv('~/projects/dissertation/projects/lichen_coo/data/uintah_trees/uintah_2012_lco_trees.csv')
+wenv <- read.csv('~/projects/dissertation/projects/lcn/data/uintah_trees/uintah_2012_lco_trees.csv')
 wenv$tree <- sub('\\.0','\\.',wenv$tree) #remove leading zeros
 wenv$tree[wenv$tree=='gnu.468'] <- "gnu.68.ramet"
                                         #match to lichen dataset
@@ -89,14 +87,14 @@ for (i in 1:length(unique(env$Tree.ID))){
   sac.com[[i]] <- apply(com.[env$Tree.ID==unique(env$Tree.ID)[i],],2,sum)
 }
 sac.com <- do.call(rbind,sac.com)
-plot(specaccum(sac.com),add=FALSE,col=2)
+plot(specaccum(sac.com),add=TRUE,col=2)
 
 ###Co-occurrence C-score
 
 ##Whole Stand
-source('../src/seenetR.R')
-library(sna)
-scn <- CoNetwork(x[,((1:ncol(x))[colnames(x)=='xgal']):((1:ncol(x))[colnames(x)=='phy'])])
+library(ComGenR)
+scn <- CoNetwork(x[,(1:ncol(x))[colnames(x)=='xgal']:ncol(x)])
+mgp(scn,x[,(1:ncol(x))[colnames(x)=='xgal']:ncol(x)],displaylabels=TRUE)
 
 ##Bipartite network (trees and species)
 bpn.l <- split(x,as.character(x$tree))
