@@ -12,7 +12,7 @@ library(bipartite)
 library(pbapply)
                                         #Sourcing ComGenR on hoth
 oldwd <- getwd()
-setwd('../../../../ComGenR/R/')
+setwd('~/projects/packages/ComGenR/R/')
 cgn.list <- (sapply(dir(),grepl,pattern='~')|sapply(dir(),grepl,pattern='\\#'))==FALSE
 sapply(dir()[cgn.list],source)
 setwd(oldwd)

@@ -124,19 +124,8 @@ acn.type <- unlist(sapply(rownames(acn.bpn),function(x) strsplit(x,split=' ')[[1
 cgPlotweb(acn.bpn[acn.type=='live',],geno.t[type.t=='live'])
 cgPlotweb(acn.bpn[acn.type=='sen',],geno.t[type.t=='live'])
                                         #tree level
-nest.liv <- list()
-nest.liv[[1]] <- oecosimu(acn.bpn[acn.type=='live',],nestfun='nestedtemp',method='r00',alternative='greater',nsimul=1000)
-nest.liv[[2]] <- oecosimu(acn.bpn[acn.type=='live',],nestfun='nestedtemp',method='r0',alternative='greater',nsimul=1000)
-nest.liv[[3]] <- oecosimu(acn.bpn[acn.type=='live',],nestfun='nestedtemp',method='c0',alternative='greater',nsimul=1000)
-nest.liv[[4]] <- oecosimu(acn.bpn[acn.type=='live',],nestfun='nestedtemp',method='r1',alternative='greater',nsimul=1000)
-nest.sen <- list()
-nest.sen[[1]] <- oecosimu(acn.bpn[acn.type=='sen',],nestfun='nestedtemp',method='r00',alternative='greater',nsimul=1000)
-nest.sen[[2]] <- oecosimu(acn.bpn[acn.type=='sen',],nestfun='nestedtemp',method='r0',alternative='greater',nsimul=1000)
-nest.sen[[3]] <- oecosimu(acn.bpn[acn.type=='sen',],nestfun='nestedtemp',method='c0',alternative='greater',nsimul=1000)
-nest.sen[[4]] <- oecosimu(acn.bpn[acn.type=='sen',],nestfun='nestedtemp',method='r1',alternative='greater',nsimul=1000)
-                                        #results summary
-do.call(rbind,lapply(nest.liv,function(x)(x$'oecosimu')[c(6,2,1,3,5)]))
-do.call(rbind,lapply(nest.sen,function(x)(x$'oecosimu')[c(6,2,1,3,5)]))
+                                        #run on hoth
+
                                         #genotype level
 ## gnest.liv <- list()
 ## gnest.liv[[1]] <- oecosimu(mean.g(acn.bpn[acn.type=='liv',],liv.geno),nestfun='nestedtemp',method='r00',alternative='greater')
