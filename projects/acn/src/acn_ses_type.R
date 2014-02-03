@@ -1,4 +1,4 @@
-###Final set of analyses for the ACN paper
+###
 ###29 Jan 2014
 ###To be run up on Hoth
 
@@ -59,57 +59,6 @@ dist.t <- dist.t[order(type.t),order(type.t)]
 pdtype <- unlist(sapply(colnames(dist.t),function(x) strsplit(x,split=' ')[[1]][2]))
 pd.t <- diag(dist.t[pdtype=='live',pdtype=='sen'])
 
-## Genetic effect on P. betae
-                                        #effect of leaf type
-t.test(pbd.t)
-cgREML(pbd.t,geno.t[type.t=='live'])
-                                        #total PB across live and senescent leaves
-cgREML(pbs.t,geno.t[type.t=='live'])
-                                        #test of PB~genotype by type
-cgREML(pbp[type.t=='live'],geno.t[type.t=='live'])
-cgREML(pbp[type.t=='sen'],geno.t[type.t=='sen'])
-                                        #genotype and pb frequencies on leaves
-cgREML(pbf[type.t=='live',1],geno.t[type.t=='live'])
-cgREML(pbf[type.t=='live',2],geno.t[type.t=='live'])
-cgREML(pbf[type.t=='live',3],geno.t[type.t=='live'])
-cgREML(pbf[type.t=='sen',1],geno.t[type.t=='sen'])
-cgREML(pbf[type.t=='sen',2],geno.t[type.t=='sen'])
-cgREML(pbf[type.t=='sen',3],geno.t[type.t=='sen'])
-cgREML(pbf[type.t=='sen',4],geno.t[type.t=='sen'])
-chisq.test(pbf.liv[,apply(pbf.liv,2,sum)!=0])
-chisq.test(pbf.sen)
-
-## Genotype effect on richness (i.e. individual degree)
-cgREML(rich.t[type.t=='live'],geno.t[type.t=='live'])
-cgREML(rich.t[type.t=='sen'],geno.t[type.t=='sen'])
-cgREML((rich.t[type.t=='live']-rich.t[type.t=='sen']),geno.t[type.t=='live'])
-
-## Genotype effect on composition
-t.test(pd.t)
-cgREML(pd.t,geno.t[type.t=='live'])
-adonis(cbind(com.rel.i,ds=rep(min(com.rel.i[com.rel.i!=0]),nrow(com.rel.i)))~type.t)
-adonis(cbind(com.rel.i,ds=rep(min(com.rel.i[com.rel.i!=0]),nrow(com.rel.i)))[type.t=='live',]~geno.t[type.t=='live'])
-adonis(cbind(com.rel.i,ds=rep(min(com.rel.i[com.rel.i!=0]),nrow(com.rel.i)))[type.t=='sen',]~geno.t[type.t=='sen'])
-pair.permanova(cbind(com.rel.i,ds=rep(min(com.rel.i[com.rel.i!=0]),nrow(com.rel.i)))[type.t=='live',],geno.t[type.t=='live'])$p.mat
-
-## Genetic effect on SES
-                                        #test co-occurrence across trees
-                                        #values from hoth script run
-                                        #SES values ~ genotype
-acn.cnm <- read.csv('../data/acn_ses.csv')
-###Run another ses for each tree, but put sen and live together
-acn.cnm.ls <- read.csv('../data/acn_ses_ls.csv')
-##
-acn.ses <- acn.cnm$SES
-acn.ses[is.na(acn.ses)] <- 0
-cgREML(acn.ses,geno.t[order(type.t)])
-cgREML(acn.ses[type.t=='live'],geno.t[type.t=='live'])
-cgREML(acn.ses[type.t=='sen'],geno.t[type.t=='sen'])
-cgREML(acn.cnm.ls$SES,geno.t[type.t=='live'])
-#Stand level co-occurrence patterns
-cnm.liv <- cnm.test(com.i[type.t=='live',])
-cnm.sen <- cnm.test(com.i[type.t=='sen',])
-
 
 ###Building networks using tree level data
 build.bpn <- function(x,alpha=0.05,p=0.05,adjust=FALSE){
@@ -137,27 +86,3 @@ nest.sen[[4]] <- oecosimu(acn.bpn[acn.type=='sen',],nestfun='nestedtemp',method=
                                         #results summary
 do.call(rbind,lapply(nest.liv,function(x)(x$'oecosimu')[c(6,2,1,3,5)]))
 do.call(rbind,lapply(nest.sen,function(x)(x$'oecosimu')[c(6,2,1,3,5)]))
-                                        #genotype level
-## gnest.liv <- list()
-## gnest.liv[[1]] <- oecosimu(mean.g(acn.bpn[acn.type=='liv',],liv.geno),nestfun='nestedtemp',method='r00',alternative='greater')
-## gnest.liv[[2]] <- oecosimu(mean.g(acn.bpn[acn.type=='liv',],liv.geno),nestfun='nestedtemp',method='r0',alternative='greater')
-## gnest.liv[[3]] <- oecosimu(mean.g(acn.bpn[acn.type=='liv',],liv.geno),nestfun='nestedtemp',method='c0',alternative='greater')
-## gnest.liv[[4]] <- oecosimu(mean.g(acn.bpn[acn.type=='liv',],liv.geno),nestfun='nestedtemp',method='r1',alternative='greater')
-## gnest.sen <- list()
-## gnest.sen[[1]] <- oecosimu(mean.g(acn.bpn[acn.type=='sen',],sen.geno),nestfun='nestedtemp',method='r00',alternative='greater')
-## gnest.sen[[2]] <- oecosimu(mean.g(acn.bpn[acn.type=='sen',],sen.geno),nestfun='nestedtemp',method='r0',alternative='greater')
-## gnest.sen[[3]] <- oecosimu(mean.g(acn.bpn[acn.type=='sen',],sen.geno),nestfun='nestedtemp',method='c0',alternative='greater')
-## gnest.sen[[4]] <- oecosimu(mean.g(acn.bpn[acn.type=='sen',],sen.geno),nestfun='nestedtemp',method='r1',alternative='greater')
-
-## Co-occurrence network structure
-pit.trees <- split(pit.com,paste(leaf.type,tree))
-net.trees <- lapply(pit.trees,CoNetwork)
-net.d <- netDist(net.trees)
-adonis(net.d~ls.geno*tree.leaf)
-                                        #using the tested percent abundance values from bpn
-acn.net.liv <- CoNetwork(pit.com[leaf.type=='live',])
-acn.net.sen <- CoNetwork(pit.com[leaf.type=='sen',])
-par(mfrow=c(1,2))
-mgp(acn.net.liv,pit.com[leaf.type=='live',])
-mgp(acn.net.sen,pit.com[leaf.type=='sen',])
-

@@ -38,31 +38,38 @@ Continuing to work on script.
 Results Summary
 
 \begin{itemize}
-\item PB effects: 
+\item Richness
   \begin{itemize}
-  \item PB (as percent) decreased from senescent to live leaves
-    (Paired t=-5.58,df=34,P=0.000003)
-  \item Genotype did not affect the change in PB as percent (REML:ch2=2.81,P=0.094)
-  \item Genotype affects (pb=liv+sen) (REML:chi2=4.20,P=0.040,df=1) 
-  \item Genotype affects liv (REML: chi2=6.75,P=0.009) but not sen
-    (REML: chi2=3.32,P=0.068) using percent abundances
+  \item Genotype does not influence richness (Live: 1.4102840
+    0.2350093 , Sen: 1.060422 0.303119 )
+  \item Or the difference in richness (-2.246907e-09  1.000000e+00)
   \end{itemize}
 \item Composition
   \begin{itemize}
-  \item Liv and Sen leaves were compositionally different (relativized)
-    (Multivariate Paired distance based t-test: t=23.74,df=34,P=2.2e-16)
-  \item Genotype did not affect the difference in composition between
-    live and sen (REML: chi2=0.53,P=0.465)
-  \item Genotype and tree type influenced community composition but
-    did not interact (PERM:
-    dfgeno=6,F=1.96,P=0.004,R2=0.14,dfleaf=1,F=10.71,P=0.001,R2=0.12,dfint=6,F=1.31,R2=0.09,P=0.125)
+  \item Leaf type influences composition (Paired t: t = 23.7363, df = 34, p-value < 2.2e-16)
+  \item Genotype does not influence the difference in community
+    composition between leaf types (REML: chi2=0.53,P=0.465)
+  \item Genotype influences community composition for live but not sen
+    leaves (F=1.85,P=0.004,R2=0.28; F=1.22,P=0.176)
+  \item Several genotypes are different (Paired Perm: 1000 vs
+    T6,1008vs1023vsT6, 1023vs11vsT6, 11vs996,996vsT6)
+  \end{itemize}
+\item PB effects: 
+  \begin{itemize}
+  \item PB (as percent) decreased from senescent to live leaves by 31\% on average
+    (t = -5.5791, df = 34, p-value = 3.036e-06) but this was not
+    different among genotypes (X2=2.809,P=0.0937)
+  \item PB.total ~ Genotype (X2=4.20104879,P=0.0404) 
+  \item Percent PB ~ Genotype Live (X2=6.75,P=0.009), Percent PB !~ Genotype Sen (X2=3.32,P=0.07)
+  \item PB frequencies are different among genotypes (X2 test: 125.62,
+    df=18, P=2.2e-16), frequencies of 1 and 2 PB per leaf are
+    different among genotypes on live leaves (X2=6.701,P=0.0096 and
+    X2=6.27,P=0.012), while 3 PB/leaf for SEN (X2=4.045,P=0.044)
   \end{itemize}
 \item Co-occurrence patterns
   \begin{itemize}
-  \item Both live and sen show similar tree total co-occurrence
-    patterns (SESlive=-6.85,P=0.001,SESsen=-5.87,P=0.001)
-  \item Sen and Liv show different patterns of co-occurrence
-  \item Do a paired analysis
+  \item Live SES is lower than sen ses (Live: SES=-7.865,P=0.001; Sen: SES=-4.447,P=0.001)
+  \item No genotype effect on co-occurrence patterns within trees (X2=0,P=1)
   \end{itemize}
 \item Nestedness
   \item R1 nestedness is only significant for Live leaves
