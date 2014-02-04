@@ -15,6 +15,8 @@ library(ComGenR)
                                         #using notes from the following link
                                         #http://www.stat.wisc.edu/~ane/st572/notes/lec21.pdf
 source('~/projects/packages/ComGenR_development/src/cgREML.R')
+source('~/projects/packages/ComGenR_development/src/cgQAP.R')
+
 ## Load data
 pit <- read.csv('~/projects/dissertation/projects/acn/data/arth_cooc_PIT_Lau.csv')
                                         #genotype remove 1007
@@ -58,6 +60,7 @@ dist.t <- as.matrix(vegdist(cbind(com.rel.i,ds=rep(min(com.rel.i[com.rel.i!=0]),
 dist.t <- dist.t[order(type.t),order(type.t)]
 pdtype <- unlist(sapply(colnames(dist.t),function(x) strsplit(x,split=' ')[[1]][2]))
 pd.t <- diag(dist.t[pdtype=='live',pdtype=='sen'])
+sen.t <- unlist(lapply(split(pit$leaves,paste(tree,type)),function(x) x[1]))[type.t=='sen']
 
 ## Genetic effect on P. betae
                                         #effect of leaf type
@@ -67,6 +70,7 @@ cgREML(pbd.t,geno.t[type.t=='live'])
 cgREML(pbs.t,geno.t[type.t=='live'])
                                         #test of PB~genotype by type
 cgREML(pbp[type.t=='live'],geno.t[type.t=='live'])
+getH2C(pbp[type.t=='live'],geno.t[type.t=='live'],method='nms')
 cgREML(pbp[type.t=='sen'],geno.t[type.t=='sen'])
                                         #genotype and pb frequencies on leaves
 cgREML(pbf[type.t=='live',1],geno.t[type.t=='live'])
@@ -78,6 +82,9 @@ cgREML(pbf[type.t=='sen',3],geno.t[type.t=='sen'])
 cgREML(pbf[type.t=='sen',4],geno.t[type.t=='sen'])
 chisq.test(pbf.liv[,apply(pbf.liv,2,sum)!=0])
 chisq.test(pbf.sen)
+                                        #genotype effect on all species
+lsd.t <- (com.i[type.t=='live',]-com.i[type.t=='sen',])
+round(p.adjust(apply(lsd.t,2,function(x) t.test(x)$p.value),method='fdr'),5)
 
 ## Genotype effect on richness (i.e. individual degree)
 cgREML(rich.t[type.t=='live'],geno.t[type.t=='live'])
@@ -110,43 +117,56 @@ cgREML(acn.cnm.ls$SES,geno.t[type.t=='live'])
 cnm.liv <- cnm.test(com.i[type.t=='live',])
 cnm.sen <- cnm.test(com.i[type.t=='sen',])
 
-
 ###Building networks using tree level data
-build.bpn <- function(x,alpha=0.05,p=0.05,adjust=FALSE){
+build.bpn <- function(x,alpha=0.05,p=0.001,adjust=FALSE){
   p.out <- apply(x,2,function(x) as.numeric(unlist(binom.test(sum(sign(x)),length(x),p=p))[3]))
   if (adjust){p.adjust(p.out,method='fdr')}
   x.out <- apply(sign(x),2,sum)/nrow(x)
-  x.out[p.out<=alpha] <- 0
+  x.out[p.out>alpha] <- 0
   return(x.out)
 }
 acn.bpn <- do.call(rbind,lapply(obs,build.bpn))
+colnames(acn.bpn) <- paste('S',1:ncol(acn.bpn),sep='')
 acn.type <- unlist(sapply(rownames(acn.bpn),function(x) strsplit(x,split=' ')[[1]][2]))
 cgPlotweb(acn.bpn[acn.type=='live',],geno.t[type.t=='live'])
 cgPlotweb(acn.bpn[acn.type=='sen',],geno.t[type.t=='live'])
+                                        #bpn degree
+bpd.t <- apply(sign(acn.bpn),1,sum)
+cgREML(bpd.t[type.t=='live'],geno.t[type.t=='live'])
+cgREML(bpd.t[type.t=='sen'],geno.t[type.t=='sen'])
                                         #tree level
-                                        #run on hoth
-
+read.csv('../results/acn_bpnnest_live.csv')
+read.csv('../results/acn_bpnnest_sen.csv')
                                         #genotype level
-## gnest.liv <- list()
-## gnest.liv[[1]] <- oecosimu(mean.g(acn.bpn[acn.type=='liv',],liv.geno),nestfun='nestedtemp',method='r00',alternative='greater')
-## gnest.liv[[2]] <- oecosimu(mean.g(acn.bpn[acn.type=='liv',],liv.geno),nestfun='nestedtemp',method='r0',alternative='greater')
-## gnest.liv[[3]] <- oecosimu(mean.g(acn.bpn[acn.type=='liv',],liv.geno),nestfun='nestedtemp',method='c0',alternative='greater')
-## gnest.liv[[4]] <- oecosimu(mean.g(acn.bpn[acn.type=='liv',],liv.geno),nestfun='nestedtemp',method='r1',alternative='greater')
-## gnest.sen <- list()
-## gnest.sen[[1]] <- oecosimu(mean.g(acn.bpn[acn.type=='sen',],sen.geno),nestfun='nestedtemp',method='r00',alternative='greater')
-## gnest.sen[[2]] <- oecosimu(mean.g(acn.bpn[acn.type=='sen',],sen.geno),nestfun='nestedtemp',method='r0',alternative='greater')
-## gnest.sen[[3]] <- oecosimu(mean.g(acn.bpn[acn.type=='sen',],sen.geno),nestfun='nestedtemp',method='c0',alternative='greater')
-## gnest.sen[[4]] <- oecosimu(mean.g(acn.bpn[acn.type=='sen',],sen.geno),nestfun='nestedtemp',method='r1',alternative='greater')
-
+gml.t <- mean.g(acn.bpn[type.t=='live',],geno.t[type.t=='live'])
+gms.t <- mean.g(acn.bpn[type.t=='sen',],geno.t[type.t=='sen'])
+gml.nest <- list()
+gml.nest[[1]] <- oecosimu(gml.t,nestfun='nestedtemp',method='r00',nsimul=1000)
+gml.nest[[2]] <- oecosimu(gml.t,nestfun='nestedtemp',method='r0',nsimul=1000)
+gml.nest[[3]] <- oecosimu(gml.t,nestfun='nestedtemp',method='c0',nsimul=1000)
+gml.nest[[4]] <- oecosimu(gml.t,nestfun='nestedtemp',method='r1',nsimul=1000)
+gms.nest <- list()
+gms.nest[[1]] <- oecosimu(gms.t,nestfun='nestedtemp',method='r00',nsimul=1000)
+gms.nest[[2]] <- oecosimu(gms.t,nestfun='nestedtemp',method='r0',nsimul=1000)
+gms.nest[[3]] <- oecosimu(gms.t,nestfun='nestedtemp',method='c0',nsimul=1000)
+gms.nest[[4]] <- oecosimu(gms.t,nestfun='nestedtemp',method='r1',nsimul=1000)
+                                        #
 ## Co-occurrence network structure
-pit.trees <- split(pit.com,paste(leaf.type,tree))
-net.trees <- lapply(pit.trees,CoNetwork)
-net.d <- netDist(net.trees)
-adonis(net.d~ls.geno*tree.leaf)
-                                        #using the tested percent abundance values from bpn
-acn.net.liv <- CoNetwork(pit.com[leaf.type=='live',])
-acn.net.sen <- CoNetwork(pit.com[leaf.type=='sen',])
-par(mfrow=c(1,2))
-mgp(acn.net.liv,pit.com[leaf.type=='live',])
-mgp(acn.net.sen,pit.com[leaf.type=='sen',])
+net.t <- lapply(split(pit.com,type),CoNetwork)
+for (i in 1:length(net.t)){
+  rownames(net.t[[i]]) <- colnames(net.t[[i]]) <- paste('S',1:ncol(net.t[[i]]),sep='')
+}
+net.t <- reduce.net(net.t)
+coord <- mgp(net.t[[1]],split(pit.com,type)[[1]],displaylabels=TRUE)
+par(mfrow=c(1,1))
+mgp(net.t[[1]],split(pit.com,type)[[1]],loc=FALSE,my.coord=coord,displaylabels=TRUE)
+mgp(net.t[[2]],split(pit.com,type)[[2]],loc=FALSE,my.coord=coord,displaylabels=TRUE)
+mgp(abs(net.t[[1]]-net.t[[2]]),pit.com,loc=FALSE,my.coord=coord,displaylabels=TRUE)
+                                        #qap.test
+qap.t <- cgQAP(net.t,nits=5000)
+(qap.t$testval-mean(qap.t$dist))/sd(qap.t$dist)
+c(qap.t$pleeq,1-qap.t$pleeq)
+hist(qap.t$dist,xlim=c(0,20))
+abline(v=net.dif(q,g1=1,g2=2))
+
 

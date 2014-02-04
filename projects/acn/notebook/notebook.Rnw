@@ -31,6 +31,43 @@
 \item Think about genetic basis of leaf abscision/senescence
 \end{itemize}
 
+\section{3 Feb 2014}
+
+Figures
+
+<<>>=
+library(gplots)
+                                        #PB among genotypes
+mu <- tapply(pbp[type.t=='live']*100,geno.t[type.t=='live'],mean)
+se <- tapply(pbp[type.t=='live']*100,geno.t[type.t=='live'],function(x) sd(x)/sqrt(length(x)))
+se <- se[order(mu,decreasing=TRUE)]
+mu <- mu[order(mu,decreasing=TRUE)]
+barplot2(mu,plot.ci=TRUE,ci.u=mu+se,ci.l=mu-se,ylab='P. betae abundance (percent leaves)',xlab='Tree Genotype',ylim=c(0,20))
+                                        #Composition among genotypes for living leaves
+nms.liv <- nmds.min(nmds(vegdist(com.i[type.t=='live',])))
+ch.plot(nms.liv,g=geno.t[type.t=='live'])
+pb.env <- data.frame('P_betae'=pbp[type.t=='live'])
+pbp.fit <- envfit(nms.liv,pb.env)
+plot(pbp.fit,col='darkgrey')
+
+                                        #co-occurrence network plots
+
+net.t <- lapply(split(pit.com,type),CoNetwork)
+for (i in 1:length(net.t)){
+  rownames(net.t[[i]]) <- colnames(net.t[[i]]) <- paste('S',1:ncol(net.t[[i]]),sep='')
+}
+
+coord <- mgp(net.t[[1]],split(pit.com,type)[[1]],displaylabels=TRUE)
+par(mfrow=c(1,1))
+mgp(net.t[[1]],split(pit.com,type)[[1]],loc=FALSE,my.coord=coord,displaylabels=TRUE)
+mgp(net.t[[2]],split(pit.com,type)[[2]],loc=FALSE,my.coord=coord,displaylabels=TRUE)
+
+stopme
+
+
+@ 
+
+
 \section{30 Jan 2014}
 
 Continuing to work on script.
@@ -66,15 +103,27 @@ Results Summary
     different among genotypes on live leaves (X2=6.701,P=0.0096 and
     X2=6.27,P=0.012), while 3 PB/leaf for SEN (X2=4.045,P=0.044)
   \end{itemize}
+\item These species' abundances differ between live and senescent:
+  \begin{itemize}
+  \item chew.edge (P=0.00009)
+  \item scrape (P=0.000)
+  \item chomp (P=0.00013)
+  \item chew.holes (P=0.00553)
+  \item tier (P=0.01134)
+  \item mid.miner (P=0.00553)
+  \item pinch (P=0.00683)
+  \item pb (P=0.00060)
+  \end{itemize}
 \item Co-occurrence patterns
   \begin{itemize}
   \item Live SES is lower than sen ses (Live: SES=-7.865,P=0.001; Sen: SES=-4.447,P=0.001)
   \item No genotype effect on co-occurrence patterns within trees (X2=0,P=1)
+  \item Co-occurrence network structure different between live and sen
+    (QAP: z=7.454,P<0.0001).
   \end{itemize}
 \item Nestedness
-  \item R1 nestedness is only significant for Live leaves
-  \item R00 and R0 nestedness are significant for both
-  \item C0 nestedness is only signficant for Sen leaves
+  \item At the tree scale, both live and sen are nested for r00 and r0
+  \item At the genotype scale, live is nested for r00 and both for r0
 \end{itemize}
 
 \section{29 Jan 2014}

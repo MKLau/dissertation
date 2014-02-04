@@ -1,0 +1,22 @@
+digraph "sem.fit" {
+  rankdir=LR;
+  size="12,12";
+  node [fontname="Helvetica" fontsize=14 shape=box];
+  edge [fontname="Arial" fontsize=10];
+  center=1;
+  "roughness" -> "Axis1" [label="0.79"];
+  "Geno1" -> "roughness" [label="-0.21"];
+  "Geno2" -> "roughness" [label="0.36"];
+  "Geno3" -> "roughness" [label="0.31"];
+  "Geno4" -> "roughness" [label="0.14"];
+  "Geno5" -> "roughness" [label="0.08"];
+  "Geno6" -> "roughness" [label="0.04"];
+  "Geno7" -> "roughness" [label="0.02"];
+  "Geno7" -> "Axis1" [label="0.16"];
+  "Geno8" -> "roughness" [label="-0.2"];
+  "Geno8" -> "Axis1" [label="-0.13"];
+  "Geno9" -> "roughness" [label="0.2"];
+  "Geno10" -> "roughness" [label="-0.12"];
+  "Geno11" -> "roughness" [label="0.18"];
+  "Geno12" -> "roughness" [label="-0.22"];
+}

@@ -67,11 +67,11 @@ pd.t <- diag(dist.t[pdtype=='live',pdtype=='sen'])
 
 
 ###Building networks using tree level data
-build.bpn <- function(x,alpha=0.05,p=0.05,adjust=FALSE){
+build.bpn <- function(x,alpha=0.05,p=0.001,adjust=FALSE){
   p.out <- apply(x,2,function(x) as.numeric(unlist(binom.test(sum(sign(x)),length(x),p=p))[3]))
   if (adjust){p.adjust(p.out,method='fdr')}
   x.out <- apply(sign(x),2,sum)/nrow(x)
-  x.out[p.out<=alpha] <- 0
+  x.out[p.out>alpha] <- 0
   return(x.out)
 }
 acn.bpn <- do.call(rbind,lapply(obs,build.bpn))
