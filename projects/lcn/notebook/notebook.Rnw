@@ -40,7 +40,10 @@ Results:
   \item Roughness is highly heritable (REML: X2=9.214,P=0.0024,H2C=0.36)
   \item Roughness predicts relativized community composition (PERM: R2=0.04,
     P=0.04)
-  \item 
+  \item Stand level co-occurrence patterns significant using the
+    community matrix (SES=-11.32535,P<<0.0001) (stand level network figure), but
+    genotype doesn't predict SES (REML:  X2<<0.0001,P=0.996)
+  \item genotype-species networks are nested (r1: z=-3.496,P=0.001)
   \end{itemize}
 \item Wild
   \begin{itemize}

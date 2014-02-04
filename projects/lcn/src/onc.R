@@ -126,29 +126,38 @@ stand.null <- unlist(dget(file='../../lcn/data/onc_stand_null.Rdata'))
 stand.ses <- (cscore(onc[,7:ncol(onc)]) - mean(stand.null)) / sd(stand.null)
 stand.ses.p <- length(stand.null[stand.null<=stand.ses])/length(stand.null)
 c(stand.ses,stand.ses.p)
+                                        #
+onc.treemean.ses <- dget(file='../../lcn/results/onc_ses_treemean.Rdata')
+onc.treemean.ses
+                                        #
 onc.ses <- dget(file='../../lcn/data/onc_tree_ses.Rdata')
 onc.ses[is.na(onc.ses)] <- 0
 cgREML(onc.ses,onc.geno)
 plot(onc.ses~as.numeric(factor(onc.geno)))
+summary(lm(onc.ses~onc.rough))
+onc.mg.ses <- tapply(onc.ses,onc.geno,mean)
+onc.mg.rough <- tapply(onc.rough,onc.geno,mean)
+plot(onc.mg.ses^2~onc.mg.rough)
+abline(lm(onc.mg.ses^2~onc.mg.rough))
+summary(lm((onc.mg.ses^2)~onc.mg.rough))
                                         #unipartite networks
 lcn <- CoNetwork((onc[,7:ncol(onc)]))
 mgp(lcn,(onc[,7:ncol(onc)]),displaylabels=TRUE,loc=FALSE)
                                         #bipartite network
 onc.bpn <- do.call(rbind,lapply(onc.q,build.bpn))
 cgPlotweb(onc.bpn,onc.geno)
-onc.nest <- list()
-onc.nest[[1]] <- oecosimu(onc.bpn,nestfun='nestedtemp',method='r00',nsimul=1000)
-onc.nest[[2]] <- oecosimu(onc.bpn,nestfun='nestedtemp',method='r0',nsimul=1000)
-onc.nest[[3]] <- oecosimu(onc.bpn,nestfun='nestedtemp',method='c0',nsimul=1000)
-onc.nest[[4]] <- oecosimu(onc.bpn,nestfun='nestedtemp',method='r1',nsimul=1000)
-onc.geno.nest <- list()
-onc.geno.nest[[1]] <- oecosimu(mean.g(onc.bpn,onc.geno),nestfun='nestedtemp',method='r00',nsimul=1000)
-onc.geno.nest[[2]] <- oecosimu(mean.g(onc.bpn,onc.geno),nestfun='nestedtemp',method='r0',nsimul=1000)
-onc.geno.nest[[3]] <- oecosimu(mean.g(onc.bpn,onc.geno),nestfun='nestedtemp',method='c0',nsimul=1000)
-onc.geno.nest[[4]] <- oecosimu(mean.g(onc.bpn,onc.geno),nestfun='nestedtemp',method='r1',nsimul=1000)
-
-onc.geno
-onc.geno.nest
-                                        #test for the genotype effect on degree
-onc.d <- apply(sign(onc.bpn),1,sum)
-cgREML(onc.d,onc.geno)
+## onc.nest <- list()
+## onc.nest[[1]] <- oecosimu(onc.bpn,nestfun='nestedtemp',method='r00',nsimul=1000)
+## onc.nest[[2]] <- oecosimu(onc.bpn,nestfun='nestedtemp',method='r0',nsimul=1000)
+## onc.nest[[3]] <- oecosimu(onc.bpn,nestfun='nestedtemp',method='c0',nsimul=1000)
+## onc.nest[[4]] <- oecosimu(onc.bpn,nestfun='nestedtemp',method='r1',nsimul=1000)
+## onc.geno.nest <- list()
+## onc.geno.nest[[1]] <- oecosimu(mean.g(onc.bpn,onc.geno),nestfun='nestedtemp',method='r00',nsimul=1000)
+## onc.geno.nest[[2]] <- oecosimu(mean.g(onc.bpn,onc.geno),nestfun='nestedtemp',method='r0',nsimul=1000)
+## onc.geno.nest[[3]] <- oecosimu(mean.g(onc.bpn,onc.geno),nestfun='nestedtemp',method='c0',nsimul=1000)
+## onc.geno.nest[[4]] <- oecosimu(mean.g(onc.bpn,onc.geno),nestfun='nestedtemp',method='r1',nsimul=1000)
+onc.nest <- read.csv(file='../../lcn/results/onc_nest_tree.csv')
+onc.geno.nest <- read.csv(file='../../lcn/results/onc_nest_geno.csv')
+                                        #correlate genotype mean roughness and mean degree
+onc.deg <- apply(sign((onc.bpn)),1,sum)
+summary(lm(onc.deg~onc.rough))
