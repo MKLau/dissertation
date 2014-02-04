@@ -6,6 +6,7 @@
 ##Site = Uintah, UT
 ##Study area = 225 * 463 = 104,175 m2 = 0.104175 km2
 
+library(pbapply)
 library(vegan)
 build.bpn <- function(x,alpha=0.05,p=0.001,adjust=FALSE){
   p.out <- apply(x,2,function(x) as.numeric(unlist(binom.test(sum(sign(x)),length(x),p=p))[3]))
