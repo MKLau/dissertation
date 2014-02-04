@@ -97,11 +97,10 @@ adonis(wild.com.rel~prb)
 
 #ses patterns
 wild.stand.ses <- cnm.test(wild.com)
-wild.stand.ses
 wild.tree.ses <- lapply(wild.q,cnm.test,nits=5000)
 wild.ses <- do.call(rbind,wild.tree.ses)[,1]
 wild.ses[is.na(wild.ses)] <- 0
-summary(lm(wild.ses~prb))
+write.csv(do.call(rbind,wild.tree.ses),file='../../lcn/data/wild_ses_tree.csv')
 
 #nestedness
 wild.bpn <- do.call(rbind,lapply(wild.q,build.bpn))
@@ -111,3 +110,4 @@ wild.nest[[1]] <- oecosimu(wild.bpn,nestfun=nestedtemp,method='r00',nsimul=5000)
 wild.nest[[2]] <- oecosimu(wild.bpn,nestfun=nestedtemp,method='r0',nsimul=5000)
 wild.nest[[3]] <- oecosimu(wild.bpn,nestfun=nestedtemp,method='c0',nsimul=5000)
 wild.nest[[4]] <- oecosimu(wild.bpn,nestfun=nestedtemp,method='r1',nsimul=5000)
+wild.nest.out <- do.call(rbind,lapply(wild.nest,function(x) x$oecosimu[-4]))
