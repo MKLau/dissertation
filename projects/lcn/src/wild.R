@@ -6,6 +6,15 @@
 ##Site = Uintah, UT
 ##Study area = 225 * 463 = 104,175 m2 = 0.104175 km2
 
+library(vegan)
+build.bpn <- function(x,alpha=0.05,p=0.001,adjust=FALSE){
+  p.out <- apply(x,2,function(x) as.numeric(unlist(binom.test(sum(sign(x)),length(x),p=p))[3]))
+  if (adjust){p.adjust(p.out,method='fdr')}
+  x.out <- apply(sign(x),2,sum)/nrow(x)
+  x.out[p.out>alpha] <- 0
+  return(x.out)
+}
+
 ###lichen data
 x <- read.csv('~/projects/dissertation/projects/lcn/data/lco_Apr2012.csv')
                                         #remove notes
