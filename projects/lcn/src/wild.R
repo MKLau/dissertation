@@ -15,6 +15,13 @@ build.bpn <- function(x,alpha=0.05,p=0.001,adjust=FALSE){
   return(x.out)
 }
 
+                                        #Sourcing ComGenR on hoth
+oldwd <- getwd()
+setwd('~/projects/packages/ComGenR/R/')
+cgn.list <- (sapply(dir(),grepl,pattern='~')|sapply(dir(),grepl,pattern='\\#'))==FALSE
+sapply(dir()[cgn.list],source)
+setwd(oldwd)
+
 ###lichen data
 x <- read.csv('~/projects/dissertation/projects/lcn/data/lco_Apr2012.csv')
                                         #remove notes
@@ -90,12 +97,16 @@ adonis(wild.com.rel~prb)
 #ses patterns
 wild.stand.ses <- cnm.test(wild.com)
 wild.stand.ses
-wild.tree.ses <- lapply(wild.q,cnm.test,nits=1000)
+wild.tree.ses <- lapply(wild.q,cnm.test,nits=5000)
 wild.ses <- do.call(rbind,wild.tree.ses)[,1]
 wild.ses[is.na(wild.ses)] <- 0
 summary(lm(wild.ses~prb))
 
 #nestedness
 wild.bpn <- do.call(rbind,lapply(wild.q,build.bpn))
-cgPlotweb(wild.bpn,rownames(wild.bpn))
-oecosimu(wild.bpn,nestfun=nestedtemp,method='r0',nsimul=99)
+                                        #cgPlotweb(wild.bpn,rownames(wild.bpn))
+wild.nest <- list()
+wild.nest[[1]] <- oecosimu(wild.bpn,nestfun=nestedtemp,method='r00',nsimul=5000)
+wild.nest[[2]] <- oecosimu(wild.bpn,nestfun=nestedtemp,method='r0',nsimul=5000)
+wild.nest[[3]] <- oecosimu(wild.bpn,nestfun=nestedtemp,method='c0',nsimul=5000)
+wild.nest[[4]] <- oecosimu(wild.bpn,nestfun=nestedtemp,method='r1',nsimul=5000)
