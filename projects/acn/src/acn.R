@@ -113,9 +113,13 @@ cgREML(acn.ses,geno.t[order(type.t)])
 cgREML(acn.ses[type.t=='live'],geno.t[type.t=='live'])
 cgREML(acn.ses[type.t=='sen'],geno.t[type.t=='sen'])
 cgREML(acn.cnm.ls$SES,geno.t[type.t=='live'])
+cgREML(abs(acn.ses),geno.t[order(type.t)])
+cgREML(abs(acn.ses[type.t=='live']),geno.t[type.t=='live'])
+cgREML(abs(acn.ses[type.t=='sen']),geno.t[type.t=='sen'])
+
 #Stand level co-occurrence patterns
-cnm.liv <- cnm.test(com.i[type.t=='live',])
-cnm.sen <- cnm.test(com.i[type.t=='sen',])
+                                        #cnm.liv <- cnm.test(com.i[type.t=='live',])
+                                        #cnm.sen <- cnm.test(com.i[type.t=='sen',])
 
 ###Building networks using tree level data
 build.bpn <- function(x,alpha=0.05,p=0.001,adjust=FALSE){
@@ -129,7 +133,7 @@ acn.bpn <- do.call(rbind,lapply(obs,build.bpn))
 colnames(acn.bpn) <- paste('S',1:ncol(acn.bpn),sep='')
 acn.type <- unlist(sapply(rownames(acn.bpn),function(x) strsplit(x,split=' ')[[1]][2]))
 cgPlotweb(acn.bpn[acn.type=='live',],geno.t[type.t=='live'])
-cgPlotweb(acn.bpn[acn.type=='sen',],geno.t[type.t=='live'])
+cgPlotweb(acn.bpn[acn.type=='sen',],geno.t[type.t=='sen'])
                                         #bpn degree
 bpd.t <- apply(sign(acn.bpn),1,sum)
 cgREML(bpd.t[type.t=='live'],geno.t[type.t=='live'])
@@ -150,6 +154,18 @@ gms.nest[[1]] <- oecosimu(gms.t,nestfun='nestedtemp',method='r00',nsimul=1000)
 gms.nest[[2]] <- oecosimu(gms.t,nestfun='nestedtemp',method='r0',nsimul=1000)
 gms.nest[[3]] <- oecosimu(gms.t,nestfun='nestedtemp',method='c0',nsimul=1000)
 gms.nest[[4]] <- oecosimu(gms.t,nestfun='nestedtemp',method='r1',nsimul=1000)
+                                        #modularity
+bpn.liv <- acn.bpn[type.t=='live',]
+rownames(bpn.liv) <- paste(rownames(bpn.liv),geno.t[type.t=='live'])
+modules.liv <- computeModules(bpn.liv)
+plotModuleWeb(modules.liv,rank=FALSE)
+listModuleInformation(modules.liv)
+printoutModuleInformation(modules.liv)
+                                        #
+nulls <- nullmodel(bpn.liv, N=100, method="r2d") 
+modules.nulls <- sapply(nulls, computeModules) 
+like.nulls <- sapply(modules.nulls, function(x) x@likelihood) 
+(z <- (mod@likelihood - mean(like.nulls))/sd(like.nulls))
                                         #
 ## Co-occurrence network structure
 net.t <- lapply(split(pit.com,type),CoNetwork)
@@ -168,5 +184,4 @@ qap.t <- cgQAP(net.t,nits=5000)
 c(qap.t$pleeq,1-qap.t$pleeq)
 hist(qap.t$dist,xlim=c(0,20))
 abline(v=net.dif(q,g1=1,g2=2))
-
 

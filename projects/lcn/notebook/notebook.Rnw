@@ -48,7 +48,10 @@ Results:
 \item Wild
   \begin{itemize}
   \item Height doesn't influence composition (PERM: F=0.51,P=0.712,R2=0.019,n=999)
-  \item 
+  \item Significant co-occurrence patterns at the stand scale. 
+  \item Tree level co-occurrence patterns influenced by roughness. 
+  \item Unipartite network.
+  \item Nestedness significant.
   \end{itemize}
 \end{itemize}
 

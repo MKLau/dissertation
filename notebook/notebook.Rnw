@@ -31,6 +31,27 @@
 %\setcounter{secnumdepth}{-1}  %activate to start numbering from one
 %on the second page
 
+\section{5 Feb 2014}
+
+Relentless Evolution Notes
+
+\begin{itemize}
+\item Tightly coupled pairs of species are rare 
+\item Local processes tend to form small webs
+\item Local webs build to form large webs regionally
+\item Six main advancements:
+  \begin{enumerate}
+  \item Geographic approach
+  \item Diffuse co-evolution studies
+  \item Hypotheses for selection in small webs
+  \item Co-evolution favors the formation of webs rather than pairs
+  \item Approaches for examining evolutionary effects in small and
+    large webs (network ecology)
+  \item Development of phylogenetic and neutral approaches
+  \end{enumerate}
+\item 
+\end{itemize}
+
 \section{30 Jan 2014}
 
 Finishing script to run final acn analyses (src/acn.R). 

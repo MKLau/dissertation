@@ -61,6 +61,8 @@ coord <- mgp(net.t[[1]],split(pit.com,type)[[1]],displaylabels=TRUE)
 par(mfrow=c(1,1))
 mgp(net.t[[1]],split(pit.com,type)[[1]],loc=FALSE,my.coord=coord,displaylabels=TRUE)
 mgp(net.t[[2]],split(pit.com,type)[[2]],loc=FALSE,my.coord=coord,displaylabels=TRUE)
+                                        #barplot of p betae 1,2,3,4 gall leaves
+
 
 stopme
 
@@ -99,9 +101,9 @@ Results Summary
   \item PB.total ~ Genotype (X2=4.20104879,P=0.0404) 
   \item Percent PB ~ Genotype Live (X2=6.75,P=0.009), Percent PB !~ Genotype Sen (X2=3.32,P=0.07)
   \item PB frequencies are different among genotypes (X2 test: 125.62,
-    df=18, P=2.2e-16), frequencies of 1 and 2 PB per leaf are
+    df=18, P=2.2e-16), frequencies of 0 and 1 PB per leaf are
     different among genotypes on live leaves (X2=6.701,P=0.0096 and
-    X2=6.27,P=0.012), while 3 PB/leaf for SEN (X2=4.045,P=0.044)
+    X2=6.27,P=0.012), while 2 PB/leaf for SEN (X2=4.045,P=0.044)
   \end{itemize}
 \item These species' abundances differ between live and senescent:
   \begin{itemize}
