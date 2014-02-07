@@ -27,6 +27,10 @@
 \setcounter{tocdepth}{3}  %%activate to number sections
 \tableofcontents
 
+\section{06 Feb 2014}
+Re-organized so that simulations are contained in cg_simulations
+repository. 
+
 \section{29 Jan 2014}
 
 SES exhibits complex patterns with respect to both nestedness and

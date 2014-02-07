@@ -138,6 +138,11 @@ cgPlotweb(acn.bpn[acn.type=='sen',],geno.t[type.t=='sen'])
 bpd.t <- apply(sign(acn.bpn),1,sum)
 cgREML(bpd.t[type.t=='live'],geno.t[type.t=='live'])
 cgREML(bpd.t[type.t=='sen'],geno.t[type.t=='sen'])
+                                        #total percent species max
+tpsm.t <- apply(apply(acn.bpn,2,function(x) if(any(x!=0)){x/max(x)}else{x}),1,sum)
+cgREML(tpsm.t[type.t=='live'],geno.t[type.t=='live'])
+cgREML(tpsm.t[type.t=='sen'],geno.t[type.t=='sen'])
+barplot(sort(tapply(tpsm.t[type.t=='live'],geno.t[type.t=='live'],mean),decreasing=TRUE))
                                         #tree level
 read.csv('../results/acn_bpnnest_live.csv')
 read.csv('../results/acn_bpnnest_sen.csv')
