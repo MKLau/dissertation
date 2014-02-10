@@ -6,6 +6,15 @@
 %%%Turn off email
 %%%Log the current number of pages at the end of each day
 
+10 Feb 2014 
+sgn = 18 / 25 = 72%
+lcn = 24 / 25 = 96%
+acn = 15 / 25 = 60%
+ComGenR = 43 
+
+*note: Keep working to get ComGenR up on CRAN. Should count as a pub
+and should include the help files and vignette in your dissertation.
+
 6 Feb 2014 
 sgn = 18 / 25 = 72%
 lcn = 24 / 25 = 96%
