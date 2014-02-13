@@ -33,7 +33,17 @@
 
 \section{12 Feb 2014}
 
+Notes for meeting with Tom:
+
+\begin{enumerate}
+\item Core concept good/interesting?
+\item Figure 1 useful?
+\item Comment 29: art branches with and without
+  \subitem 
+\end{enumerate}
+
 Testing out koding for more flexibility in where and how you work.
+
 
 <<>>=
 
