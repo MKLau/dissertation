@@ -27,6 +27,16 @@
 \setcounter{tocdepth}{3}  %%activate to number sections
 \tableofcontents
 
+\section{24 Feb 2014}
+
+Writing modularity analysis script.
+
+Look at cg_simulations repo. 
+
+Started working on een_mod.R, move it to cg_simulations repo. 
+
+Also, write and move the assocaited .sh file to cg_simulations.
+
 \section{06 Feb 2014}
 Re-organized so that simulations are contained in cg_simulations
 repository. 
