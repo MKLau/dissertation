@@ -8,7 +8,6 @@
 %\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
 \usepackage{graphicx}
 \usepackage{amssymb}
-\usepackage{/Library/Frameworks/R.framework/Resources/share/texmf/Sweave}
 \newcommand{\etal}{\textit{et al.}}
 \usepackage{hyperref}  %\hyperref[label_name]{''link text''}
                        %\hyperlink{label}{anchor caption}
@@ -26,6 +25,37 @@
 
 \setcounter{tocdepth}{3}  %%activate to number sections
 \tableofcontents
+
+\section{6 Mar 2014}
+
+Finished running simulations and getting network stats (cscore,
+modularity, nestedness)
+
+Question: incorporate centrality?
+
+There are lots of different kinds of centrality measures.  Let's
+assume that you are thinking about degree centrality for the moment,
+then a local measure of centrality is the number of edges that touch
+the node.  Thus, in a mutualistic network, this centrality would tell
+you the number of directly interacting mutualist partners.  A more
+global measure (considering indirect interactions, or pathways) would
+give you an idea of the size of the reachable species or community.
+Does this help?  There are a couple of really good centrality review
+papers cited in my Throughflow centrality paper if you are
+interested.  We can also discuss further.
+
+\begin{itemize}
+\item Look at Stuart's centrality paper
+\item Global centrality gives the size of the reachable species or
+  genotypes in the community
+\item In a bipartite network, local centrality tells you how many
+  interactions a species/genotype has
+\item Local degree centrality measures how many edges touch a node.
+\item Which centrality measure? 
+\end{itemize}
+
+Looking at results: 
+
 
 \section{24 Feb 2014}
 
@@ -59,7 +89,7 @@ SES analyses:
   which increases nestedness.
 \end{enumerate}
 
-<<>>=
+<<eval=false>>=
 sim.nest <- read.csv('../results/een_exp_sym/nest_sim.csv')
 ses <- read.csv('../results/een_ses.csv')[,-1]
 ses[is.na(ses)] <- 0
@@ -91,7 +121,7 @@ Continuing to work on figures.
 
 Making figures
 
-<<>>=
+<<eval=false>>=
 library(ComGenR)  
 sim.s <- dget('../results/een_exp_sym/comsim_sym.rdata')
 sim.a <- dget('../results/een_exp_asym/comsim_asym.rdata')
@@ -133,7 +163,7 @@ t.test((even.sym-even.asym))
 
 Appendix 1. Comparing nmds and ipd.
 
-<<>>=
+<<eval=false>>=
 h2c.nmds <- read.csv('../results/een_exp_asym/h2c_shuster.csv')
 h2c.ipd <- read.csv('../results/een_exp_asym/h2c_perm.csv')
 h2c.nmds <- as.numeric(apply(h2c.nmds,2,function(x) x[2]))
@@ -156,7 +186,7 @@ abline(lm(h2c.nmds~h2c.ipd,data=data.frame(h2c.dat)))
 
 Looking at een experiments from yesterday
 
-<<>>=
+<<eval=false>>=
 ex.sym.rm <- data.frame(read.csv('../results/een_exp_sym/rm_rnd.csv'),read.csv('../results/een_exp_sym/rm_deg.csv')[,-1],read.csv('../results/een_exp_sym/rm_type.csv')[,-1])
 names(ex.sym.rm) <- c('sel','rnd','deg','typ')
                                         #
@@ -271,7 +301,7 @@ numerical differences in H2C.
 
 Does genetic variation contribute to nestedness in ecological networks?
 
-<<>>=
+<<eval=false>>=
 library(ComGenR)
   ##Types of trait distribution
   ##uniform/random
@@ -400,7 +430,7 @@ Manuscript
 
 \section{7 Jan 2014}
 
-<<>>=
+<<eval=false>>=
 ###Moved to src/een_sim.R
 
 @ 
@@ -483,7 +513,7 @@ probability divided by the occurrence probability of one species.
 
 Apply network modeling to Lonsdorf output:
 
-<<>>=
+<<eval=false>>=
 source('../src/lonsdorf.R')
 source('../../lichen_coo/src/seenetR.R')
 library(sna)
@@ -568,7 +598,7 @@ simulations:
 \section{Check out simecol}
 \url{http://cran.r-project.org/web/packages/simecol/vignettes/a-simecol-introduction.pdf}
 
-<<>>=
+<<eval=false>>=
 library(simecol)
 ?simecol
 ?indbasedModel
@@ -579,7 +609,7 @@ library(simecol)
 
 \subsection{Generate Interaction Network}
 
-<<>>=
+<<eval=false>>=
                                         #generate a square, symmetric adjacency matrix 
 rnet <- function(n){
 x <- array(sample(c(0,1),(n^2),replace=TRUE),dim=c(n,n))
@@ -591,7 +621,7 @@ return(x)
 @ 
 
 \subsection{Generate Genome}
-<<>>=
+<<eval=false>>=
                                         #generate a genome (binary) of length n
 rgenome <- function(n){
   return(sample(c(0,1),n,replace=TRUE))
@@ -614,7 +644,7 @@ genomeCom <- function(nk){
 
 \subsection{Map Genotype to Phenotype}
 
-<<>>=
+<<eval=false>>=
                                         #map a genotype to a phenotype
 gpMap <- function(g,mu,sigma){
   x <- cbind(g,mu,sigma)
@@ -626,7 +656,7 @@ gpMap <- function(g,mu,sigma){
 
 \subsection{Generate a population for each species}
 
-<<>>=
+<<eval=false>>=
                                         #generate a population
                                         #g is a list of genotypes
                                         #mu is a vector of population trait means
@@ -640,7 +670,7 @@ genPop <- function(g,mu,sigma){
 
 \section{Test Run}
 
-<<>>=
+<<eval=false>>=
                                         #generate a population of genotypes for each species
                                         #
 nk <- as.matrix(rep(15,25)) #create a kX1 matrix of genome lengths

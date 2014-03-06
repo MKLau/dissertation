@@ -1,0 +1,741 @@
+\documentclass[12pt]{article}
+\usepackage{color}
+\usepackage{cite}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+%\usepackage{pdflscape}        %single page landscape
+                                %mode \begin{landscape} \end{landscape}
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\usepackage{amssymb}
+\newcommand{\etal}{\textit{et al.}}
+\usepackage{hyperref}  %\hyperref[label_name]{''link text''}
+                       %\hyperlink{label}{anchor caption}
+                       %\hypertarget{label}{link caption}
+\linespread{1.5}
+
+\title{Evolution on Ecological Networks}
+\author{M.K. Lau}
+%\date{}                                           % Activate to display a given date or no date
+
+\usepackage{Sweave}
+\begin{document}
+\maketitle
+
+\thispagestyle{empty}
+
+\setcounter{tocdepth}{3}  %%activate to number sections
+\tableofcontents
+
+\section{6 Mar 2014}
+
+Finished running simulations and getting network stats (cscore,
+modularity, nestedness)
+
+Question: incorporate centrality?
+
+There are lots of different kinds of centrality measures.  Let's
+assume that you are thinking about degree centrality for the moment,
+then a local measure of centrality is the number of edges that touch
+the node.  Thus, in a mutualistic network, this centrality would tell
+you the number of directly interacting mutualist partners.  A more
+global measure (considering indirect interactions, or pathways) would
+give you an idea of the size of the reachable species or community.
+Does this help?  There are a couple of really good centrality review
+papers cited in my Throughflow centrality paper if you are
+interested.  We can also discuss further.
+
+\begin{itemize}
+\item Look at Stuart's centrality paper
+\item Global centrality gives the size of the reachable species or
+  genotypes in the community
+\item In a bipartite network, local centrality tells you how many
+  interactions a species/genotype has
+\item Local degree centrality measures how many edges touch a node.
+\item Which centrality measure? 
+\end{itemize}
+
+Looking at results: 
+
+
+\section{24 Feb 2014}
+
+Writing modularity analysis script.
+
+Look at cg_simulations repo. 
+
+Started working on een_mod.R, move it to cg_simulations repo. 
+
+Also, write and move the assocaited .sh file to cg_simulations.
+
+\section{06 Feb 2014}
+Re-organized so that simulations are contained in cg_simulations
+repository. 
+
+\section{29 Jan 2014}
+
+SES exhibits complex patterns with respect to both nestedness and
+selection. 
+
+SES analyses:
+
+\begin{enumerate}
+\item Is ses correlated with selection?
+  \subitem As slection increases, SES first decreases strongly, then
+  begins to increase again. 
+\item Is ses correlated with nestedness?
+  \subitem Communities can exhibit high clustering (i.e. low ses
+  values), but not exhibit nestedness. This is possibly due to
+  selection first clustering species, but then sorting species out,
+  which increases nestedness.
+\end{enumerate}
+
+\begin{Schunk}
+\begin{Sinput}
+> sim.nest <- read.csv('../results/een_exp_sym/nest_sim.csv')
+> ses <- read.csv('../results/een_ses.csv')[,-1]
+> ses[is.na(ses)] <- 0
+> ses <- as.vector(t(ses))
+> selection <- (0.00007924*2.511886^(sim.nest[,1]-1))
+> plot(ses~selection)
+> plot(sim.nest[,2]~ses)
+> pairs(cbind(ses,nest=sim.nest[,2],selection))
+> 
+\end{Sinput}
+\end{Schunk}
+
+
+\section{25 Jan 2014}
+
+Debugging error in rmTrees for type.
+
+\begin{verbatim}
+
+"Error in sample.int(length(x), size, replace, prob) :
+  too few positive probabilities"
+
+\end{verbatim}
+
+\section{28 Jan 2014}
+
+Continuing to work on figures.
+
+\section{27 Jan 2014}
+
+Making figures
+
+\begin{Schunk}
+\begin{Sinput}
+> library(ComGenR)  
+> sim.s <- dget('../results/een_exp_sym/comsim_sym.rdata')
+> sim.a <- dget('../results/een_exp_asym/comsim_asym.rdata')
+> tree.gpm <- read.csv('../data/tree_gpm_een_sim.csv')
+> tree.pheno <- read.csv('../data/trees_een_sim.csv')
+> insects <- read.csv('../data/insects_een_sim.csv')
+> sim.nest <- read.csv('../results/een_exp_sym/nest_sim.csv')
+> selection <- (0.00007924*2.511886^((sim.nest[,1])-1))
+> ###Plot of phenotypes
+> plot(density(tree.pheno[tree.gpm[,1]==unique(tree.gpm[,1])[1],1]),ylim=c(0,0.25),
++      main='',xlim=c(5,27),col=1,xlab='Tree Phenotypic Value')
+> for (i in 2:length(unique(tree.gpm[,1]))){
++   lines(density(tree.pheno[tree.gpm[,1]==unique(tree.gpm[,1])[i],1]),ylim=c(0,1),
++         main='',col=1)
++ }
+> ###
+> 
+> ###Nestedness by selection intensity
+> plot(sim.nest[1:79,2]~selection[1:79],xlab='Selection',ylab='Nestedness Temperature')
+> nest.mu <- tapply(sim.nest[1:79,2],factor(selection[1:79]),mean)
+> lines(spline(as.numeric(names(nest.mu)),nest.mu))
+> ###Ordination of community
+> ord <- nmds.min(nmds(vegdist(sim.a[[9]][[1]])))
+> ch.plot(ord,tree.gpm[,1])
+> ###Evenness
+> ##Using pielous eveness = H / log(specnumber(com))
+> even <- function(x){diversity(x)/log(specnumber(x))}
+> even.sym <- lapply(sim.s,function(x) lapply(x,even));even.sym <- unlist(lapply(even.sym,function(x) lapply(x,mean)))
+> even.asym <- lapply(sim.a,function(x) lapply(x,even));even.asym <- unlist(lapply(even.asym,function(x) lapply(x,mean)))
+> mean(even.sym-even.asym)
+> t.test((even.sym-even.asym))
+> 
+\end{Sinput}
+\end{Schunk}
+
+
+Appendix 1. Comparing nmds and ipd.
+
+\begin{Schunk}
+\begin{Sinput}
+> h2c.nmds <- read.csv('../results/een_exp_asym/h2c_shuster.csv')
+> h2c.ipd <- read.csv('../results/een_exp_asym/h2c_perm.csv')
+> h2c.nmds <- as.numeric(apply(h2c.nmds,2,function(x) x[2]))
+> h2c.ipd <- unlist(matrix(h2c.ipd,ncol=3,byrow=TRUE)[,2])
+> #selection <- as.numeric(gl(9,10))
+> h2c.dat <- cbind(Selection=selection,h2c.nmds,h2c.ipd)
+> h2c.dat <- h2c.dat[1:79,]
+>                                         #
+> par(mfrow=c(1,3))
+> plot(h2c.nmds~Selection,data=h2c.dat,ylab='H2C NMDS')
+> abline(lm(h2c.nmds~Selection,data=data.frame(h2c.dat)))
+> plot(h2c.ipd~Selection,data=h2c.dat,ylab='H2C IPD')
+> abline(lm(h2c.ipd~Selection,data=data.frame(h2c.dat)))
+> plot(h2c.nmds~h2c.ipd,data=h2c.dat,xlab='H2C IPD',ylab='H2C NMDS')
+> abline(lm(h2c.nmds~h2c.ipd,data=data.frame(h2c.dat)))
+> 
+\end{Sinput}
+\end{Schunk}
+
+\section{26 Jan 2014}
+
+Looking at een experiments from yesterday
+
+\begin{Schunk}
+\begin{Sinput}
+> ex.sym.rm <- data.frame(read.csv('../results/een_exp_sym/rm_rnd.csv'),read.csv('../results/een_exp_sym/rm_deg.csv')[,-1],read.csv('../results/een_exp_sym/rm_type.csv')[,-1])
+> names(ex.sym.rm) <- c('sel','rnd','deg','typ')
+>                                         #
+> ex.asym.rm <- data.frame(read.csv('../results/een_exp_asym/rm_rnd.csv'),read.csv('../results/een_exp_asym/rm_deg.csv')[,-1],read.csv('../results/een_exp_asym/rm_type.csv')[,-1])
+> names(ex.asym.rm) <- c('sel','rnd','deg','typ')
+> ###Remove selection level 9
+> ex.sym.rm <- ex.sym.rm[-81:-90,]
+> ex.asym.rm <- ex.asym.rm[-81:-90,]
+>                                         #
+> par(mfrow=c(1,2))
+> pairs(data.frame(ex.sym.rm,ex.asym.rm))
+>                                         #
+> exp <- c(rep('sym',nrow(ex.sym.rm)),rep('asym',nrow(ex.asym.rm)))
+> een.exp <- rbind(ex.sym.rm,ex.asym.rm)
+> sel <- as.numeric(sapply(as.character(een.exp[,1]),function(x) strsplit(x,split=' ')[[1]][1]))
+> sel <- (0.00007924*2.511886^((as.numeric(sel))-1))
+> een.exp <- data.frame(exp=exp,selection=sel,een.exp[,-1])
+> colnames(een.exp)
+>                                         #
+> summary(lm(rnd~exp*selection,data=een.exp))
+> summary(lm(deg~exp*selection,data=een.exp))
+> summary(lm(typ~exp*selection,data=een.exp))
+>                                         #plot each experiment together by the removal
+> par(mfrow=c(1,3))
+> plot(rnd~selection,data=een.exp,col=as.numeric(een.exp$exp))
+> plot(deg~selection,data=een.exp,col=as.numeric(een.exp$exp))
+> plot(typ~selection,data=een.exp,col=as.numeric(een.exp$exp))
+>                                         #plot each removal type to compare
+> par(mfrow=c(1,3))
+> plot(rnd~deg,data=een.exp,col=as.numeric(een.exp$exp))
+> plot(rnd~typ,data=een.exp,col=as.numeric(een.exp$exp))
+> plot(deg~typ,data=een.exp,col=as.numeric(een.exp$exp))
+>                                         #density plots
+> ex.split <- split(een.exp,een.exp$exp)
+> par(mfrow=c(1,3))
+> plot(density(ex.split[[1]]$rnd),main='',col=1,ylim=c(0,20));lines(density(ex.split[[2]]$rnd),col=2)
+> plot(density(ex.split[[1]]$deg),main='',col=1,ylim=c(0,20));lines(density(ex.split[[2]]$deg),col=2)
+> plot(density(ex.split[[1]]$typ),main='',col=1,ylim=c(0,20));lines(density(ex.split[[2]]$typ),col=2)
+>                                         #selection
+> par(mfrow=c(1,2))
+> plot(rnd~jitter(selection,factor=10),data=ex.split[[1]],col='red',ylab='Percent Nodes Removed',xlab='Selection')
+> points(deg~jitter(selection,factor=10),data=ex.split[[1]],col='green')
+> points(typ~jitter(selection,factor=10),data=ex.split[[1]],col='blue')
+> plot(rnd~jitter(selection,factor=10),data=ex.split[[2]],col='red',ylim=c(0.85,1),ylab='Percent Nodes Removed',xlab='Selection')
+> points(deg~jitter(selection,factor=10),data=ex.split[[2]],col='green')
+> points(typ~jitter(selection,factor=10),data=ex.split[[2]],col='blue')
+> 
+\end{Sinput}
+\end{Schunk}
+
+Networks with assymetric species distributions are more susceptible to
+remvovals overall, but this susceptibility is driven by the species abundances
+and not the effect of genotype. When species abundances are even, then
+the effect of selection on a genetically based phenotype has a strong
+impact on the robustness of the community.
+
+\section{25 Jan 2014}
+
+Debugged een_exp_sym and een_exp_asym as well as rmTrees. The
+experiment scripts both needed the removal experiments to be written
+to file. Also the number of iterations for the individual removals was
+several orders of magnitude too high. Reduced to 100. Also, the input
+to type in rmTrees was genotype when it should be phenotype.
+
+rmTrees type was selecting trees at random even though it was
+selecting a phenotype. Each step chose a random type and then a random
+tree, which made the algorithm equaivalent to selecting a tree at
+random. 
+
+\section{24 Jan 2014}
+
+Final EEN analyses continued. Currently running on romer. Two scripts:
+een_sym.R and een_asym.R. Both use species rounding to whole
+numbers. Output is saved to two different folders. Both use the same
+trees and insects (these are saved to the data folder). Started at
+about 12:15pm.
+
+\section{23 Jan 2014}
+Working on the final EEN analyses:
+
+\begin{enumerate}
+\item Simulate networks with varying levels of genotypic effects and a
+  percent genetic variance equivalent to published community
+  heritability estimates
+\item In an appendix, develop the use of permanova R2, inlcuding:
+  \begin{enumerate}
+  \item Calculation using Anderson's method
+  \item Comparison to NMDS method in Shuster 2006
+  \end{enumerate}
+\item Measure nestedness and examine correlation between genetic
+  variance and nestedness
+\item Conduct Removal experiments (random vs targeted removal):
+  \begin{enumerate}
+  \item Random removal
+  \item Genotype removal based on phenotpic similarity
+  \item Centralized species removal
+  \end{enumerate}
+\end{enumerate}
+
+Coding in source file, een.R. 
+
+\section{22 Jan 2014}
+
+Re-organized the flow for community simulation with cgSim.
+
+Added two new functions to support cgSim: simTrees and simSpp.
+
+Compared output (gamma and H2C) with Shuster 2006 output. Everything
+checks out with the exception of NMDS rotation error and slight
+numerical differences in H2C.
+
+\section{14 Jan 2014}
+
+Does genetic variation contribute to nestedness in ecological networks?
+
+\begin{Schunk}
+\begin{Sinput}
+> library(ComGenR)
+>   ##Types of trait distribution
+>   ##uniform/random
+> tree.trait <- runif(100,10,20)
+> arth.trait <- rnorm(100,15,1)
+> S <- tree.trait - arth.trait
+> hist(S)
+> plot(tree.trait,arth.trait)
+>   ##increasing
+> 
+>   ##decreasing
+>   ##convex (bowl down)
+> tree.trait <- rnorm(100,15,1)
+> arth.trait <- rnorm(100,15,1)
+> S <- tree.trait - arth.trait
+> par(mfrow=c(1,2))
+> hist(S)
+> plot(tree.trait,arth.trait)
+>   ##concave (bowl up)
+> 
+> ###Run a set of simulations across a gradient of increasing genotype variation and measure nestedness
+> 
+> ##Increase the range for a uniform distribution
+> c.r <- 15.5 #center of the range
+> ns.r <- 15 #number of steps over the range
+> ng.r <- 10 #number of genotypes over the range
+> nr.g <- 5 #number of reps for each genotype
+> s.r <- 0.5 #step size over range
+> steps <- seq(0,ns.r*s.r,by=s.r)
+> tp.l <- list()
+> for (i in 1:ns.r){
++   tp.l[[i]] <- gpmTrees(seq((c.r-steps[[i]]),(c.r+steps[[i]]),length=ng.r),nr.g)
++ }
+> cp.l <- gpmCom(n=20)
+> com.sim <- lapply(tp.l,function(x) cgSim(tree.pheno=x,insect=cp.l,YY=1,GG=8,reps=1))
+> com.sim. <- list()
+> for (i in 1:length(com.sim)){
++   com.sim.[[i]] <- round(com.sim[[i]][[1]][[1]][[8]],0)
++ }
+> com.nest <- unlist(lapply(com.sim.,function(x) nestedtemp(x)$statistic))
+> V.g <- unlist(lapply(tp.l,function(x) var(x[,2])))
+>                                         #Correlation between H2Cnms~Vg and H2Cperm~Vg
+> cs.nms1d <- list()
+> cs.stress <- list()
+> for (i in 1:length(com.sim.)){
++   cs.nms1d[[i]] <- nmds(vegdist(com.sim.[[i]]),1,1)
++   cs.stress[[i]] <- min(cs.nms1d[[i]]$stress)
++   cs.nms1d[[i]] <- nmds.min(cs.nms1d[[i]])[,1]
++ }
+> h2c.nms <- lapply(cs.nms1d,getH2C,g=as.character(tp.l[[1]][,1]))
+> h2c.nms <- do.call(rbind,h2c.nms)[,2]
+> h2c.adonis <- pblapply(com.sim.,function(x,g) adonis(x~g),g=as.character(tp.l[[1]][,1]))
+> h2c.perm <- unlist(lapply(h2c.adonis,function(x) x$aov.tab[1,5]))
+> summary(lm(h2c.nms~V.g))
+> summary(lm(h2c.perm~V.g))
+> plot(h2c.nms~V.g,pch=19,xlab='Vg',ylab='H2C',col='grey',ylim=c(0,0.85),font.lab=2)
+> points(h2c.perm~V.g,pch=19,col='black')
+> abline(lm(h2c.nms~V.g),col='grey',lty=2)
+> abline(lm(h2c.perm~V.g),col='black')
+> legend('topleft',legend=c('NMDS','PerMANOVA'),col=c('grey','black'),pch=19)
+> h2c.ancova <- data.frame(vg=c(V.g,V.g),
++                          type=c(rep('nms',length(h2c.nms)),rep('perm',length(h2c.perm))),
++                          h2c=c(h2c.nms,h2c.perm))
+> summary(lm(h2c~vg+type,data=h2c.ancova))
+>                                         #
+> par(mfrow=c(1,2))
+> plot(density(tp.l[[1]][,2]),main='',xlab='Tree Phenotype',xlim=c(5,27),ylim=c(0,1),col=0)
+> for (i in 2:length(tp.l)){lines(density(tp.l[[i]][,2]),col=heat.colors(length(tp.l))[i])}
+> plot(com.nest~I(V.g/max(V.g)),pch=1,col='grey',cex=1.5)
+> points(com.nest~I(V.g/max(V.g)),pch=19,col=heat.colors(length(tp.l))[1:length(tp.l)])
+> abline(lm(com.nest~I(V.g/max(V.g))))
+>                                         #
+> par(mfrow=c(1,2))
+> plotweb(com.sim.[[1]][order(apply(com.sim.[[1]],1,function(x) sum(sign(x))),decreasing=TRUE),
++                       order(apply(com.sim.[[1]],2,function(x) sum(sign(x))),decreasing=TRUE)],method='normal')
+> plotweb(com.sim.[[15]],method='normal')
+> cgPlotweb <- function(x,g){
++   x <- x[order(apply(x,1,function(x) sum(sign(x))),decreasing=TRUE),
++            order(apply(x,2,function(x) sum(sign(x))),decreasing=TRUE)]
++   plotweb(apply(x,2,function(x,g) tapply(x,g,mean),g=g),method='normal')
++ }
+> cgImage <- function(x,xlab='',ylab='',col=c(0,1)){
++   x <- x[order(apply(x,1,function(x) sum(sign(x))),decreasing=TRUE),
++          order(apply(x,2,function(x) sum(sign(x))),decreasing=TRUE)]
++   x[x!=0] <- 1
++   image(t(x),col=col,xaxt='n',yaxt='n')
++   mtext(side=c(1,2),c(xlab,ylab),font=2)
++ }
+> par(mfrow=c(1,2))
+> cgPlotweb(com.sim.[[1]],tp.l[[1]][,1])
+> cgPlotweb(com.sim.[[15]],tp.l[[15]][,1])
+> cgImage(com.sim.[[1]],xlab='Tree Genotype',ylab='Insect Species',col=c(0,'grey'))
+> cgImage(com.sim.[[15]],xlab='Tree Genotype',ylab='Insect Species',col=c(0,'grey'))
+> 
+\end{Sinput}
+\end{Schunk}
+
+\section{9 Jan 2014}
+Developing the manuscript, package and vignette for lab meeting. 
+
+Package
+\begin{enumerate}
+\item Debug current set of functions
+\item Populate help files
+\item Check --as-cran
+\item Build as v1.0
+\item Post to github
+\item Post to cran
+\end{enumerate}
+
+Vignette
+\begin{enumerate}
+\item Write body text
+\item Set figures
+\item Proof
+\end{enumerate}
+
+Manuscript
+\begin{enumerate}
+\item Two articles 1) Methods in Ecology and Evolution = Vignette and 2)
+  Ecography = Modeling and Data
+\item Summarize results
+\item Write outline
+\end{enumerate}
+
+
+\section{7 Jan 2014}
+
+\begin{Schunk}
+\begin{Sinput}
+> ###Moved to src/een_sim.R
+> 
+\end{Sinput}
+\end{Schunk}
+
+\section{20 Dec 2013}
+Add data from Gina, Art, Rikke and Cam, Adrian?
+
+The idea being to simulate but then observe patterns in real data.
+
+\section{18 Dec 2013}
+Sent outline (see Docs) to Steve. Check back with him in a couple of
+days. 
+
+
+\section{17 Dec 2013}
+
+\begin{enumerate}
+\item Conducting network modeling
+\end{enumerate}
+
+\section{16 Dec 2013}
+
+Results
+\begin{itemize}
+\item Lonsdorf model produces nested biparite genotype-species networks at high
+  levels of genetic effects
+\item Lonsdorf model also produces co-occurrence network structure at
+  high levels of genetic effects
+\end{itemize}
+
+Look at Jelle's models of stability.
+
+Check Lonsdorf's model output with your R cod output.
+
+Analyze the simulation output from two perspectives: 1) bipartaite
+network structure of tree species and 2) co-occurrence patterns in
+dependent communities. 
+
+From the bipartite perspective, if we assume nestedness, how will
+networks evolve.
+
+From the co-occurrence perspective, what network patterns arise given
+different amounts of influence of genetics versus environment. The
+interaction context comes in the form of co-occurrences influencing
+encounter rates, which are the rate limiting step for interactions.
+
+Also from both of these perspectives, keep in mind the possibility of
+actually looking at interactions among species. 
+
+Notes on Lonsdorf Code
+\begin{itemize}
+\item Line 30 "art_r" doesn't match any other variables in the code,
+  most likely a typo and shoulg be art_g
+\item 
+\end{itemize}
+
+
+\section{11 Dec 2013}
+
+Strategy for Chap3
+\begin{verbatim}
+- seeNets package on CRAN
+- seeNets pub MEE
+* Make sure to email Araujo et al.
+- add simulator, which will show the development of networks along a
+genetic gradient
+* This can be based on the Shuster 2006 paper so that you don't scoop
+the Lonsdorf manuscript
+\end{verbatim}
+
+\section{6 Dec 2013}
+
+What does the co.net tell us?
+Significant co-occurrences in units of standard deviations by default.
+
+What does the dep.net tell us?
+Significant conditional probability of co-occurrence of one species
+given another. Conditional probability is the co-occurrence
+probability divided by the occurrence probability of one species.
+
+Apply network modeling to Lonsdorf output:
+
+\begin{Schunk}
+\begin{Sinput}
+> source('../src/lonsdorf.R')
+> source('../../lichen_coo/src/seenetR.R')
+> library(sna)
+> x <- lapply(out[[1]][[4]],round,digits=0)
+> for (i in 1:length(x)){
++   x[[i]][x[[i]]<10] <- 0
++ }
+> con <- lapply(x,co.net)
+> par(mfrow=c(1,2))
+> coord <- gplot(abs(con[[1]]))
+> gplot(abs(con[[8]]),coord=coord)
+> 
+> 
+\end{Sinput}
+\end{Schunk}
+
+\section{26 Nov 2013}
+
+
+Need to review species interaction network literature, focusing on
+simulations:
+
+\begin{itemize}
+\item Baiser's metabolic network
+\item Allesina's networks
+\item Sala's networks
+\end{itemize}
+
+
+\section{Before 26 Nov 2013}
+
+\subsection*{Outline}
+\begin{itemize}
+\item Main Question: how does the structure of ecological networks
+  influence the evolution of species in the community?
+\item Simulate the evolution of traits determining interactions (and
+  possibly linked traits of varying association)
+\item Review:
+  \begin{itemize}
+  \item Salas manuscript
+    \subitem -- Different from Sala's in that it will explore more
+    network structure, including modularity
+  \item Lonsdorf Manuscript
+    \subitem -- Different from Lonsdorf's in that the emphasis is
+    exploring how network structure influences evolution
+  \item Shuster et al. (2006)
+  \item Nuismer and Doebeli (2004)
+  \item Nowak 2006 Chapter 8 (population genetics on graphs)
+  \end{itemize}
+\item Model:
+  \begin{itemize}
+  \item Individual Based
+  \item Genetics -> binary vector
+  \item Phenotype -> vector of continuous trait values (\sim N($\mu$,$\sigma$))
+  \item Interaction Network -> adjacency matrix + trait matching
+  \item Community Dynamics -> demographics (birth - death) and stability
+  \item Ecosystem Dynamics -> productivity and energy flow
+  \item Evolution -> selection (fitness + reproduction) and
+    recombination + mutation
+  \end{itemize}
+\item Pseudocode:
+  \begin{enumerate}
+  \item Generate interaction network
+    \subitem -- adjacency matrix
+    \subitem -- make sure to control for covarying structural
+    properties, such as connectence
+  \item Generate genome (i.e. create a binary vector)
+  \item Map genotype to phenotype (i.e. for each allele draw a value
+    (0 <= value < infinity) from a normal distribution)
+    \subitem -- Repeat for n individuals in k species
+  \item 
+  \end{enumerate}
+\item Explore:
+  \begin{itemize}
+  \item Stability - resistance and resilience 
+  \item Additive versus non-additive (epistatic) genetic effects
+  \item Random, foundation, nested/modular
+  \item \textit{Spatial (e.g. relative abundance effects)}
+  \item Others...?
+  \end{itemize}
+\end{itemize}
+
+\section{Check out simecol}
+\url{http://cran.r-project.org/web/packages/simecol/vignettes/a-simecol-introduction.pdf}
+
+\begin{Schunk}
+\begin{Sinput}
+> library(simecol)
+> ?simecol
+> ?indbasedModel
+> 
+\end{Sinput}
+\end{Schunk}
+
+\section{The Model}
+
+\subsection{Generate Interaction Network}
+
+\begin{Schunk}
+\begin{Sinput}
+>                                         #generate a square, symmetric adjacency matrix 
+> rnet <- function(n){
++ x <- array(sample(c(0,1),(n^2),replace=TRUE),dim=c(n,n))
++ x[lower.tri(x)] <- t(x)[lower.tri(x)]
++ return(x)
++ }
+>                                         #
+> 
+\end{Sinput}
+\end{Schunk}
+
+\subsection{Generate Genome}
+\begin{Schunk}
+\begin{Sinput}
+>                                         #generate a genome (binary) of length n
+> rgenome <- function(n){
++   return(sample(c(0,1),n,replace=TRUE))
++ }
+>                                         #generate a population of genomes of length n
+> genomePop <- function(n){
++ g <- sapply(rep(n,10),function(x) rgenome(x))
++ g <- split(g, rep(1:ncol(g), each = nrow(g)))
++ return(g)
++ }
+>                                         #generate a community of genomes
+>                                         #generate a community
+>                                         #nk is a list of population sizes nk <- split(nk, rep(1:nrow(nk), each = ncol(nk)))
+> genomeCom <- function(nk){
++   return(lapply(nk,function(x) genomePop(x)))
++ }
+> 
+> 
+\end{Sinput}
+\end{Schunk}
+
+\subsection{Map Genotype to Phenotype}
+
+\begin{Schunk}
+\begin{Sinput}
+>                                         #map a genotype to a phenotype
+> gpMap <- function(g,mu,sigma){
++   x <- cbind(g,mu,sigma)
++   y <- apply(x,1,function(x) if (x[1] == 0){0}else{rnorm(1,x[2],x[3])})
++   return(y)
++ }
+> 
+\end{Sinput}
+\end{Schunk}
+
+\subsection{Generate a population for each species}
+
+\begin{Schunk}
+\begin{Sinput}
+>                                         #generate a population
+>                                         #g is a list of genotypes
+>                                         #mu is a vector of population trait means
+>                                         #sigma is a vector of population trait standard deviations
+> genPop <- function(g,mu,sigma){
++   return(lapply(g,function(x,m,s) gpMap(x,m,s),m=mu,s=sigma))
++ }
+> 
+> 
+\end{Sinput}
+\end{Schunk}
+
+\section{Test Run}
+
+\begin{Schunk}
+\begin{Sinput}
+>                                         #generate a population of genotypes for each species
+>                                         #
+> nk <- as.matrix(rep(15,25)) #create a kX1 matrix of genome lengths
+> nk <- split(nk, rep(1:nrow(nk), each = ncol(nk))) #create a genome length list for all k species
+> meta.genome <- genomeCom(rep(15,15)) #create a population of genomes for each species
+>                                         #1. initialize a population of genotypes
+>                                         #2. map genotypes to phenotypes using trait means
+>                                         #3. calculate trait matching using adjacency matrix
+>                                         #4. calculate fitness using trait matching
+>                                         #5. select a proportion for reproduction using fitness
+>                                         #6. recombine and mutate
+>                                         #7. select a proportion for death
+> gn <- 15 #genome length
+> mu <- runif(n,0,100)
+> sigma <- rnorm(n,15,3)
+> gpMap(rgenome(15),mu,sigma)
+> 
+> 
+\end{Sinput}
+\end{Schunk}
+
+%% %%Figure construction
+%% <<echo=false,results=hide,label=fig1,include=false>>=
+%% @ 
+
+
+%% %%Figure plotting
+%% \begin{figure} 
+%% \begin{center} 
+%% <<label=fig1,fig=TRUE,echo=false>>=
+%% <<fig1>> 
+%% @ 
+%% \end{center} 
+%% \caption{}
+%% \label{fig:one}
+%% \end{figure}
+
+
+%% %%Activate for bibtex vibliography
+%% \cite{goossens93}
+%% \bibliographystyle{plain}
+%% \bibliography{/Users/Aeolus/Documents/bibtex/biblib}
+
+
+\end{document}  
+
+
