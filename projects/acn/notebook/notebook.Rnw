@@ -31,6 +31,107 @@
 \item Think about genetic basis of leaf abscision/senescence
 \end{itemize}
 
+\section{12 Mar 2014}
+
+Summary of analyses below:
+
+\begin{enumerate}
+\item Genotype does not affect SES
+\item Genotype affects multivariate co-occurrence patterns for live
+  (negative co-occurrences) and senescent (positive co-occurrences)
+  leaves. These data are relatvized to co-occurrence maximum and use
+  the Clarke adjustment.
+\end{enumerate}
+
+<<eval=false>>=
+library(vegan)
+pit <- read.csv('~/projects/dissertation/projects/acn/data/arth_cooc_PIT_Lau.csv')
+                                        #
+coMat = function(x,type=c('pos','neg')){
+  if (length(type)!=1|all(type!=c('pos','neg'))){print('Using positive co-occurrence');type='pos'}
+  if (length(colnames(x))==0){colnames(x) <- paste('sp',1:ncol(x),sep='')}
+  if (type=='neg'){print('Using negative co-occurrence')}
+  x <- sign(x)
+  y <- list()
+  k <- 0
+  for (i in 1:ncol(x)){
+    for (j in i:ncol(x)){
+      k <- k+1
+      if (i!=j){
+        if (type=='pos'){
+          y[[k]] <- (x[,i]+x[,j])
+          y[[k]][y[[k]]!=2] <- 0
+          y[[k]] <- sign(y[[k]])
+        }else{
+          y[[k]] <- (x[,i]+x[,j])
+          y[[k]][y[[k]]!=1] <- 0
+          y[[k]] <- sign(y[[k]])
+        }
+        names(y)[k]=paste(colnames(x)[i],colnames(x)[j],sep='_')
+      }
+    }
+  }
+  y=do.call(cbind,y)
+  return(y)
+}
+
+                                        #got through each tree and quantify the number of co-occurrences for all species pairs
+                                        #get pit info
+pit.env <- pit[,1:6]
+                                        #no fungal
+pit.com <- pit[,-1:-7]
+pit.com[is.na(pit.com)] <- 0
+                                        #combine pb.upper and pb.lower and woody
+pit.com[,4] <- pit.com[,4] + pit.com[,6] + pit.com[,8]
+colnames(pit.com)[4] <- 'pb'
+pit.com <- pit.com[,c(-6,-8)]
+                                        #combine pb. preds
+pit.com[,5] <- pit.com[,5] + pit.com[,7] 
+pit.com <- pit.com[,-7]
+                                        #remove pb holes and mite
+pit.com <- pit.com[,c(-6,-17)]
+
+###Separate into trees
+pit.com <- split(pit.com,paste(pit.env$tree,pit.env$leaf.type))
+pit.g <- unlist(lapply(split(pit.env$geno,paste(pit.env$tree,pit.env$leaf.type)),function(x) as.character(x[1])))
+pit.lf <- unlist(lapply(split(pit.env$leaf.type,paste(pit.env$tree,pit.env$leaf.type)),function(x) as.character(x[1])))
+pit.cooc <- lapply(pit.com,coMat,type='neg')
+pit.cooc <- lapply(pit.cooc,function(x) apply(x,2,sum))
+pit.cooc <- do.call(rbind,pit.cooc)
+pit.neg <- pit.cooc
+pit.cooc <- lapply(pit.com,coMat,type='pos')
+pit.cooc <- lapply(pit.cooc,function(x) apply(x,2,sum))
+pit.cooc <- do.call(rbind,pit.cooc)
+pit.pos <- pit.cooc
+pit.com. <- do.call(rbind,lapply(pit.com,function(x) apply(x,2,sum)))
+                                        #
+adonis(apply(pit.com.,2,function(x) if (all(x==0)){x}else{x/max(x)})[pit.lf=='live',]~pit.g[pit.lf=='live'])
+adonis(apply(pit.com.,2,function(x) if (all(x==0)){x}else{x/max(x)})[pit.lf=='sen',]~pit.g[pit.lf=='sen'])
+                                        #
+adonis(cbind(pit.cooc[pit.lf=='live',],ds=rep(1,nrow(pit.cooc[pit.lf=='live',])))~pit.g[pit.lf=='live'],perm=5000)
+adonis(cbind(pit.cooc[pit.lf=='sen',],ds=rep(1,nrow(pit.cooc[pit.lf=='sen',])))~pit.g[pit.lf=='sen'],perm=5000)
+adonis(cbind(apply(pit.cooc[pit.lf=='live',],2,function(x) if (all(x==0)){x}else{x/max(x)}),ds=rep(0.1,nrow(pit.cooc[pit.lf=='live',])))~pit.g[pit.lf=='live'],perm=5000)
+adonis(cbind(apply(pit.cooc[pit.lf=='sen',],2,function(x) if (all(x==0)){x}else{x/max(x)}),ds=rep(0.1,nrow(pit.cooc[pit.lf=='sen',])))~pit.g[pit.lf=='sen'],perm=5000)
+                                        #
+barplot(sort(apply(pit.cooc[pit.lf=='live',],2,sum),dec=TRUE)[1:10],las=2)
+barplot(sort(apply(pit.cooc[pit.lf=='sen',],2,sum),dec=TRUE)[1:10],las=2)
+                                        #ses
+source('~/projects/packages/cooc/src/cooc.R')
+pit.ses. <- lapply(pit.com,function(x) if (length(table(x))<2){NA}else{oecosimu(x,cs,method='r1',burnin=100,thin=10,nsimul=1000)$oecosimu})
+pit.ses <- unlist(lapply(pit.ses.,function(x) unlist(x[1])))
+pit.ses.p <- unlist(lapply(pit.ses.,function(x) unlist(x[3])))
+pit.ses[is.na(pit.ses)] <- 0
+summary(aov(pit.ses[pit.lf=='live']~pit.g[pit.lf=='live']))
+summary(aov(pit.ses[pit.lf=='sen']~pit.g[pit.lf=='sen']))
+pit.ses[pit.lf=='live']~pit.g[pit.lf=='live']
+                                        #reml for ses
+source('/Users/Aeolus/projects/packages/ComGenR_development/src/cgREML.R')
+cgREML(pit.ses[pit.lf=='live'],pit.g[pit.lf=='live'])
+cgREML(pit.ses[pit.lf=='sen'],pit.g[pit.lf=='sen'])
+cgREML((pit.ses[pit.lf=='sen']-pit.ses[pit.lf=='live']),pit.g[pit.lf=='sen'])
+
+@ 
+
 \section{3 Feb 2014}
 
 Figures

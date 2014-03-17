@@ -26,10 +26,274 @@
 \setcounter{tocdepth}{3}  %%activate to number sections
 \tableofcontents
 
+\section{13 Mar 2014}
+
+Evenness 
+
+<<>>=
+library(vegan)
+library(gplots)
+#empirical
+owd <- getwd()
+setwd('~/projects/pb_removal_nets/src/')
+source('~/projects/pb_removal_nets/src/pbr_load_data.R')
+setwd(owd)
+pbr09c <- pbr.09$c
+pbr09c
+                                        #shannon diversity
+H.obs <- print(diversity(apply(pbr09c,2,sum)))
+                                        #pielous evenness
+E.obs <- print(diversity(apply(pbr09c,2,sum))/log(sum(sign(apply(pbr09c,2,sum)))))
+
+#simulated 
+setwd('/Users/Aeolus/projects/cg_simulations/data/coms')
+sim <- list()
+for (i in 1:length(dir())){sim[[i]] <- read.csv(dir()[i]);names(sim)[i] <- dir()[i]}
+H.sim <- unlist(lapply(sim,function(x) diversity(apply(x,2,sum))))
+E.sim <- unlist(lapply(sim,function(x) diversity(apply(x,2,sum))/log(sum(sign(apply(x,2,sum))))))
+sim.type <- substr(names(sim),1,4)
+                                        #stats
+mu <- tapply(E.sim,sim.type,mean)
+sd <- tapply(E.sim,sim.type,sd)
+mu.h <- tapply(H.sim,sim.type,mean)
+sd.h <- tapply(H.sim,sim.type,sd)
+                                        #plot
+barplot2(mu,plot.ci=TRUE,ci.l=mu-sd,ci.u=mu+sd,ylab='Community Evenness',names.arg=c('Asymptotic','Even'))
+abline(h=E.obs,lty=2)
+barplot2(mu.h,plot.ci=TRUE,ci.l=mu.h-sd.h,ci.u=mu.h+sd.h,ylab='Community Diversity',names.arg=c('Asymptotic','Even'))
+abline(h=H.obs,lty=2)
+
+@ 
+
+\section{11 Mar 2014}
+Getting the final results for Arts 2009 trees:
+
+- using 2009
+- removing absent species (i.e. total abundance 0)
+- using the most conservative null model (r1)
+- calculating nestedness and modularity on hoth
+- importing null files from hoth for cs and centrality
+- using a total of 5000 simulated null communities
+
+<<>>=
+
+#co-occurrence, modularity, nestedness, centrality
+owd <- getwd()
+setwd('~/projects/pb_removal_nets/src')
+source('~/projects/pb_removal_nets/src/pbr_load_data.R')
+setwd(owd)
+                                        #observed
+                                        #co-occurrence
+pb09c <- pbr.09$c
+pb09c <- pb09c[,apply(pb09c,2,sum)!=0]
+pb09c[pb09c!=0] <- 1
+obs.cs <- nestedchecker(pb09c)[[1]]
+                                        #modularity
+                                        #obs.mod <- computeModules(pb09c)
+                                        #obs.mod <- slot(obs.mod,'likelihood')
+                                        #steps=1000000
+obs.mod <- 0.216648
+                                        #nestedness
+obs.nest <- nested(pb09c)
+                                        #centrality
+detach(package:ComGenR);detach(package:igraph)
+obs.cen <- centralization(pb09c,'degree')
+library(ComGenR)
+                                        #null
+owd <- getwd()
+setwd("/Users/Aeolus/projects/pb_removal_nets/data/null09c/")
+                                        # null <- list();for (i in 1:length(dir())){print(i);null[[i]] <- read.csv(dir()[i])}
+                                        # null cscore
+                                        # nul.cs <- unlist(lapply(null,function(x) nestedchecker(x)[[1]][1]))
+                                        # write.csv(nul.cs,file='~/projects/pb_removal_nets/results/nulcs09.csv',
+                                        #          row.names=FALSE)
+nul.cs <- read.csv(file='~/projects/pb_removal_nets/results/nulcs09.csv')[,1]
+p.cs <- min(c(length(nul.cs[nul.cs<=obs.cs])/length(nul.cs),length(nul.cs[nul.cs>=obs.cs])/length(nul.cs)))
+z.cs <- (obs.cs-mean(nul.cs))/sd(nul.cs)
+hist(nul.cs,xlim=c(7,15));abline(v=obs.cs,lty=2)
+                                        #centrality
+## detach(package:ComGenR);detach(package:igraph)
+## nul.cen <- unlist(lapply(null,function(x) centralization(x,'degree')))
+## library(ComGenR)
+## write.csv(nul.cen,file='~/projects/pb_removal_nets/results/nulcen09.csv',
+##           row.names=FALSE)
+nul.cen <- read.csv(file='~/projects/pb_removal_nets/results/nulcen09.csv')[,1]
+p.cen <- min(c(length(nul.cen[nul.cen<=obs.cen])/length(nul.cen),length(nul.cen[nul.cen>=obs.cen])/length(nul.cen)))
+z.cen <- (obs.cen-mean(nul.cen))/sd(nul.cen)
+hist(nul.cen,xlim=c(0.05,obs.cen+0.05));abline(v=obs.cen,lty=2)
+                                        #nestedness
+nul.nest <- readLines('~/projects/pb_removal_nets/results/null_nest09c.txt')
+nul.nest <- as.numeric(unlist(strsplit(nul.nest,split=' ')))
+nul.nest <- na.omit(nul.nest)
+p.nest <- min(c(length(nul.nest[nul.nest<=obs.nest])/length(nul.nest),length(nul.nest[nul.nest>=obs.nest])/length(nul.nest)))
+z.nest <- (obs.nest-mean(nul.nest))/sd(nul.nest)
+hist(nul.nest,xlim=c(12,23));abline(v=obs.nest,lty=2)
+                                        #modularity
+nul.mod <- readLines('~/projects/pb_removal_nets/results/null_mods09c.txt')
+nul.mod <- as.numeric(unlist(strsplit(nul.mod,split=' ')))
+nul.mod[is.na(nul.mod)] <- 0
+p.mod <- min(c(length(nul.mod[nul.mod<=obs.mod])/length(nul.mod),length(nul.mod[nul.mod>=obs.mod])/length(nul.mod)))
+z.mod <- (obs.mod-mean(nul.mod))/sd(nul.mod)
+hist(nul.mod,xlim=c(0.1,0.25));abline(v=obs.mod,lty=2)
+                                        #
+obs <- c(obs.cs=obs.cs,obs.mod=obs.mod,obs.nest=obs.nest,obs.cen=obs.cen)
+nul.p <- c(p.cs=p.cs,p.mod=p.mod,p.nest=p.nest,p.cen=p.cen)
+nul.z <- c(z.cs=z.cs,z.mod=z.mod,z.nest=z.nest,z.cen=z.cen)
+rbind(obs,nul.z,nul.p)
+
+par(mfrow=c(2,2))
+hist(nul.cs,xlim=c(7,15),main='',xlab='C-Score');abline(v=obs.cs,lty=2)
+hist(nul.mod,xlim=c(0.1,0.25),main='',xlab='Modularity');abline(v=obs.mod,lty=2)
+hist(nul.nest,xlim=c(12,23),main='',xlab='Nestedness');abline(v=obs.nest,lty=2)
+hist(nul.cen,xlim=c(0.05,obs.cen+0.05),main='',xlab='Centrality');abline(v=obs.cen,lty=2)
+
+@ 
+
+
 \section{6 Mar 2014}
 
 Finished running simulations and getting network stats (cscore,
 modularity, nestedness)
+
+Note that running parallely in the same directory causes issues with
+nestedness and modularity because seprate cases are writing to the
+same directory and over-writing other processes. Separate jobs
+into different directories in the future. Here, I used the sleep
+function to delay the start of successive cases.
+
+
+Looking at results: 
+
+<<eval=false>>=
+
+###Get heritability
+  library(ComGenR)
+coms <- list()
+for (i in 1:length(dir('~/projects/cg_simulations/data/coms',full.names=TRUE))){
+  coms[[i]] <- read.csv(dir('~/projects/cg_simulations/data/coms',full.names=TRUE)[i])
+}
+names(coms) <- dir('~/projects/cg_simulations/data/coms')
+g <- read.csv('~/projects/cg_simulations/data/tree_gpm.csv')[,1]
+h2c.coms <- do.call(rbind,lapply(coms,getH2C,g=factor(g)))
+h2c.a <- h2c.coms[substr(names(coms),1,1)=='a',2]
+h2c.e <- h2c.coms[substr(names(coms),1,1)=='e',2]
+my.deg <- function(x,norm=TRUE){
+  out <- apply(x,2,function(x) if (any(x!=0)){x/max(x)}else{x})
+  out <- apply(out,1,sum)
+  if (norm){out <- out/ncol(x)}
+  return(out)
+}
+g.deg <- lapply(coms,my.deg)
+detach(package:ComGenR);detach(package:igraph)
+g.cen <- unlist(lapply(coms,function(x) centralization(x,degree)))
+library(ComGenR)
+                                        #
+pp <- function(x,zero.na=TRUE){
+  x <- unlist(strsplit(x,split=' ')) #initial split
+  y <- as.numeric(sapply(as.character(x),function(x) strsplit(x,split='_')[[1]][2])) #get scores
+  sim <- substr(x,1,4)
+  x <- as.numeric(substr(x,5,5))
+  if (zero.na){y[is.na(y)] <- 0}
+  return(data.frame(sim=sim,x=x,y=y))
+}
+x <- sapply(paste('/Users/Aeolus/projects/cg_simulations/results/6mar2014/',dir('/Users/Aeolus/projects/cg_simulations/results/6mar2014/'),sep=''),readLines)
+##fill gaps
+                                        #strsplit(x[[2]],split=' ')[[1]][substr(strsplit(x[[2]],split=' ')[[1]],1,5)=='asym6']
+                                        #missing mods asym66 asym67
+                                        #asym66 <- read.csv('~/projects/cg_simulations/data/coms/asym66')
+                                        #asym67 <- read.csv('~/projects/cg_simulations/data/coms/asym67')
+                                        #mod66 <- slot(computeModules(asym66,steps=100000),'likelihood')
+                                        #mod67 <- slot(computeModules(asym67,steps=100000),'likelihood')
+                                        #c(mod66,mod67)
+                                        #adding asym66_0.062732 asym67_0.065190 
+names(x) <- dir('/Users/Aeolus/projects/cg_simulations/results/6mar2014/')
+stats <- lapply(x,pp,zero.na=TRUE)
+stats.cen <- stats[[1]]
+stats.cen[,3] <- g.cen
+stats$centrality <- stats.cen
+lapply(stats,function(x) table(x$x))
+stats <- do.call(rbind.data.frame,stats)
+stats <- stats[stats[,2]>=1,]
+stats$stat <- sapply(rownames(stats),function(x) strsplit(x,split='_')[[1]][1])
+stats$stat <- sapply(rownames(stats),function(x) strsplit(x,split='\\.')[[1]][1])
+head(stats);tail(stats)
+                                        #standardize
+
+                                        #look and inter-correlations
+asym. <- stats[stats$sim=='asym',]
+even. <- stats[stats$sim=='even',]
+ge.level <- as.numeric(as.character(gl(length(unique(asym.[,2])),10)))
+ge <- as.numeric(as.character(gl(length(unique(asym.[,2])),10)))
+ge <- (0.00007924*2.511886^(ge-1))
+ge <- round(ge,3)
+asym <- do.call(cbind,split(asym.$y,asym.$stat))
+even <- do.call(cbind,split(even.$y,even.$stat))
+stdize <- FALSE
+if (stdize){
+  asym.even <- rbind(asym,even)
+  asym.even <- apply(asym.even,2,function(x) (x-mean(x))/sd(x))
+  asym <- asym.even[1:nrow(asym),]
+  even <- asym.even[(nrow(asym)+1):(nrow(asym)+nrow(even)),]
+}
+source('/Users/Aeolus/projects/packages/ComGenR_development/src/old/cor_nets/pairs.R')
+pairs(even,lower.panel=panel.cor,upper.panel=panel.smooth)
+pairs(asym,lower.panel=panel.cor,upper.panel=panel.smooth)
+pairs(asym,lower.panel=panel.cor,upper.panel=panel.lm)
+pairs(even[ge>=0.007,],lower.panel=panel.cor,upper.panel=panel.lmr)
+pairs(asym[ge>=0.007,],lower.panel=panel.cor,upper.panel=panel.lmr)
+                                        #genotypic effect
+par(mfrow=c(2,2))
+                                        #Co-occurrence patterns
+i <- 2
+plot(even[,i]~ge,xlab='Genotypic Effect',ylab='C-Score',pch=19)
+lines(spline(ge,even[,i],n=100))
+points(asym[,i]~ge,col='red')
+lines(spline(ge,asym[,i],n=100),col='red')
+cor.test(even[,i],ge)
+cor.test(asym[,i],ge)
+                                        #network stats
+                                        #Centrality
+i <- 1
+plot(even[,i]~ge,xlab='Genotypic Effect',ylab='Global Centrality',pch=19,ylim=c(20,60))
+lines(spline(ge,even[,i],n=100))
+points(asym[,i]~ge,col='red')
+lines(spline(ge,asym[,i],n=100),col='red')
+cor(even[,i],ge)
+cor(asym[,i],ge)
+                                        #Modularity
+i <- 3
+plot(even[,i]~ge,xlab='Genotypic Effect',ylab='Modularity',pch=19,ylim=c(0,0.3))
+lines(spline(ge,even[,i],n=100))
+points(asym[,i]~ge,col='red')
+lines(spline(ge,asym[,i],n=100),col='red')
+cor(even[,i],ge)
+cor(asym[,i],ge)
+                                        #Nestedness
+i <- 4
+plot(even[,i]~ge,xlab='Genotypic Effect',ylab='Nestedness',pch=19,ylim=c(0,45))
+lines(spline(ge,even[,i],n=100))
+points(asym[,i]~ge,col='red')
+lines(spline(ge,asym[,i],n=100),col='red')
+cor(even[,i],ge)
+cor(asym[,i],ge)
+                                        #heritability
+par(mfrow=c(1,2))
+                                        #even
+h2c.e[h2c.e<0] <- 0
+par(mfrow=c(1,1))
+plot(h2c.e~ge,xlab='Genotypic Effect',ylab='H2C',ylim=c(0,0.70),yaxt='none',pch=19)
+lines(spline(ge,fitted(lm(h2c.e~ge+I(ge^2)))))
+abline(h=0.6,lty=2)
+axis(2,at=seq(0,0.75,by=0.05),label=seq(0,0.75,by=0.05))
+                                        #asymptotic
+h2c.a[h2c.a<0] <- 0
+par(mfrow=c(1,1))
+points(h2c.a~ge,xlab='Genotypic Effect',ylab='H2C',ylim=c(0,0.70),yaxt='none',col='red')
+lines(spline(ge,fitted(lm(h2c.a~ge+I(ge^2)))),col='red')
+axis(2,at=seq(0,0.75,by=0.05),label=seq(0,0.75,by=0.05))
+
+@ 
+
 
 Question: incorporate centrality?
 
@@ -53,8 +317,6 @@ interested.  We can also discuss further.
 \item Local degree centrality measures how many edges touch a node.
 \item Which centrality measure? 
 \end{itemize}
-
-Looking at results: 
 
 
 \section{24 Feb 2014}
