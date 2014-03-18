@@ -26,11 +26,60 @@
 \setcounter{tocdepth}{3}  %%activate to number sections
 \tableofcontents
 
+\section{18 Mar 2014}
+
+Modules are most interesting when using species max relativized data.
+
+Exploring modules:
+
+<<eval=false>>=
+rm(list=ls())
+owd <- getwd()
+setwd('~/projects/pb_removal_nets/src')
+source('~/projects/pb_removal_nets/src/pbr_load_data.R')
+setwd(owd)
+                                        #
+pb09c <- pbr.09$c
+pb09c <- pb09c[,apply(pb09c,2,sum)!=0]
+pb09c <- apply(pb09c,2,function(x) x/max(x))
+                                        #
+mods.. <- computeModules(pb09c)
+                                        #
+length(slot(mods..,'orderA'))
+length(slot(mods..,'orderB'))
+plotModuleWeb(mods..)
+getMods <- function(x,split.mods=TRUE){
+  if (split.mods){
+    com <- slot(x,'originalWeb')
+    mod.s <- slot(x,'modules')[-1,-1:-2]
+    mod.s <- apply(mod.s,2,function(x) (1:length(x))[x!=0])
+    row.mods <- mod.s[1:nrow(com)]
+    col.mods <- mod.s[(nrow(com)+1):(nrow(com)+ncol(com))]
+    names(row.mods) <- rownames(com)
+    names(col.mods) <- colnames(com)
+    return(list(row.mods=row.mods,col.mods=col.mods))
+  }else{
+    mod.s <- slot(x,'modules')[-1,-1:-2]
+    com <- slot(x,'originalWeb')
+    names <- c(rownames(com),colnames(com))
+    mod.l <- list()
+    for (i in 1:nrow(mod.s)){mod.l[[i]] <- names[mod.s[i,mod.s[i,]!=0]]}
+    return(mod.l)
+  }
+}
+                                        #
+rownames(slot(mods..,'originalWeb')) <- paste(geno.09$c,rownames(pb09c),sep='_')
+mod.l <- getMods(mods..)
+tapply(mod.l[[1]],geno.09$c,table)
+                                        #
+
+@ 
+
 \section{13 Mar 2014}
 
 Evenness 
 
-<<>>=
+<<eval = false>>=
 library(vegan)
 library(gplots)
 #empirical
@@ -39,7 +88,6 @@ setwd('~/projects/pb_removal_nets/src/')
 source('~/projects/pb_removal_nets/src/pbr_load_data.R')
 setwd(owd)
 pbr09c <- pbr.09$c
-pbr09c
                                         #shannon diversity
 H.obs <- print(diversity(apply(pbr09c,2,sum)))
                                         #pielous evenness
@@ -84,9 +132,23 @@ source('~/projects/pb_removal_nets/src/pbr_load_data.R')
 setwd(owd)
                                         #observed
                                         #co-occurrence
+g <- geno.09$c
 pb09c <- pbr.09$c
-pb09c <- pb09c[,apply(pb09c,2,sum)!=0]
+                                        #pb09c <- pb09c[,apply(pb09c,2,sum)>3]
+                                        #average to create genotype-species network
+pb09c.mu <- apply(pb09c,2,function(x,g) tapply(x,g,mean),g=g)
+                                        #
 pb09c[pb09c!=0] <- 1
+                                        #genotype centrality
+detach(package:ComGenR);detach(package:igraph)
+cen <- degree(pb09c,'freeman',rescale=TRUE)
+names(cen) <- c(rownames(pb09c),colnames(pb09c))
+library(ComGenR)
+source('/Users/Aeolus/projects/packages/ComGenR_development/src/cgREML.R')
+cgREML(cen[1:length(g)],g)
+plot(cen[1:length(g)]~apply(pb09c,1,sum))
+                                        #species centrality
+
 obs.cs <- nestedchecker(pb09c)[[1]]
                                         #modularity
                                         #obs.mod <- computeModules(pb09c)
