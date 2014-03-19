@@ -38,16 +38,7 @@ owd <- getwd()
 setwd('~/projects/pb_removal_nets/src')
 source('~/projects/pb_removal_nets/src/pbr_load_data.R')
 setwd(owd)
-                                        #
-pb09c <- pbr.09$c
-pb09c <- pb09c[,apply(pb09c,2,sum)!=0]
-pb09c <- apply(pb09c,2,function(x) x/max(x))
-                                        #
-mods.. <- computeModules(pb09c)
-                                        #
-length(slot(mods..,'orderA'))
-length(slot(mods..,'orderB'))
-plotModuleWeb(mods..)
+cbp <- c('#1F78B4','#33A02C','#E31A1C','#FF7F00','#6A3D9A','#B15928') #color blind pallete
 getMods <- function(x,split.mods=TRUE){
   if (split.mods){
     com <- slot(x,'originalWeb')
@@ -68,10 +59,33 @@ getMods <- function(x,split.mods=TRUE){
   }
 }
                                         #
-rownames(slot(mods..,'originalWeb')) <- paste(geno.09$c,rownames(pb09c),sep='_')
-mod.l <- getMods(mods..)
-tapply(mod.l[[1]],geno.09$c,table)
+troph <- c(1,2,2,2,2,2,2,2,1,1,2,2,1,1,1,2,1,2,1,1,1,1,1,1,2,2,2,1,2,2,1,1,1,1,1,1,1,1,1,2,1,1,1,2,2,2,2,11,2,1,2,2,1,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1)
+pb09c <- pbr.09$c
+pb09c <- pb09c[,apply(pb09c,2,sum)!=0]
+                                        #pb09c[pb09c!=0] <- 1
+pb09c <- apply(pb09c,2,function(x) x/max(x))
+x <- apply(pb09c,2,function(x,g) tapply(x,g,sum),g=geno.09$c)
+                                        #x <- apply(pb09c,2,function(x) x/max(x))
                                         #
+mod.mu <- computeModules(x)
+mod.l <- getMods(mod.mu)
+max.mod <- as.numeric(tapply(mod.l[[1]],geno.09$c,function(x) names(sort(table(x),decreasing=TRUE))[1]))
+avg.mod <- tapply(mod.l[[1]],geno.09$c,function(x) round(mean(x),0))
+                                        #
+x. <- apply(x,2,function(x,g) tapply(x,g,mean),g=geno.09$c)
+colnames(x.) <- as.character(1:ncol(x.))
+plotweb(x.[order(apply(x.,1,function(x)sum(sign(x))),decreasing=TRUE),
+           order(apply(x.,2,function(x) sum(sign(x))),decreasing=TRUE)],
+        method='normal',col.low=cbp[max.mod[order(apply(x.,1,function(x)sum(sign(x))),decreasing=TRUE)]],
+        col.high=cbp[mod.l$col.mods[order(apply(x.,2,function(x)sum(sign(x))),decreasing=TRUE)]],
+        text.rot=90,labsize=1)
+                                        #
+plotweb(x.[order(apply(x.,1,function(x)sum(sign(x))),decreasing=TRUE),
+           order(apply(x.,2,function(x) sum(sign(x))),decreasing=TRUE)],
+        method='normal',col.low=cbp[avg.mod[order(apply(x.,1,function(x)sum(sign(x))),decreasing=TRUE)]],
+        col.high=cbp[mod.l$col.mods[order(apply(x.,2,function(x)sum(sign(x))),decreasing=TRUE)]],
+        text.rot=90,labsize=1)
+
 
 @ 
 
