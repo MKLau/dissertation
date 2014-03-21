@@ -85,13 +85,15 @@ Re-running analyses:
 \begin{itemize}
 \item Wild
   \begin{enumerate}
-  \item Height composition
-  \item Overall Co-occurrence Patterns
-  \item Nestedness, Modularity, Centrality
-  \item SES ~ Roughness
-  \item co ~ Roughness
-  \item ch ~ Roughness
-  \item ch ~ co ~ SES
+  \item Height composition = not related
+  \item Overall Co-occurrence Patterns = statistic    1.3556 -2.9207 0.0005999
+  \item Nestedness = 8.6663 -2.5715 0.0018
+  \item SES ~ Roughness = p=0.0502, r2 = 0.2233
+  \item co ~ Roughness = p=0.5975
+  \item ch ~ Roughness = p=0.1058
+  \item ch ~ co ~ SES = all negatively correlated
+  \item Significant Co-occurrence network
+  \item Get pos and neg co-occurrence
   \end{enumerate}
 \item ONC
   \begin{enumerate}

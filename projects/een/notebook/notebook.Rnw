@@ -91,7 +91,7 @@ getMods <- function(x,split.mods=TRUE){
   }
 }
                                         #new araujo
-newAraujo <- function(x,probabilities=FALSE,zero.diag=TRUE){
+newAraujo <- function(x,probabilities=FALSE,zero.diag=TRUE,showsign=FALSE){
   x <- as.matrix(x)
   x[x!=0] <- 1
   A <- nrow(x)
@@ -112,6 +112,7 @@ newAraujo <- function(x,probabilities=FALSE,zero.diag=TRUE){
   if (probabilities){out <- obs.ab / A}else{out <- obs.ab}
   out[obs.ab<=u.lim&obs.ab>=l.lim] <- 0
   if (zero.diag){diag(out) <- 0}
+  if (showsign){out[obs.ab>u.lim] <- 1;out[obs.ab<l.lim] <- 0}
   return(out)
 }
                                         #
