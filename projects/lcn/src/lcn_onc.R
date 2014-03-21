@@ -3,7 +3,6 @@
 ###21Mar2014
 
 source('~/projects/dissertation/projects/lcn/src/lcn_load_onc.R')
-
 source('~/projects/packages/cooc/src/cooc.R')
 
 ###Data objects:
@@ -22,7 +21,7 @@ source('~/projects/packages/cooc/src/cooc.R')
 
 ## Overall Co-occurrence Patterns
 #wco.all <- oecosimu(do.call(rbind,wq),cs,method='r1',burnin=100,thin=10,nsimul=5000)
-oecosimu(wc,cs,method='r1',burnin=100,thin=10,nsimul=5000)
+oecosimu(oc,cs,method='r1',burnin=100,thin=10,nsimul=100)
 
 ## oecosimu(wc,cs,method='r1',burnin=100,thin=10,nsimul=5000)
 ##           statistic       z   mean   2.5%    50%  97.5%  Pr(sim.)    

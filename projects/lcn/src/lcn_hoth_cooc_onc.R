@@ -40,41 +40,4 @@ onc.ses <- lapply(onc.q,function(x)
                   }
                   )
 os <- unlist(lapply(onc.ses,function(x) x[[1]]))
-ses.tree <- onc.ses
-names(ses.tree) <- names(onc.q)
-ses.tree <- as.character(sapply(names(onc.ses),function(x) unlist(strsplit(x,split=' '))[1]))
-onc.rough <- avg.rough[match(ses.tree,r.tree)]
-all(ses.tree==names(onc.rough))
-                                        #Microsat data from Nash
-## gen.d <- read.csv(file='../../lcn/data/ONC_MSAT_datafromnash.csv')[,-1]
-## gen.d[is.na(gen.d)] <- 0
-## gen.d <- as.dist((gen.d))
-                                        #RFLP distance values from Zink from Martinsen
-rflp.d <- readLines('/Users/Aeolus/projects/dissertation/projects/acn/data/rflp_queller_goodnight.txt')
-rflp.d <- lapply(rflp.d,strsplit,split='\t')
-rflp.d <- lapply(rflp.d,function(x) x[[1]])
-rflp.d[[61]] <- c(rflp.d[[61]],"")
-rflp.d <- do.call(rbind,rflp.d)
-rflp.n <- rflp.d[1,-1]
-rflp.d <- rflp.d[-1,-1]
-diag(rflp.d) <- 0
-rflp.d <- matrix(as.numeric(rflp.d),nrow=nrow(rflp.d))
-rownames(rflp.d) <- colnames(rflp.d) <- rflp.n
-rflp.d <- as.dist(rflp.d)
-                                        #community data
-onc.com <- do.call(rbind,lapply(onc.q,function(x) apply(x,2,sum)))
-onc.R <- apply(sign(onc.com),1,sum)
-onc.H <- diversity(onc.com)
-onc.com.rel <- apply(onc.com,2,function(x) x/max(x))
-onc.com.rel <- cbind(onc.com.rel,ds=rep(min(onc.com.rel[onc.com.rel!=0]),nrow(onc.com.rel)))
-onc.com <- cbind(onc.com,ds=rep(min(onc.com[onc.com!=0]),nrow(onc.com)))
-                                        #nmds and procrustes rotation
-## onc.nms <- nmds.min(nmds(vegdist(onc.com.rel),2,2))
-## onc.rot <- procrustes(dist(onc.rough),onc.nms,scale=TRUE)
-## onc.rot <- t(onc.rot$rotation)
-## onc.rot.sem <- onc.rot
-## onc.rot <- onc.rot[,(1:2)[abs(cor(cbind(onc.rough,onc.rot))[1,2:3])==max(abs(cor(cbind(onc.rough,onc.rot))[1,2:3]))]]
-
-### Renaming
-oq <- onc.q
-oc <- onc.com[,colnames(onc.com)!='ds']
+save(os,file='../data/lcn_onc_ses.rda')
