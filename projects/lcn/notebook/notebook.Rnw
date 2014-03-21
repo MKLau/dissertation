@@ -28,6 +28,94 @@
 \setcounter{tocdepth}{1}
 \tableofcontents
 
+\section{Current Results and Analyses Left to Finish}
+
+\begin{itemize}
+\item Garden
+  \begin{itemize}
+  \item Height doesn't influence composition (PERM: F=1.88,P=0.154,R2=0.017,n=999)
+  \item NMDS: stress = 0.1727378, r2 = 0.894879
+  \item Roughness is highly heritable (REML: X2=9.214,P=0.0024,H2C=0.36)
+  \item Roughness predicts relativized community composition (PERM: R2=0.04,
+    P=0.04)
+  \item Stand level co-occurrence patterns significant using the
+    community matrix (SES=-11.32535,P<<0.0001) (stand level network figure), but
+    genotype doesn't predict SES (REML:  X2<<0.0001,P=0.996)
+  \item genotype-species networks are nested (r1: z=-3.496,P=0.001)
+  \end{itemize}
+\item Wild
+  \begin{itemize}
+  \item Height doesn't influence composition (PERM: F=0.51,P=0.712,R2=0.019,n=999)
+  \item Significant co-occurrence patterns at the stand scale. 
+  \item Tree level co-occurrence patterns influenced by roughness. 
+  \item Unipartite network.
+  \item Nestedness significant.
+  \end{itemize}
+\end{itemize}
+
+Final set of analyses:
+
+Note: Pit does not show compositional patterns. Leave out of results for now.
+
+\begin{itemize}
+\item genotype effects on richness, diversity and composition
+\item genotype effects on roughness
+\item roughness correlation with richness, diversity, eveness and compostion
+\item co-occurrence patterns (stand, tree, individual = genotype)
+\item nestedness (stand, tree, genotype: r00, r0, c0, r1)
+\end{itemize}
+
+
+\section{21 Mar 2014}
+
+New analyses:
+
+Co-Occurrence PerMANOVA tests if observations of positive or negative
+co-occurrence patterns vary significantly with respect to a
+categorical or continuous predictor variable.
+
+\begin{enumerate}
+\item Co-occurrence counts (co)
+\item Checker counts (ch)
+\item Ratio of co to ch
+\end{enumerate}
+
+Re-running analyses:
+
+\begin{itemize}
+\item Wild
+  \begin{enumerate}
+  \item Height composition
+  \item Overall Co-occurrence Patterns
+  \item Nestedness, Modularity, Centrality
+  \item SES ~ Roughness
+  \item co ~ Roughness
+  \item ch ~ Roughness
+  \item ch ~ co ~ SES
+  \end{enumerate}
+\item ONC
+  \begin{enumerate}
+  \item Height composition
+  \item Overall Co-occurrence Patterns
+  \item Nestedness, Modularity, Centrality
+  \item SES ~ Genotype or RFLP distance
+  \item co ~ Genotype or RFLP distance
+  \item ch ~ Genotype or RFLP distance
+  \item ch ~ co ~ SES
+  \end{enumerate}
+\item Pit
+  \begin{enumerate}
+  \item Height composition
+  \item Overall Co-occurrence Patterns
+  \item Nestedness, Modularity, Centrality
+  \item SES ~ Genotype or RFLP distance
+  \item co ~ Genotype or RFLP distance
+  \item ch ~ Genotype or RFLP distance
+  \item ch ~ co ~ SES
+  \end{enumerate}
+\end{itemize}
+
+
 \section{31 Jan 2014}
 
 Results:

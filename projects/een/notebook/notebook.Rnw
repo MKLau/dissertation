@@ -26,6 +26,38 @@
 \setcounter{tocdepth}{3}  %%activate to number sections
 \tableofcontents
 
+\section{20 Mar 2014}
+
+Looking at genotype unipartite networks:
+
+<<eval=false>>=
+cbp <- c("#A6CEE3","#1F78B4","#B2DF8A","#33A02C","#FB9A99","#E31A1C",
+         "#FDBF6F","#FF7F00","#CAB2D6","#6A3D9A","#FFFF99","#B15928")
+rm(list=ls())
+owd <- getwd()
+setwd('~/projects/pb_removal_nets/src')
+source('~/projects/pb_removal_nets/src/pbr_load_data.R')
+setwd(owd)
+                                        #
+pb09c <- as.matrix(pbr.09$c)
+pb09c[pb09c!=0] <- 1
+gn09c <- newAraujo(t(pb09c))
+                                        #find percolation threshold
+y <- gn09c
+y <- y[apply(y,1,sum)!=0,apply(y,2,sum)!=0]
+diag(y) <- 0
+step <- 1
+k <- 0
+while(all(apply(sign(y),1,sum)>0)){
+  k <- k+step
+  y[y<=k] <- 0
+}
+gn09c[gn09c<=k] <- 0
+gn.col <- cbp[as.numeric(factor(geno.09$c))]
+gplot(gn09c,vertex.col=gn.col,gmode='graph',mode='circle')
+
+@ 
+
 \section{18 Mar 2014}
 
 Modules are most interesting when using species max relativized data.
@@ -58,13 +90,53 @@ getMods <- function(x,split.mods=TRUE){
     return(mod.l)
   }
 }
+                                        #new araujo
+newAraujo <- function(x,probabilities=FALSE,zero.diag=TRUE){
+  x <- as.matrix(x)
+  x[x!=0] <- 1
+  A <- nrow(x)
+  obs.ab <- t(x)%*%x
+  nul.Pa <- diag(obs.ab) / A
+  nul.Pab <- nul.Pa%*%t(nul.Pa)
+  nul.Pa.b <- nul.Pa%*%t(1-nul.Pa) + (1-nul.Pa)%*%t(nul.Pa)
+  nul.P.. <- (1-nul.Pa)%*%t(1-nul.Pa)
+  if (any(round((nul.Pab+nul.Pa.b+nul.P..),2)!=1)){warning('Error: null probabilities not unit.')}
+  nul.ab <- A * nul.Pab
+  nul.a.b <- A * nul.Pa.b
+  nul... <- A * nul.P..
+  v.ab <- A * nul.Pab * (1-nul.Pab)
+  v.a.b <- A * nul.Pa.b * (1-nul.Pa.b)
+  v... <- A * nul.P.. * (1-nul.P..)
+  u.lim <- nul.ab + 2*(v.ab^(1/2))
+  l.lim <- nul.ab - 2*(v.ab^(1/2))
+  if (probabilities){out <- obs.ab / A}else{out <- obs.ab}
+  out[obs.ab<=u.lim&obs.ab>=l.lim] <- 0
+  if (zero.diag){diag(out) <- 0}
+  return(out)
+}
+                                        #
+coocThresh <- function(x){
+  y <- x
+  diag(y) <- 0
+  y <- y[apply(y,1,sum)!=0,apply(y,2,sum)!=0]
+  k <- 0
+  while(all(apply(sign(y),1,sum)>0)){
+    k <- k+1
+    y[y==k] <- 0
+  }
+  return(k-1)
+}
+n09c <- t(pb09c)%*%pb09c
+n09c[n09c<=5] <- 0
+coocThresh(n09c)
                                         #
 troph <- c(1,2,2,2,2,2,2,2,1,1,2,2,1,1,1,2,1,2,1,1,1,1,1,1,2,2,2,1,2,2,1,1,1,1,1,1,1,1,1,2,1,1,1,2,2,2,2,11,2,1,2,2,1,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1)
 pb09c <- pbr.09$c
 pb09c <- pb09c[,apply(pb09c,2,sum)!=0]
-                                        #pb09c[pb09c!=0] <- 1
-pb09c <- apply(pb09c,2,function(x) x/max(x))
-x <- apply(pb09c,2,function(x,g) tapply(x,g,sum),g=geno.09$c)
+pb09c[pb09c!=0] <- 1
+pb09c <- as.matrix(pb09c)
+## pb09c <- apply(pb09c,2,function(x) x/max(x))
+## x <- apply(pb09c,2,function(x,g) tapply(x,g,sum),g=geno.09$c)
                                         #x <- apply(pb09c,2,function(x) x/max(x))
                                         #
 mod.mu <- computeModules(x)
