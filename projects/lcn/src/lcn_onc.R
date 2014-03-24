@@ -2,15 +2,16 @@
 ###MKLau
 ###21Mar2014
 
+library(bipartite)
 source('~/projects/dissertation/projects/lcn/src/lcn_load_onc.R')
 source('~/projects/packages/cooc/src/cooc.R')
 
 ###Data objects:
 ###oc = co-occurrences summed across all cells for each tree
 ###oq = co-occurrence matrices separated out for each tree
-###os = matrix of ses and related stats for trees
-###wco = co-occurrence counts
-###wch = checker counts
+###os = onc ses values
+###oco = co-occurrence counts
+###och = checker counts
 ###prb = percent rough bark (averaged between the upper and lower)
 ###Data notes:
 ###No physciods

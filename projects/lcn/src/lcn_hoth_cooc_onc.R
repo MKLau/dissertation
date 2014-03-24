@@ -34,10 +34,7 @@ r.tree <- sub('-','\\.',r.tree)
 r.tree <- sub('\\.0','\\.',r.tree)
 names(avg.rough) <- r.tree
                                         #match roughness to to ses values
-onc.ses <- lapply(onc.q,function(x) 
-                  if (all(x==0)){rep(NA,5)}else{
-                    oecosimu(x,cs,method='r1',burnin=100,thin=10,nsimul=5000)
-                  }
-                  )
-os <- unlist(lapply(onc.ses,function(x) x[[1]]))
+get.ses <- function(x){print('...');if (all(x==0)){rep(NA,5)}else{oecosimu(x,cs,method='r1',burnin=100,thin=10,nsimul=5000)}}
+onc.ses <- lapply(onc.q,get.ses)
+os <- do.call(rbind,lapply(onc.ses,function(x) x[[2]][1:3]))
 save(os,file='../data/lcn_onc_ses.rda')

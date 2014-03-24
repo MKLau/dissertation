@@ -34,17 +34,12 @@ r.tree <- sub('-','\\.',r.tree)
 r.tree <- sub('\\.0','\\.',r.tree)
 names(avg.rough) <- r.tree
                                         #match roughness to to ses values
-onc.ses <- lapply(onc.q,function(x) 
-                  if (all(x==0)){rep(NA,5)}else{
-                    oecosimu(x,cs,method='r1',burnin=100,thin=10,nsimul=5000)
-                  }
-                  )
-os <- unlist(lapply(onc.ses,function(x) x[[1]]))
-ses.tree <- onc.ses
-names(ses.tree) <- names(onc.q)
+load('../data/lcn_onc_ses.rda')
+onc.ses <- os
+if (all(names(onc.ses)==names(onc.q))){print('Good to go!')}else{print('Holy crap!')}
 ses.tree <- as.character(sapply(names(onc.ses),function(x) unlist(strsplit(x,split=' '))[1]))
 onc.rough <- avg.rough[match(ses.tree,r.tree)]
-all(ses.tree==names(onc.rough))
+if (all(ses.tree==names(onc.rough))){print('Good to go!')}else{print('Holy Crap!')}
                                         #Microsat data from Nash
 ## gen.d <- read.csv(file='../../lcn/data/ONC_MSAT_datafromnash.csv')[,-1]
 ## gen.d[is.na(gen.d)] <- 0
@@ -78,3 +73,5 @@ onc.com <- cbind(onc.com,ds=rep(min(onc.com[onc.com!=0]),nrow(onc.com)))
 ### Renaming
 oq <- onc.q
 oc <- onc.com[,colnames(onc.com)!='ds']
+os <- onc.ses
+prb <- onc.rough
