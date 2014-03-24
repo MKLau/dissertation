@@ -19,29 +19,27 @@ source('~/projects/packages/cooc/src/cooc.R')
 ###Data notes:
 ###No physciods
 ###Lecanoras merged
+###Folios grey black was deleted as it occurred in only three cells on one tree
 
 ## Height composition
 ### Previous tests show that this is not significant
 
 ## Overall Co-occurrence Patterns
 #wco.all <- oecosimu(do.call(rbind,wq),cs,method='r1',burnin=100,thin=10,nsimul=5000)
-oecosimu(wc,cs,method='r1',burnin=100,thin=10,nsimul=5000)
-
 ## oecosimu(wc,cs,method='r1',burnin=100,thin=10,nsimul=5000)
-##           statistic       z   mean   2.5%    50%  97.5%  Pr(sim.)    
-## statistic    1.3556 -2.9207 4.5655 2.3778 4.5556 6.7339 0.0005999
+## statistic    1.0833 -3.1515 4.7057 2.4722 4.7222 6.9444   0.0018 **
 
 ## Nestedness, Modularity, Centrality
-### oecosimu(wc,nested,method='r1',burnin=100,thin=10,nsimul=5000)
-##             statistic       z   mean   2.5%    50%  97.5% Pr(sim.)   
-## binmatnest2    8.6663 -2.5715 18.592 11.589 18.428 26.445   0.0018 **
-## Only did 10
-## oecosimu(wc,mm,method='r1',burnin=100,thin=10,nsimul=10)
-##           statistic       z    mean    2.5%     50%  97.5% Pr(sim.)
-## statistic   0.18652 -1.6232 0.20923 0.18708 0.21407 0.2263   0.2727
-## mods <- computeModules(wc)
+## oecosimu(wc,nested,method='r1',burnin=100,thin=10,nsimul=5000)
+##             statistic       z   mean   2.5%    50%  97.5%  Pr(sim.)    
+## binmatnest2    6.7749 -2.7125 18.127 10.389 18.018 26.648 0.0005999 ***
 
-plotweb(wc[order(apply(wc,1,sum),decreasing=TRUE),order(apply(wc,2,sum),decreasing=TRUE)],text.rot=90,method='normal')
+## wmods <- oecosimu(apply(wc[,colnames(wc)!='Pu'],2,function(x) x/max(x)),mm,method='r1',burnin=100,thin=10,nsimul=20)
+wom <- computeModules(apply(wc[,colnames(wc)!='Pu'],2,function(x) x/max(x)))
+plotModuleWeb(wom)
+
+plotweb(wc[order(apply(wc,1,sum),decreasing=TRUE),order(apply(wc,2,sum),decreasing=TRUE)],
+        text.rot=90,method='normal',labsize=2)
 
 ## SES ~ Roughness
 ## prb         -0.03937    0.01809  -2.177   0.0502 .
@@ -90,5 +88,16 @@ plot(dist(as.matrix(ws$wses))~vegdist(wch),xlab='Checker Dissimilarity',
 abline(lm(dist(as.matrix(ws$wses))~vegdist(wch)))
 ## Araujo network
 wan <- newAraujo(do.call(rbind,wq)[,c(-4,-8)])
+
+oan <- coNet(do.call(rbind,oq))
+oan <- log(oan+1)
+oan.col <- coNet(do.call(rbind,oq),showsign=TRUE)
+oan.vs <- (apply(oc,2,sum))
+oan.vs <- oan.vs/max(oan.vs)+1.5
+gplot(oan,displaylabels=FALSE,gmode='graph',coord=coord,vertex.col='grey',
+      vertex.cex=oan.vs,edge.lwd=oan)
+text(coord,rownames(oan))
+
+
 wan.col <- newAraujo(do.call(rbind,wq)[,c(-4,-8)],showsign=TRUE)
 gplot(,displaylabels=TRUE,gmode='graph')

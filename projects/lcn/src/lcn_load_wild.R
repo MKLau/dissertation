@@ -30,6 +30,8 @@ x <- x[,-c(6,8,10,18)]
 x <- x[,colnames(x)!='physcioid']
                                         #break into quadrat list (x.q)
 quads <- paste(x$tree,x$quadrat)
+colnames(x)[5:ncol(x)] <- c('Xg','Cs', 'Xm', 'fgb', 'Rs', 'Pm' ,'Pa', 'Pu','Ch','Ls')
+x <- x[colnames(x)!='fgb']
 x.q <- split(x,quads)
 wild.com <- split(x,x$tree)
 wild.com <- do.call(rbind,lapply(wild.com,function(x) apply(x[,-1:-4],2,sum)))

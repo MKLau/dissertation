@@ -2,7 +2,12 @@
 ###MKLau
 ###21Mar2014
 
+library(vegan)
+library(bipartite)
 source('~/projects/packages/cooc/src/cooc.R')
+source('~/projects/packages/ComGenR/R/CoCo.R')
+cs <- function(x){nestedchecker(x)[[1]][1]}
+mm <- function(x){slot(computeModules(x),'likelihood')}
 garden.data <- read.csv('~/projects/dissertation/projects/lcn/data/LCO_data_ONC_PIT.csv')
                                         #remove genotype RL6 and N1.31
 garden.data <- garden.data[garden.data$Geno!='RL6',]
@@ -18,8 +23,10 @@ unique(onc$Tree[onc$Year=='2011']) %in% unique(onc$Tree[onc$Year=='2010'])
                                         #
 if (all(table(onc[,1])==100)){print('Good to go!')}else{for (i in 1:1000){print('Warning: check input data!!!')}}
                                         #separate trees
+colnames(onc)[7:ncol(onc)] <- substr(colnames(onc)[7:ncol(onc)],1,2)
 onc.q <- split(onc,paste(onc[,1],onc[,2]))
 onc.q <- lapply(onc.q,function(x) x[,7:ncol(x)])
+
                                         #get genotype
 onc.geno <- unlist(sapply(names(onc.q),function(x) strsplit(x,split=' ')[[1]][2]))
                                         #Roughness in the Garden
@@ -35,11 +42,14 @@ r.tree <- sub('\\.0','\\.',r.tree)
 names(avg.rough) <- r.tree
                                         #match roughness to to ses values
 load('../data/lcn_onc_ses.rda')
-onc.ses <- os
+onc.ses <- unlist(os[,1])
+onc.ses[is.na(onc.ses)] <- 0
+names(onc.ses) <- rownames(os)
 if (all(names(onc.ses)==names(onc.q))){print('Good to go!')}else{print('Holy crap!')}
 ses.tree <- as.character(sapply(names(onc.ses),function(x) unlist(strsplit(x,split=' '))[1]))
 onc.rough <- avg.rough[match(ses.tree,r.tree)]
 if (all(ses.tree==names(onc.rough))){print('Good to go!')}else{print('Holy Crap!')}
+
                                         #Microsat data from Nash
 ## gen.d <- read.csv(file='../../lcn/data/ONC_MSAT_datafromnash.csv')[,-1]
 ## gen.d[is.na(gen.d)] <- 0
@@ -55,6 +65,9 @@ rflp.d <- rflp.d[-1,-1]
 diag(rflp.d) <- 0
 rflp.d <- matrix(as.numeric(rflp.d),nrow=nrow(rflp.d))
 rownames(rflp.d) <- colnames(rflp.d) <- rflp.n
+rflp.d <- rflp.d[rownames(rflp.d)%in%unique(onc.geno),colnames(rflp.d)%in%unique(onc.geno)]
+rflp.d <- rflp.d[match(unique(onc.geno),rownames(rflp.d)),match(unique(onc.geno),rownames(rflp.d))]
+if (all(rownames(rflp.d)==unique(onc.geno))){print('Good to go!')}else{print('Holy crap, rflp.d names match error')}
 rflp.d <- as.dist(rflp.d)
                                         #community data
 onc.com <- do.call(rbind,lapply(onc.q,function(x) apply(x,2,sum)))
@@ -69,9 +82,26 @@ onc.com <- cbind(onc.com,ds=rep(min(onc.com[onc.com!=0]),nrow(onc.com)))
 ## onc.rot <- t(onc.rot$rotation)
 ## onc.rot.sem <- onc.rot
 ## onc.rot <- onc.rot[,(1:2)[abs(cor(cbind(onc.rough,onc.rot))[1,2:3])==max(abs(cor(cbind(onc.rough,onc.rot))[1,2:3]))]]
-
+                                        #genotype means
+omu <- apply(onc.com,2,function(x,g) tapply(x,g,mean),g=onc.geno)
+oms <- tapply(onc.ses,onc.geno,mean)
+oms.d <- as.dist(as.matrix(dist(oms[match(rownames(as.matrix(rflp.d)),names(oms))])))
+                                        #bark roughness means
+oprbmu <- tapply(onc.rough,onc.geno,mean)
+oprbmu <- oprbmu[match(rownames(as.matrix(rflp.d)),names(oprbmu))]
+                                        #Co-occurrence counts
+                                        #co-occurrence patterns
+oco <- do.call(rbind,lapply(onc.q,function(x,t) apply(CoCo(x,type=t),2,sum),t='pos'))
+och <- do.call(rbind,lapply(onc.q,function(x,t) apply(CoCo(x,type=t),2,sum),t='neg'))
+                                        #get araujo coordinates
+coord <- read.csv('../data/lcn_coord_onc.csv')
+rownames(coord) <- coord[,1]
+coord <- coord[,-1]
 ### Renaming
 oq <- onc.q
 oc <- onc.com[,colnames(onc.com)!='ds']
 os <- onc.ses
+og <- onc.geno
+osgmu <- tapply(os,og,mean)
+osgse <- tapply(os,og,function(x)sd(x)/sqrt(length(x)))
 prb <- onc.rough
