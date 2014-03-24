@@ -6,6 +6,7 @@
 ###Site = Uintah, UT
 ###Study area = 225 * 463 = 104,175 m2 = 0.104175 km2
 library(bipartite)
+library(methods)
 mm <- function(x){slot(computeModules(x),'likelihood')}
                                         #
 x <- read.csv('~/projects/dissertation/projects/lcn/data/lco_Apr2012.csv')
