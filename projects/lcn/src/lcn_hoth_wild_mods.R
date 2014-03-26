@@ -61,5 +61,5 @@ wild.com <- do.call(rbind,lapply(wild.com,function(x) apply(x[,-1:-4],2,sum)))
 ##             statistic       z   mean   2.5%    50%  97.5%  Pr(sim.)    
 ## binmatnest2    6.7749 -2.7125 18.127 10.389 18.018 26.648 0.0005999 ***
 wc <- wild.com
-wmods <- oecosimu(apply(wc[,colnames(wc)!='Pu'],2,function(x) x/max(x)),mm,method='r1',burnin=100,thin=10,nsimul=1)
+wmods <- oecosimu(apply(wc[,colnames(wc)!='Pu'],2,function(x) x/max(x)),mm,method='r1',burnin=100,thin=10,nsimul=5000)
 save(wmods,'../data/lcn_mods_wild.rda')

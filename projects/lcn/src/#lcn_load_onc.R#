@@ -85,6 +85,7 @@ onc.com <- cbind(onc.com,ds=rep(min(onc.com[onc.com!=0]),nrow(onc.com)))
                                         #genotype means
 omu <- apply(onc.com[,colnames(onc.com)!='ds'],2,function(x,g) tapply(x,g,mean),g=onc.geno)
 oms <- tapply(onc.ses,onc.geno,mean)
+oms. <- tapply(onc.ses[onc.ses!=0],onc.geno[onc.ses!=0],mean)
 oms.d <- dist(oms[match(rownames(as.matrix(rflp.d)),names(oms))])
                                         #bark roughness means
 oprbmu <- tapply(onc.rough,onc.geno,mean)

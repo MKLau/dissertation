@@ -59,6 +59,29 @@ env.split <- paste(env$Tree.ID,env$Quad.Loc)
 x.split <- as.character(x$tree)
 env.split <- as.character(env$Tree.ID)
 prb <- tapply(env$Pct.Roughness,env.split,mean) #percent rough bark
+                                        #age
+age <- read.csv('~/projects/dissertation/projects/lcn/data/UintaMaster_LichenHeritNL_FallSpring_2012_ForLau.csv')
+dbh <- age$DBH.cm_01
+age.final <- age$AgeFinal.U
+age <- data.frame(tree.id=age[,1],age.final=age$AgeFinal.U)
+age[,1] <- tolower(age[,1])
+age[,1] <- sub('_','\\.',age[,1])
+age[,1] <- sub('-','\\.',age[,1])
+age[,1] <- sub('\\?','',age[,1])
+age[,1] <- sub('\\.0','\\.',age[,1])
+age[age[,1]=='gnu.85.1ftaway',1] <- 'gnu.85'
+                                        #predict age
+gnu19.dbh <- dbh[age$tree.id=='gnu.19']
+new <- data.frame(dbh=seq(min(dbh),max(dbh),by=0.1))
+age.final <- na.omit(age.final)
+pred.age <- predict(lm(age.final~dbh,data=age),new)
+plot(pred.age~new[,1])
+gnu19.age <- as.numeric(pred.age[new[,1]==gnu19.dbh])
+                                        #
+tree.age <- age[match(names(prb),age[,1]),2]
+tree.age[is.na(tree.age)] <- gnu19.age
+names(tree.age) <- age[match(names(prb),age[,1]),1]
+age <- tree.age
                                         #co-occurrence patterns
 wco <- do.call(rbind,lapply(wild.q,function(x,t) apply(CoCo(x,type=t),2,sum),t='pos'))
 wch <- do.call(rbind,lapply(wild.q,function(x,t) apply(CoCo(x,type=t),2,sum),t='neg'))
@@ -72,6 +95,10 @@ wch <- do.call(rbind,lapply(wild.q,function(x,t) apply(CoCo(x,type=t),2,sum),t='
                                         #rownames(wsim) <- names(wild.q)
                                         #ws <- cbind(wses,wsmu,wsp)
                                         #write.csv(ws,file='../data/wild_ses_21mar2014.csv')
+## Araujo Coordinate Values
+coord <- read.csv('../data/lcn_coord_onc.csv')
+rownames(coord) <- coord[,1]
+coord <- coord[,-1]
 
 ###Rename data objects for simplicity
 ws <- read.csv('~/projects/dissertation/projects/lcn/data/wild_ses_21mar2014.csv')
