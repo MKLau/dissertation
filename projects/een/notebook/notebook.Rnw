@@ -360,11 +360,13 @@ stats <- lapply(x,pp,zero.na=TRUE)
 stats.cen <- stats[[1]]
 stats.cen[,3] <- g.cen
 stats$centrality <- stats.cen
+stats$centrality[,3] <- stats$centrality[,3]/100
 lapply(stats,function(x) table(x$x))
 stats <- do.call(rbind.data.frame,stats)
 stats <- stats[stats[,2]>=1,]
 stats$stat <- sapply(rownames(stats),function(x) strsplit(x,split='_')[[1]][1])
 stats$stat <- sapply(rownames(stats),function(x) strsplit(x,split='\\.')[[1]][1])
+stats[stats$stat=='cscore_coms',3] <- stats[stats$stat=='cscore_coms',3]/100
 head(stats);tail(stats)
                                         #standardize
 
@@ -392,54 +394,56 @@ pairs(even[ge>=0.007,],lower.panel=panel.cor,upper.panel=panel.lmr)
 pairs(asym[ge>=0.007,],lower.panel=panel.cor,upper.panel=panel.lmr)
                                         #genotypic effect
 par(mfrow=c(2,2))
-                                        #Co-occurrence patterns
-i <- 2
-plot(even[,i]~ge,xlab='Genotypic Effect',ylab='C-Score',pch=19)
-lines(spline(ge,even[,i],n=100))
-points(asym[,i]~ge,col='red')
-lines(spline(ge,asym[,i],n=100),col='red')
-cor.test(even[,i],ge)
-cor.test(asym[,i],ge)
-                                        #network stats
-                                        #Centrality
-i <- 1
-plot(even[,i]~ge,xlab='Genotypic Effect',ylab='Global Centrality',pch=19,ylim=c(20,60))
-lines(spline(ge,even[,i],n=100))
-points(asym[,i]~ge,col='red')
-lines(spline(ge,asym[,i],n=100),col='red')
-cor(even[,i],ge)
-cor(asym[,i],ge)
                                         #Modularity
 i <- 3
 plot(even[,i]~ge,xlab='Genotypic Effect',ylab='Modularity',pch=19,ylim=c(0,0.3))
 lines(spline(ge,even[,i],n=100))
-points(asym[,i]~ge,col='red')
-lines(spline(ge,asym[,i],n=100),col='red')
+points(asym[,i]~ge,col='darkgrey',pch=19)
+lines(spline(ge,asym[,i],n=100),col='darkgrey')
 cor(even[,i],ge)
 cor(asym[,i],ge)
                                         #Nestedness
 i <- 4
 plot(even[,i]~ge,xlab='Genotypic Effect',ylab='Nestedness',pch=19,ylim=c(0,45))
 lines(spline(ge,even[,i],n=100))
-points(asym[,i]~ge,col='red')
-lines(spline(ge,asym[,i],n=100),col='red')
+points(asym[,i]~ge,col='darkgrey',pch=19)
+lines(spline(ge,asym[,i],n=100),col='darkgrey')
 cor(even[,i],ge)
 cor(asym[,i],ge)
+                                        #Centrality
+i <- 1
+plot(even[,i]~ge,xlab='Genotypic Effect',ylab='Centrality',pch=19,ylim=c(0.20,0.60))
+lines(spline(ge,even[,i],n=100))
+points(asym[,i]~ge,col='darkgrey',pch=19)
+lines(spline(ge,asym[,i],n=100),col='darkgrey')
+cor(even[,i],ge)
+cor(asym[,i],ge)
+                                        #Co-occurrence patterns
+i <- 2
+plot(even[,i]~ge,xlab='Genotypic Effect',ylab='C-Score',pch=19)
+lines(spline(ge,even[,i],n=100))
+points(asym[,i]~ge,col='darkgrey',pch=19)
+lines(spline(ge,asym[,i],n=100),col='darkgrey')
+cor.test(even[,i],ge)
+cor.test(asym[,i],ge)
                                         #heritability
 par(mfrow=c(1,2))
                                         #even
 h2c.e[h2c.e<0] <- 0
-par(mfrow=c(1,1))
-plot(h2c.e~ge,xlab='Genotypic Effect',ylab='H2C',ylim=c(0,0.70),yaxt='none',pch=19)
-lines(spline(ge,fitted(lm(h2c.e~ge+I(ge^2)))))
-abline(h=0.6,lty=2)
-axis(2,at=seq(0,0.75,by=0.05),label=seq(0,0.75,by=0.05))
+op <- par(mfrow=c(1,1),mai=c(1.02,1.02,0.82,0.42))
+###plot(h2c.e~ge,xlab='Genotypic Effect',ylab='H2C',ylim=c(0,0.70),yaxt='none',pch=19)
+plot(h2c.e~ge,xlab='Genotypic Effect',ylab=expression(paste(H ['C']^"2")),ylim=c(0,0.60),yaxt='none',pch=19)
+#lines(spline(ge,fitted(lm(h2c.e~ge+I(ge^2)))))
+lines(c(-0.1,0.0415),c(0.6,0.6),lty=2)
+axis(2,at=seq(0,0.6,by=0.1),label=seq(0,0.6,by=0.1))
                                         #asymptotic
 h2c.a[h2c.a<0] <- 0
-par(mfrow=c(1,1))
-points(h2c.a~ge,xlab='Genotypic Effect',ylab='H2C',ylim=c(0,0.70),yaxt='none',col='red')
-lines(spline(ge,fitted(lm(h2c.a~ge+I(ge^2)))),col='red')
-axis(2,at=seq(0,0.75,by=0.05),label=seq(0,0.75,by=0.05))
+#par(mfrow=c(1,1))
+points(h2c.a~ge,xlab='Genotypic Effect',ylab='H2C',ylim=c(0,0.70),yaxt='none',col='darkgrey',pch=19)
+#lines(spline(ge,fitted(lm(h2c.a~ge+I(ge^2)))),col='red')
+#axis(2,at=seq(0,0.6,by=0.05),label=seq(0,0.6,by=0.05))
+legend('topright',legend=c('Even','Un-Even'),pch=19,col=c(1,'darkgrey'))
+par(op)
 
 @ 
 
