@@ -43,7 +43,7 @@ source('~/projects/packages/cooc/src/cooc.R')
 ##       statistic  z        mean         Pr(sim)
 ## mm    0.3243    7.422347   0.2099011  0.000000000
 ## plotModuleWeb(wom)
-wom <- computeModules(apply(wc[,colnames(wc)!='Pu'],2,function(x) x/max(x)))
+#wom <- computeModules(apply(wc[,colnames(wc)!='Pu'],2,function(x) x/max(x)))
 wom. <- getMods(wom)
 col.trees <- cbp[wom.[[1]]]
 col.spp <- cbp[c(wom.[[2]][1:5],Pu=5,wom.[[2]][6:8])]
@@ -54,14 +54,22 @@ plotweb(wc[order(apply(wc,1,sum),decreasing=TRUE),order(apply(wc,2,sum),decreasi
         col.low=col.trees[order(apply(wc,1,sum),decreasing=TRUE)],
         col.high=col.spp[order(apply(wc,2,sum),decreasing=TRUE)])
 ## SES ~ Roughness
-## summary(rlm(ws$wses~prb))
+summary(rlm(ws$wses~prb))
 ## rlm = t=-2.1766, p=0.025
+##Mantel for ses and roughness
+ws.d <- dist(as.matrix(ws$wses))
+prb.d <- dist(as.matrix(prb))
+mantel(ws.d~prb.d)
+
 ## PRB ~ age
 ## summary(rlm(prb~age))
 ## rlm = t=2.1461, p=0.02650551
 ## SES ~ age
-## summary(rlm(ws$wses~age))
-## rlm = t=-0.9164,p=0.188753
+summary(rlm(ws$wses~age))
+## rlm = t=-2.1766,p=
+
+##SES ~ prb * age
+summary(lm(ws$wses~prb))
 
 plot(ws$wses~prb,xlab='Percent Rough Bark',ylab='SES',pch=19)
 abline((lm(ws$wses~prb)),lty=2)

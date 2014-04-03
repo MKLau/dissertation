@@ -63,8 +63,56 @@ source('~/projects/packages/ComGenR/R/coNet.R')
 ##         col.high=col.spp[order(apply(omu,2,sum),decreasing=TRUE)])
 
 ## SES ~ Roughness
-summary(rlm(os~prb))
-summary(aov(sqrt(abs(os))~og))
+summary(rlm(sqrt(abs(os))~prb))
+
+###transform percent rough bark too
+cor.test(sqrt(abs(os)),sqrt(prb))
+##t = 1.2843, df = 55, p-value = 0.2044
+
+###Mantel
+os.d <- dist(as.matrix(os))
+prb.d <- dist(as.matrix(prb))
+mantel(os.d~prb.d)
+
+##    mantelr       pval1       pval2       pval3   llim.2.5%  ulim.97.5% 
+##-0.08334190  0.97800000  0.02300000  0.06900000 -0.10906468 -0.06058215 
+os.d <- dist(sqrt(abs(as.matrix(tapply(os,og,mean)))))
+prb.d <- dist(as.matrix(tapply(prb,og,mean)))
+mantel(os.d~prb.d)
+
+
+mantel os.d prb.d
+library(sem)
+###OS <- PRB <- OG
+##make genotype a factor
+og.mat <- array(0,dim=c(length(og),length(unique(og))))
+colnames(og.mat) <- paste('Geno',1:ncol(og.mat),sep='')
+for (i in 1:length(unique(og))){
+  og. <- og
+  og.[og==unique(og)[i]] <- 1
+  og.[og!=unique(og)[i]] <- 0
+  og.mat[,i] <- as.numeric(og.)
+}
+
+library(sem)
+   model.sem <- specifyModel(file='../data/sem_os.txt')
+   sem.data <- data.frame(og.mat[,unique(og)!='1005'],prb,os)
+                                        #sem.data[,1:12] <- apply(sem.data[,1:12],2,factor)
+                                        #transforms
+   os <- sqrt(abs(os))
+                                        #sem fitting and analysis
+                                        #colnames(sem.data)
+   Sigma <- var(sem.data)
+   sem.fit <- sem(model.sem,S=Sigma,N=nrow(sem.data))
+   summary(sem.fit)
+   modIndices(sem.fit)
+                                        #effects(sem.fit)
+                                        #hist(residuals(sem.fit))
+                                        #stdCoef(sem.fit)
+   pathDiagram(sem.fit,file='semPathA',edge.labels='values',standardize=TRUE
+               ,ignore.double=FALSE,size=c(12,12),edge.font=c("Arial", 10),
+               graphics.fmt='png') #export to graphviz
+
 
 
 ## SES ~ genotype

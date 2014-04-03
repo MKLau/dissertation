@@ -1,4 +1,5 @@
-Moth -> Light.average, g.1.2, NA
+
+ -> Light.average, g.1.2, NA
 Moth -> Litter, g.1.3, NA
 #Light.average -> Litter, b.2.3, NA
 #Light.average <-> Litter, b.2.3, NA
