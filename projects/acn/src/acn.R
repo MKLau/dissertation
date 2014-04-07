@@ -7,6 +7,8 @@
 ##tree (add up the leaves for each tree) scale is labeled t
 ##int. (values summed up for each tree) is labled i
 rm(list=ls())
+source('~/projects/packages/cooc/src/cooc.R')
+source('/Users/Aeolus/projects/packages/ComGenR/R/coNet.R')
 library(vegan)
 library(bipartite)
 library(pbapply)
@@ -19,6 +21,11 @@ source('~/projects/packages/ComGenR_development/src/cgQAP.R')
 
 ## Load data
 pit <- read.csv('~/projects/dissertation/projects/acn/data/arth_cooc_PIT_Lau.csv')
+                                        #rempove trees with no leaves
+pit <- pit[pit$tree!='np2.21',] # 7 leaves
+pit <- pit[pit$tree!='np2.7',] # 7 leaves
+pit <- pit[pit$tree!='np4.33',] #0 leaves
+pit <- pit[pit$tree!='np13.10',] #0 leaves
                                         #genotype remove 1007
 pit <- pit[pit$geno!='1007',]
 pit$geno <- factor(as.character(pit$geno))
@@ -69,59 +76,70 @@ cgREML(pbd.t,geno.t[type.t=='live'])
                                         #total PB across live and senescent leaves
 cgREML(pbs.t,geno.t[type.t=='live'])
                                         #test of PB~genotype by type
-cgREML(pbp[type.t=='live'],geno.t[type.t=='live'])
-getH2C(pbp[type.t=='live'],geno.t[type.t=='live'],method='nms')
-cgREML(pbp[type.t=='sen'],geno.t[type.t=='sen'])
-                                        #genotype and pb frequencies on leaves
-cgREML(pbf[type.t=='live',1],geno.t[type.t=='live'])
-cgREML(pbf[type.t=='live',2],geno.t[type.t=='live'])
-cgREML(pbf[type.t=='live',3],geno.t[type.t=='live'])
-cgREML(pbf[type.t=='sen',1],geno.t[type.t=='sen'])
-cgREML(pbf[type.t=='sen',2],geno.t[type.t=='sen'])
-cgREML(pbf[type.t=='sen',3],geno.t[type.t=='sen'])
-cgREML(pbf[type.t=='sen',4],geno.t[type.t=='sen'])
-chisq.test(pbf.liv[,apply(pbf.liv,2,sum)!=0])
-chisq.test(pbf.sen)
-                                        #genotype effect on all species
-lsd.t <- (com.i[type.t=='live',]-com.i[type.t=='sen',])
-round(p.adjust(apply(lsd.t,2,function(x) t.test(x)$p.value),method='fdr'),5)
+                                        #cgREML(pbp[type.t=='live'],geno.t[type.t=='live'])
+                                        #cgREML((pbp[type.t=='sen']),geno.t[type.t=='sen'])
+cgREML(log(pbp[type.t=='sen']-pbp[type.t=='live']+1),geno.t[type.t=='sen'])
 
-## Genotype effect on richness (i.e. individual degree)
-cgREML(rich.t[type.t=='live'],geno.t[type.t=='live'])
-cgREML(rich.t[type.t=='sen'],geno.t[type.t=='sen'])
-cgREML((rich.t[type.t=='live']-rich.t[type.t=='sen']),geno.t[type.t=='live'])
+                                        #genotype and percent pb density per leaf
+pbfp <- t(apply(pbf,1,function(x) x/sum(x)))
+cgREML((pbfp[type.t=='sen',1]-pbfp[type.t=='live',1]),geno.t[type.t=='sen'])
+cgREML(sqrt(pbfp[type.t=='sen',2]-pbfp[type.t=='live',2]+0.02),geno.t[type.t=='sen'])
+cgREML(sqrt(pbfp[type.t=='sen',3]-pbfp[type.t=='live',3]),geno.t[type.t=='sen'])
 
 ## Genotype effect on composition
-t.test(pd.t)
-cgREML(pd.t,geno.t[type.t=='live'])
-adonis(cbind(com.rel.i,ds=rep(min(com.rel.i[com.rel.i!=0]),nrow(com.rel.i)))~type.t)
-adonis(cbind(com.rel.i,ds=rep(min(com.rel.i[com.rel.i!=0]),nrow(com.rel.i)))[type.t=='live',]~geno.t[type.t=='live'])
-adonis(cbind(com.rel.i,ds=rep(min(com.rel.i[com.rel.i!=0]),nrow(com.rel.i)))[type.t=='sen',]~geno.t[type.t=='sen'])
-pair.permanova(cbind(com.rel.i,ds=rep(min(com.rel.i[com.rel.i!=0]),nrow(com.rel.i)))[type.t=='live',],geno.t[type.t=='live'])$p.mat
+adonis(cbind(com.rel.i,ds=rep(min(com.rel.i[com.rel.i!=0]),nrow(com.rel.i)))~geno.t*type.t,strata=tree.t)
+liv.pp <- pair.permanova(cbind(com.rel.i,ds=rep(min(com.rel.i[com.rel.i!=0]),nrow(com.rel.i)))[type.t=='live',],geno.t[type.t=='live'])$p.mat
+sen.pp <- pair.permanova(cbind(com.rel.i,ds=rep(min(com.rel.i[com.rel.i!=0]),nrow(com.rel.i)))[type.t=='sen',],geno.t[type.t=='sen'])$p.mat
+liv.pp[liv.pp<=0.05] <- 1;liv.pp[liv.pp<1] <- 0
+sen.pp[sen.pp<=0.05] <- 1;sen.pp[sen.pp<1] <- 0
+liv.pp-sen.pp
+
+###This will give you the effect of tree, which you're not really interested in anyway
+#library(BiodiversityR)
+#env.t <- data.frame(tree.t,geno.t,type.t)
+#nested.npmanova(cbind(com.rel.i,ds=rep(min(com.rel.i[com.rel.i!=0]),nrow(com.rel.i)))~tree.t+geno.t,data=env.t,method='bray')
 
 ## Genetic effect on SES
                                         #test co-occurrence across trees
                                         #values from hoth script run
                                         #SES values ~ genotype
-acn.cnm <- read.csv('../data/acn_ses.csv')
-###Run another ses for each tree, but put sen and live together
-acn.cnm.ls <- read.csv('../data/acn_ses_ls.csv')
-##
-acn.ses <- acn.cnm$SES
-acn.ses[is.na(acn.ses)] <- 0
-cgREML(acn.ses,geno.t[order(type.t)])
-cgREML(acn.ses[type.t=='live'],geno.t[type.t=='live'])
-cgREML(acn.ses[type.t=='sen'],geno.t[type.t=='sen'])
-cgREML(acn.cnm.ls$SES,geno.t[type.t=='live'])
-cgREML(abs(acn.ses),geno.t[order(type.t)])
-cgREML(abs(acn.ses[type.t=='live']),geno.t[type.t=='live'])
-cgREML(abs(acn.ses[type.t=='sen']),geno.t[type.t=='sen'])
-
 #Stand level co-occurrence patterns
-                                        #cnm.liv <- cnm.test(com.i[type.t=='live',])
-                                        #cnm.sen <- cnm.test(com.i[type.t=='sen',])
+cnm.liv.com <- cooc(com.i[type.t=='live',],nits=5000)
+cnm.sen.com <- cooc(com.i[type.t=='sen',],nits=5000)
+#cnm.liv.stand <- cooc(pit.com[pit$leaf.type=='live',],nits=5000)
+#cnm.sen.stand <- cooc(pit.com[pit$leaf.type=='sen',],nits=5000)
 
-###Building networks using tree level data
+###Araujo Networks
+net.all <- coNet(pit.com)
+net.sen <- coNet(pit.com[pit$leaf.type=='live',])
+net.liv <- coNet(pit.com[pit$leaf.type=='sen',])
+
+par(mfrow=c(1,3))
+coord <- gplot(net.all,displaylabels=TRUE)
+gplot(net.sen,coord=coord,displaylabels=TRUE)
+gplot(net.liv,coord=coord,displaylabels=TRUE)
+
+###Tree level SES
+pit.q <- split(pit.com,paste(pit$tree,pit$leaf.type))
+start <- Sys.time();pq.cnm <- lapply(pit.q[1:3],cooc,nits=1000);end <- Sys.time();end-start
+
+###Bipartite networks
+mu.gliv <- apply(com.i[type.t=='live',],2,function(x,y) tapply(x,y,mean),y=geno.t[type.t=='live'])
+mu.gsen <- apply(com.i[type.t=='sen',],2,function(x,y) tapply(x,y,mean),y=geno.t[type.t=='sen'])
+
+#modularity
+source('/Users/Aeolus/projects/dissertation/projects/lcn/src/getMods.R')
+mod.gliv <- computeModules(apply(mu.gliv,2,function(x) if (all(x==0)){x}else{x/max(x)}))
+mod.gsen <- computeModules(apply(mu.gsen,2,function(x) if (all(x==0)){x}else{x/max(x)}))
+mods.gl <- getMods(mod.gliv)
+mods.gs <- getMods(mod.gsen)
+par(mfrow=c(1,2))
+plotweb(mu.gliv[order(apply(mu.gliv,1,sum),decreasing=TRUE),order(apply(mu.gliv,2,sum),decreasing=TRUE)],method='normal',text.rot=90,col.low=mods.gl[[1]],col.high=mods.gl[[2]])
+plotweb(mu.gsen[order(apply(mu.gsen,1,sum),decreasing=TRUE),order(apply(mu.gsen,2,sum),decreasing=TRUE)],method='normal',text.rot=90,col.low=mods.gs[[1]],col.high=mods.gs[[2]])
+
+#nestedness
+
+###
 build.bpn <- function(x,alpha=0.05,p=0.001,adjust=FALSE){
   p.out <- apply(x,2,function(x) as.numeric(unlist(binom.test(sum(sign(x)),length(x),p=p))[3]))
   if (adjust){p.adjust(p.out,method='fdr')}

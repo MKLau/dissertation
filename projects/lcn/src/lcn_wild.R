@@ -54,6 +54,7 @@ plotweb(wc[order(apply(wc,1,sum),decreasing=TRUE),order(apply(wc,2,sum),decreasi
         col.low=col.trees[order(apply(wc,1,sum),decreasing=TRUE)],
         col.high=col.spp[order(apply(wc,2,sum),decreasing=TRUE)])
 ## SES ~ Roughness
+library(MASS)
 summary(rlm(ws$wses~prb))
 ## rlm = t=-2.1766, p=0.025
 ##Mantel for ses and roughness
@@ -156,4 +157,4 @@ plot(onec~I(log(oan.vs+1)/max(log(oan.vs+1))),pch=19,xlab='Relative log(Abundanc
 points(wnec~I(log(wan.vs+1)/max(log(wan.vs+1))),pch=19,col='darkgrey')
 abline(lm(onec~I(log(oan.vs+1)/max(log(oan.vs+1)))))
 abline(lm(wnec~I(log(wan.vs+1)/max(log(wan.vs+1)))),lty=2)
-legend('bottomright',legend=c('ONC','','Uintah',''),pch=c(19,31,19,31),col=c(1,1,'darkgrey',1),lty=c(0,1,0,2))
+legend('bottomright',legend=c('Garden','','Natural',''),pch=c(19,31,19,31),col=c(1,1,'darkgrey',1),lty=c(0,1,0,2))

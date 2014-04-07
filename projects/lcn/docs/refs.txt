@@ -1,43 +1,81 @@
-Lamit et al. 2011 
-Lamit et al. 2013
-Araujo et al. 2011
-Bailey et al. 2006
-Barbour et al. 2009, 
-Burkle et al. 2013
-Busby et al. 2013
-Butts et al. 2010
-CITE
-CITE
-CITE
-Connor and Simberloff 1983 
-Crutsinger et al. 2006
-DeAngelis et al. 1989
-Diamond 1972, 
-Eckenwalder 1996
-Fontaine et al. 2011
-Forestry Suppliers,
-Forestry Suppliers, Inc.
-Garmin, Ltd.
-Gotelli 2002
-Gotelli 2002
-Inc.
-Jordano et al. 2006, 
-Keith et al. 2010
-Kissling et al. 2012
-Lamit et al. 2011
-Lamit et al. 2011
-Lamit et al. 2011
-Lamit et al. 2013
-Lamit et al. 2013
-Mantel 1957
-Martinsen et al. 2001
-May 2011
-Patten and Higashi 1995
-R Development Core Team 2014
-Schupp and Fuentes 1995, 
-Stone and Roberts 1991
-T.G. Whitham, Personal Communication
-Whitham barrage
-Wimp et al. 2005
-ZEISS
-unknown species
+1. Rezende, E. L., Lavabre, J. E., Guimarães, P. R., Jordano,
+P. & Bascompte, J. Non-random coextinctions in phylogenetically
+structured mutualistic networks. Nature 448, 925–8 (2007).
+2. Guimarães, P. R., Jordano, P. & Thompson, J. N. Evolution
+and coevolution in mutualistic networks. Ecol. Lett. 14, 877–85
+(2011).
+3. Moya-Laraño, J. Genetic variation, predator-prey interactions
+and food web structure. Philos. Trans. R. Soc. Lond. B. Biol. Sci. 366, 1425–37 (2011).
+4. Martinsen, G. D., T. G. Whitham; R. J. Turek, P. K. Hybrid
+populations selectively filter gene introgression between
+species. Evolution (N. Y). 55, 1325–1335 (2001).
+5. Ellison, A. M. et al. Loss of foundation species:
+consequences for the structure and dynamics of forested
+6. Winfree, R., Gross, B. J. & Kremen, C. Valuing pollination
+services to agriculture. Ecol. Econ. 71, 80–88 (2011).
+7. Fontaine, C. et al. The ecological and evolutionary implications
+of merging different types of networks. Ecol. Lett. 14, 1170–81
+(2011).
+8. Bascompte, J., Jordano, P. & Olesen, J. M. Asymmetric
+Coevolutionary Networks Facilitate Biodiversity
+Maintenance. Science 312, 431–433 (2006).
+9. Rafferty, N. E. & Ives, A. R. Phylogenetic trait-based
+analyses of ecological networks. Ecology 94, 2321–33 (2013).
+10. Whitham, T. G. et al. A framework for community and
+ecosystem genetics: from genes to ecosystems. Nat. Rev. Genet. 7,
+510–523 (2006).
+11. Lamit, L. J. et al. Genetically-based trait variation within a
+foundation tree species influences a dominant bark lichen. Fungal
+Ecol. 4, 103–109 (2011).
+ecosystems. Front. Ecol. Environ. 3, 479–486 (2005).
+12. Bailey, J. K. et al. From genes to ecosystems: a synthesis of
+the effects of plant genetic factors across levels of
+organization. Philos. Trans. R. Soc. Lond. B. Biol. Sci. 364, 1607–16
+(2009).
+13. Holeski, L. M., Hillstrom, M. L., Whitham, T. G. & Lindroth,
+R. L. Relative importance of genetic, ontogenetic, induction, and
+seasonal variation in producing a multivariate defense phenotype in a
+foundation tree species. Oecologia 170, 695–707 (2012).
+14. Whitham, T. G. et al. Community specificity: Life and
+afterlife effects of genes. Trends Plant Sci. 17, 271–281 (2012).
+15. Burkle, L. A., Souza, L., Genung, M. A. & Crutsinger, G. M. Plant
+genotype, nutrients, and G × E interactions structure floral visitor
+communities. Ecosphere 4, art113 (2013).
+16. Smith, D. S., Bailey, J. K., Shuster, S. M. & Whitham, T. G. A
+geographic mosaic of trophic interactions and selection: trees, aphids
+and birds. J. Evol. Biol. 24, 422–9 (2011).
+17. Zytynska, S. E., Fay, M. F., Penney, D. & Preziosi,
+R. F. Genetic variation in a tropical tree species influences the
+associated epiphytic plant and invertebrate communities in a complex
+forest ecosystem. Philos. Trans. R. Soc. Lond. B. Biol. Sci. 366,
+1329–1336 (2011).
+18. Araújo, M. B., Rozenfeld, A., Rahbek, C. & Marquet, P. A. Using
+species co-occurrence networks to assess the impacts of climate
+change. Ecography (Cop.). 34, 897–908 (2011).
+19. DeAngelis, D. L., Bartell, S. M. & Brenkert,
+A. L. Effects of Nutrient Recycling and Food-Chain Length on
+Resilience. Am. Nat. 134, 778 (1989).
+20. Borgatti, S. P. & Everett, M. G. A Graph-theoretic perspective
+on centrality. Soc. Networks 28, 466–484 (2006).
+21. Rowntree, J. K., Shuker, D. M. & Preziosi, R. F. Forward
+from the crossroads of ecology and
+evolution. Philos. Trans. R. Soc. Lond. B. Biol. Sci. 366, 1322–8
+(2011).
+22. Zook, A. E., Eklof, A., Jacob, U. & Allesina, S. Food webs:
+Ordering species according to body size yields high degree of
+intervality. J. Theor. Biol. 271, 106–113 (2010).
+23. Evans, D. M., Pocock, M. J. O. & Memmott, J. The
+robustness of a network of ecological networks to habitat
+loss. Ecol. Lett. 16, 844–52 (2013).
+24. Blüthgen, N. Why network analysis is often disconnected from
+community ecology: A critique and an ecologist’s guide. Basic
+Appl. Ecol. 11, 185–195 (2010).
+25. Stone, L. & Roberts, A. The checkerboard score and species
+distributions. Oecologia 85, 74–79 (1990).
+26. Atmar, W. & Patterson, B. D. The measure of order and disorder
+in the distribution of species in fragmented habitat. Oecologia 96,
+373–382 (1993).
+27. Newman, M. E. J. Modularity and community structure in
+networks. Proc. Natl. Acad. Sci. U. S. A. 103, 8577–82 (2006).
+28. Gotelli, N. J. Research frontiers in null model
+analysis. Glob. Ecol. Biogeogr. 10, 337–343 (2001).
