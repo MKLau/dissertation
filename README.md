@@ -13,4 +13,4 @@ yet satisfied all naturalists; yet every naturalist
 knows vaguely what he means when he speaks of a
 species."
 
-- The Origin of SPecies (Charles Darwin, 1859)
+- The Origin of Species (Charles Darwin, 1859)
