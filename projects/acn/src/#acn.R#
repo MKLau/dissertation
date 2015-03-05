@@ -123,9 +123,9 @@ gplot(net.liv,coord=coord,displaylabels=TRUE)
 pit.q <- split(pit.com,paste(pit$tree,pit$leaf.type))
 pq.type <- unlist(lapply(split(pit$leaf.type,paste(pit$tree,pit$leaf.type)),function(x)x[1]))
 start <- Sys.time();pq.cnm <- lapply(pit.q[1:3],cooc,nits=1000);end <- Sys.time();end-start
-cnm.live <- lapply(pit.q[pq.type=='live'],cooc,nits=5000)
+cnm.live <- pblapply(pit.q[pq.type=='live'],cooc,nits=5000)
 save(cnm.live,file='../data/cnm_live.rda')
-cnm.sen <- lapply(pit.q[pq.type=='sen'],cooc,nits=5000)
+cnm.sen <- pblapply(pit.q[pq.type=='sen'],cooc,nits=5000)
 save(cnm.sen,file='../data/cnm_sen.rda')
 
 ###Bipartite networks
