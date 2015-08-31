@@ -176,9 +176,9 @@ source('~/projects/pb_removal_nets/src/pbr_load_data.R')
 setwd(owd)
 pbr09c <- pbr.09$c
                                         #shannon diversity
-H.obs <- print(diversity(apply(pbr09c,2,sum)))
+H.obs <- vegan::diversity(apply(pbr09c,2,sum))
                                         #pielous evenness
-E.obs <- print(diversity(apply(pbr09c,2,sum))/log(sum(sign(apply(pbr09c,2,sum)))))
+E.obs <- vegan::diversity(apply(pbr09c,2,sum))/log(sum(sign(apply(pbr09c,2,sum))))
 
 #simulated 
 setwd('/Users/Aeolus/projects/cg_simulations/data/coms')
