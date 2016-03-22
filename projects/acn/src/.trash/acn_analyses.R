@@ -6,16 +6,18 @@ library(sna)
 source('../../art_coo/src/helper_func.R')
 source('../../lichen_coo/src/seenetR.R')
 
+source('helper_func.R')
+
 ###Prelim data from ONC
 ## onc <- read.csv('~/projects/dissertation/projects/art_coo/data/arth_cooc.csv')
 ## onc.key <- read.csv('~/projects/dissertation/projects/art_coo/data/key.csv')
 ###Data from Pit
 
-pit <- read.csv('~/projects/dissertation/projects/art_coo/data/arth_cooc_PIT_Lau.csv')
+pit <- read.csv('../data/arth_cooc_PIT_Lau.csv')
                                         #remove trailing 0
 pit$tree <- sub('\\.0','\\.',pit$tree)
                                         #data verification of trees and genotypes
-pg <- read.csv('~/projects/dissertation/docs/garden_information/PIT_garden_tree_information.csv')
+pg <- read.csv('~/Projects/MKLau_dissertation/dissertation/docs/garden_information/PIT_garden_tree_information.csv')
 pg <- pg[pg$Row!='DEAD',]
 pg.tree <- as.character(pg$Row)
 pg.tree <- sub('-','.',pg.tree)
@@ -90,6 +92,7 @@ all(names(ses.liv)==names(ses.sen))
 geno.ses <- unlist(sapply(names(ses.liv),function(x) strsplit(x,split=' ')[[1]][2]))
 summary(aov(ses.liv~geno.ses))
 summary(aov(ses.sen~geno.ses))
+
 library(gplots)
 par(mfrow=c(1,2))
 mu <- tapply(ses.liv,geno.ses,mean)
@@ -148,3 +151,5 @@ t.test((fung.sen-fung.liv))
 summary(aov(fung.liv~geno.ses))
 summary(aov(fung.sen~geno.ses))
 summary(aov(I(fung.liv-fung.sen)~geno.ses))
+
+### 
