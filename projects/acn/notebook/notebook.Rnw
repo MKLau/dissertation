@@ -31,6 +31,16 @@
 \item Think about genetic basis of leaf abscision/senescence
 \end{itemize}
 
+\section{22 Mar 2016}
+
+Wighted and probabilistic analyses:
+
+<<>>=
+### load pit data
+
+
+@ 
+
 \section{12 Mar 2014}
 
 Summary of analyses below:
