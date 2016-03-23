@@ -2,7 +2,7 @@
 ### ACN study
 ### Pit data collected 2012
 
-source('helpers.R')
+source('../src/helpers.R')
 pit <- read.csv('../data/arth_cooc_PIT_Lau.csv')
 pit[is.na(pit)] <- 0
 
@@ -10,12 +10,25 @@ pit[is.na(pit)] <- 0
 necrosis <- pit$fungal
 pit <- pit[,colnames(pit) != 'fungal']
 
-### separating into trees
-tree.info <- pit[,1:6]
-tree.arth <- pit[,7:ncol(pit)]
-tree.arth <- split(tree.arth,paste(tree.info[,1],tree.info[,2],tree.info[,3]))
+### combine pb 
+pb <- pit$pb.upper + pit$pb.lower + pit$pb.woody 
+pb.pred <- pit$pb.pred + pit$pb.woody.pred + pit$pb.hole
+pb.abort <- pit$pb.abort
+pit <- pit[,!(grepl('pb',colnames(pit)))]
+pit <- data.frame(pit,pb.abort,pb.pred,pb)
+pit <- data.frame(pit[,1:6],pit[,ncol(pit):7])
 
-### generate network models
-arth.sub <- lapply(tree.arth,zeroCol,n=10)
-do.call(rbind,lapply(arth.sub,function(x) sum(sign(apply(x,2,sum)))))
-arth.cor <- lapply(arth.sub,cor,method='pearson')
+### separating into trees
+tree.info <- pit[,c(1,2,3,6)]
+tree.arth <- pit[,7:ncol(pit)]
+tree.arth <- split(tree.arth,paste(tree.info[,1],
+                                   tree.info[,2],
+                                   tree.info[,3]))
+tree.info <- tree.info[!(duplicated(tree.info)),]
+
+### coerce into numeric matrices
+arth.mats <- lapply(tree.arth,data.frame)
+arth.mats <- lapply(arth.mats,as.matrix)
+
+### species totals for each tree
+spp.tot <- do.call(rbind,lapply(tree.arth,function(x) apply(x,2,sum)))
