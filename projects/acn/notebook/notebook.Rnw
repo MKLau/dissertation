@@ -70,7 +70,7 @@ for (i in 1:length(nets.plot)){
 
 @ 
 
-<<fig=true>>=
+<<>>=
 
 ## Genotype average network 
 ## within each 
@@ -146,7 +146,7 @@ legend('topright',legend=unique(tree.info$geno),col=as.numeric(factor(unique(tre
 
 @ 
 
-<<fig=true>>=
+<<>>=
 
 library(bipartite)
 ### centrality

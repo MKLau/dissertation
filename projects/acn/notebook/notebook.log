@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  23 MAR 2016 17:03
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  23 MAR 2016 17:08
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -334,7 +334,7 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 )
 \Hy@SectionHShift=\skip43
 )
-No file notebook.aux.
+(./notebook.aux)
 \openout1 = `notebook.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 22.
@@ -351,7 +351,7 @@ LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 22.
 LaTeX Font Info:    ... okay on input line 22.
 LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 22.
 LaTeX Font Info:    Try loading font information for TS1+cmr on input line 22.
-(/usr/local/texlive/2014/texmf-dist/tex/latex/base/ts1cmr.fd
+ (/usr/local/texlive/2014/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    ... okay on input line 22.
@@ -435,6 +435,8 @@ Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 LaTeX Info: Redefining \ref on input line 22.
 LaTeX Info: Redefining \pageref on input line 22.
 LaTeX Info: Redefining \nameref on input line 22.
+
+(./notebook.out) (./notebook.out)
 \@outlinefile=\write4
 \openout4 = `notebook.out'.
 
@@ -476,27 +478,69 @@ LaTeX Font Info:    Font shape `TS1/aett/m/sl' in size <12> not available
 (Font)              Font shape `TS1/cmtt/m/sl' tried instead on input line 41.
  [1
 
-{/usr/local/texlive/2014/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] [3]
- [4] [5]
-[6] [7] [8] [9]
+{/usr/local/texlive/2014/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2]
+<notebook-002.pdf, id=24, 433.62pt x 433.62pt>
+File: notebook-002.pdf Graphic file (type pdf)
+ <use notebook-002.pdf>
+Package pdftex.def Info: notebook-002.pdf used on input line 105.
+(pdftex.def)             Requested size: 344.005pt x 344.0249pt.
+ [3]
+[4 <./notebook-002.pdf>] [5] <notebook-004.pdf, id=40, 433.62pt x 433.62pt>
+File: notebook-004.pdf Graphic file (type pdf)
+
+<use notebook-004.pdf>
+Package pdftex.def Info: notebook-004.pdf used on input line 160.
+(pdftex.def)             Requested size: 344.005pt x 344.0249pt.
+ [6 <./notebook-004.pdf>]
 LaTeX Font Info:    Font shape `TS1/aett/m/n' in size <12> not available
-(Font)              Font shape `TS1/cmtt/m/n' tried instead on input line 301.
- [10] [11] [12] [13] [14] [15]
-Overfull \hbox (32.9149pt too wide) in paragraph at lines 488--492
+(Font)              Font shape `TS1/cmtt/m/n' tried instead on input line 170.
+
+<notebook-005.pdf, id=50, 433.62pt x 433.62pt>
+File: notebook-005.pdf Graphic file (type pdf)
+ <use notebook-005.pdf>
+Package pdftex.def Info: notebook-005.pdf used on input line 186.
+(pdftex.def)             Requested size: 344.005pt x 344.0249pt.
+ [7]
+[8 <./notebook-005.pdf>] [9] <notebook-006.pdf, id=71, 433.62pt x 433.62pt>
+File: notebook-006.pdf Graphic file (type pdf)
+
+<use notebook-006.pdf>
+Package pdftex.def Info: notebook-006.pdf used on input line 247.
+(pdftex.def)             Requested size: 344.005pt x 344.0249pt.
+ [10] [11 <./notebook-006.pdf>] [12]
+<notebook-008.pdf, id=90, 433.62pt x 433.62pt>
+File: notebook-008.pdf Graphic file (type pdf)
+ <use notebook-008.pdf>
+Package pdftex.def Info: notebook-008.pdf used on input line 321.
+(pdftex.def)             Requested size: 344.005pt x 344.0249pt.
+ [13]
+<notebook-009.pdf, id=96, 433.62pt x 433.62pt>
+File: notebook-009.pdf Graphic file (type pdf)
+ <use notebook-009.pdf>
+Package pdftex.def Info: notebook-009.pdf used on input line 337.
+(pdftex.def)             Requested size: 344.005pt x 344.0249pt.
+ [14 <./notebook-008.pdf>] [15 <./notebook-009.pdf>]
+<notebook-010.pdf, id=118, 433.62pt x 433.62pt>
+File: notebook-010.pdf Graphic file (type pdf)
+ <use notebook-010.pdf>
+Package pdftex.def Info: notebook-010.pdf used on input line 354.
+(pdftex.def)             Requested size: 344.005pt x 344.0249pt.
+
+Overfull \hbox (32.9149pt too wide) in paragraph at lines 362--366
 []\T1/aer/m/n/12 Genotype af-fects mul-ti-vari-ate co-occurrence pat-terns for 
 live (neg-a-tive co-occurrences)
  []
 
-[16] [17] [18] [19] [20] [21]
-Underfull \hbox (badness 10000) in paragraph at lines 684--689
+[16 <./notebook-010.pdf>] [17] [18] [19] [20] [21] [22]
+Underfull \hbox (badness 10000) in paragraph at lines 558--563
 
  []
 
-[22] [23]
+[23] [24]
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.729   \item np13.10 1017_
+l.603   \item np13.10 1017_
                            live - "235 NP13-10  1017       1   M"
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -508,7 +552,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.730   \item
+l.604   \item
               np2.4 1023_live - "199 NP2-4 1000C       0   F"
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -520,7 +564,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.730   \item n
+l.604   \item n
                p2.4 1023_live - "199 NP2-4 1000C       0   F"
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -532,7 +576,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.730   \item n
+l.604   \item n
                p2.4 1023_live - "199 NP2-4 1000C       0   F"
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -544,7 +588,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.731   \item
+l.605   \item
               "np3.36 1000_live"  "np3.36 11_sen" - "168 NP3-36  1000       ...
 
 Try typing  <return>  to proceed.
@@ -553,7 +597,7 @@ If that doesn't work, type  X <return>  to quit.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.731   \item "
+l.605   \item "
                np3.36 1000_live"  "np3.36 11_sen" - "168 NP3-36  1000       ...
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -561,7 +605,7 @@ you left one out. Proceed, with fingers crossed.
 ! Missing } inserted.
 <inserted text> 
                 }
-l.731   \item "
+l.605   \item "
                np3.36 1000_live"  "np3.36 11_sen" - "168 NP3-36  1000       ...
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -572,7 +616,7 @@ my insertion and my current dilemma will both disappear.
 ! Extra }, or forgotten \endgroup.
 \par ...m \@noitemerr {\@@par }\fi \else {\@@par }
                                                   \fi 
-l.731   \item "
+l.605   \item "
                np3.36 1000_live"  "np3.36 11_sen" - "168 NP3-36  1000       ...
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -583,7 +627,7 @@ deleted material, e.g., by typing `I$}'.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.731   \item "np3.36 1000_
+l.605   \item "np3.36 1000_
                            live"  "np3.36 11_sen" - "168 NP3-36  1000       ...
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -595,7 +639,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.732   \item
+l.606   \item
               np4.23 1023_sen - "147 NP4-23  1023       1   M"
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -607,7 +651,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.732   \item n
+l.606   \item n
                p4.23 1023_sen - "147 NP4-23  1023       1   M"
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -619,7 +663,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.732   \item n
+l.606   \item n
                p4.23 1023_sen - "147 NP4-23  1023       1   M"
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -631,7 +675,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.733   \end{enumerate}
+l.607   \end{enumerate}
                        
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -643,7 +687,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.733   \end{enumerate}
+l.607   \end{enumerate}
                        
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -655,7 +699,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.733   \end{enumerate}
+l.607   \end{enumerate}
                        
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -663,7 +707,7 @@ If that doesn't work, type  X <return>  to quit.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.733   \end{enumerate}
+l.607   \end{enumerate}
                        
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -672,7 +716,7 @@ really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
 
-Overfull \hbox (28.72113pt too wide) in paragraph at lines 731--734
+Overfull \hbox (28.72113pt too wide) in paragraph at lines 605--608
 []\T1/aer/m/n/12 "np3.36 1000$[]\OML/cmm/m/it/12 ive\OT1/cmr/m/n/12 ""\OML/cmm/
 m/it/12 np\OT1/cmr/m/n/12 3\OML/cmm/m/it/12 :\OT1/cmr/m/n/12 3611[]\OML/cmm/m/i
 t/12 en\OT1/cmr/m/n/12 " \OMS/cmsy/m/n/12 ^^@ \OT1/cmr/m/n/12 "168\OML/cmm/m/it
@@ -682,15 +726,15 @@ it/12 F\OT1/cmr/m/n/12 "[]\OML/cmm/m/it/12 np\OT1/cmr/m/n/12 4\OML/cmm/m/it/12
 12 "147\OML/cmm/m/it/12 NP\OT1/cmr/m/n/12 4 \OMS/cmsy/m/n/12 ^^@
  []
 
-[24]
-Overfull \hbox (284.01291pt too wide) in paragraph at lines 742--742
+
+Overfull \hbox (284.01291pt too wide) in paragraph at lines 616--616
  []    \T1/aett/m/n/12 all(sort(unique(paste(test[[1]]$geno,test[[1]]$tree)))==
 sort(unique(paste(test[[2]]$geno,test[[2]]$tree))))[] 
  []
 
-[25] [26] [27]
+[25] [26] [27] [28]
 ! Undefined control sequence.
-l.853 ...enotypes of Narrowleaf Cottonwood (\texit
+l.727 ...enotypes of Narrowleaf Cottonwood (\texit
                                                   {Populus angustifolia}).
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -698,13 +742,13 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-[28] [29] [30]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 928.
- [31]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 928.
+[29] [30] [31]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 802.
+ [32]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 802.
  (./notebook.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 928.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 928.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 802.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 802.
 
 
 Package rerunfilecheck Warning: File `notebook.out' has changed.
@@ -712,18 +756,18 @@ Package rerunfilecheck Warning: File `notebook.out' has changed.
 (rerunfilecheck)                or use package `bookmark'.
 
 Package rerunfilecheck Info: Checksums for `notebook.out':
-(rerunfilecheck)             Before: <no file>
+(rerunfilecheck)             Before: 428A6B09000B7489B36AFA80AA8E01D4;46
 (rerunfilecheck)             After:  818BBE71E67A7CE1984F2B8164D31DB7;926.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 928.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 802.
  ) 
 Here is how much of TeX's memory you used:
- 7218 strings out of 493117
- 105858 string characters out of 6135433
- 187900 words of memory out of 5000000
- 10479 multiletter control sequences out of 15000+600000
+ 7263 strings out of 493117
+ 106653 string characters out of 6135433
+ 188004 words of memory out of 5000000
+ 10509 multiletter control sequences out of 15000+600000
  32527 words of font info for 84 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 35i,6n,28p,252b,483s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 35i,6n,28p,252b,522s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2014/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc
 }</usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 </usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb><
@@ -736,10 +780,10 @@ ocal/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/lo
 cal/texlive/2014/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/loca
 l/texlive/2014/texmf-dist/fonts/type1/public/cm-super/sfst1200.pfb></usr/local/
 texlive/2014/texmf-dist/fonts/type1/public/cm-super/sftt1200.pfb>
-Output written on notebook.pdf (31 pages, 163414 bytes).
+Output written on notebook.pdf (32 pages, 304501 bytes).
 PDF statistics:
- 245 PDF objects out of 1000 (max. 8388607)
- 199 compressed objects within 2 object streams
- 76 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 299 PDF objects out of 1000 (max. 8388607)
+ 237 compressed objects within 3 object streams
+ 77 named destinations out of 1000 (max. 500000)
+ 44 words of extra memory for PDF output out of 10000 (max. 10000000)
 
