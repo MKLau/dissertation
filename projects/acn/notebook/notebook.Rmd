@@ -1,0 +1,243 @@
+# ACN: Analysis of Leaf-Modifier Interaction Networks
+
+![Leaf Modifiers](https://uconnladybug.files.wordpress.com/2016/02/img_1658.jpg?w=510)
+
+Weighted and probabilistic analyses:
+
+```{r error=FALSE,message=FALSE,warning=FALSE }
+
+### load pit data
+source('../src/loadPitdata.R')
+
+head(summary(tree.info))
+head(summary(tree.arth))
+head(summary(arth.mats))
+
+```
+
+Generate the network using the co-occurrences of each arthropod on a leaf.
+
+```{r error=FALSE,message=FALSE,warning=FALSE ,fig.height=7,fig.width=8}
+
+library(sna)
+nets.plot <- lapply(tree.nets,rmZeros)
+
+par(mfcol=c(8,9),mai=rep(0.1,4))
+for (i in 1:length(nets.plot)){
+    if (sum(dim(nets.plot[[i]])) != 0){
+        if (tree.info[i,1] == 'sen'){
+            vc <- 'red'
+        }else{vc <- 'darkgreen'}
+        gplot(nets.plot[[i]],gmode='graph',
+              edge.col='darkgrey',vertex.col=vc,
+              vertex.border='lightgrey',
+              edge.lwd=nets.plot[[i]],vertex.cex=2)
+    }
+}
+
+
+```
+
+```{r error=FALSE,message=FALSE,warning=FALSE}
+
+t.test(I(liv.cen-sen.cen))
+
+```
+
+Analyze the mean networks for live and senescent leaves.
+
+```{r error=FALSE,message=FALSE,warning=FALSE , fig.height=8,fig.width=8}
+
+# average structure and variance
+liv.mu <- meanNet(liv.nets)
+liv.var <- varNet(liv.nets)
+sen.mu <- meanNet(sen.nets)
+sen.var <- varNet(sen.nets)
+
+par(mfrow=c(2,2),mai=rep(0.1,4))
+gplot(liv.mu,gmode='graph',
+      edge.lwd=liv.mu/max(liv.mu)*3,vertex.col='green',
+      vertex.border='lightgrey',
+      edge.col=grey(liv.var/max(liv.var)),
+      vertex.cex=apply(liv.spc,2,mean) * 3 + 0.5,
+      mode='circle',displaylabels=TRUE)
+gplot(sen.mu,gmode='graph',
+      edge.lwd=sen.mu/max(sen.mu)*3,vertex.col='red',
+      vertex.border='lightgrey',
+      edge.col=grey(sen.var/max(sen.var)),
+      vertex.cex=apply(sen.spc,2,mean) * 3 + 0.5,
+      mode='circle',displaylabels=TRUE)
+gplot(liv.mu,gmode='graph',
+      edge.lwd=liv.mu/max(liv.mu)*3,vertex.col='green',
+      vertex.border='lightgrey',
+      edge.col=grey(liv.var/max(liv.var)),
+      vertex.cex=apply(liv.spc,2,mean) * 3 + 0.5,
+      displaylabels=TRUE)
+gplot(sen.mu,gmode='graph',
+      edge.lwd=sen.mu/max(sen.mu)*3,vertex.col='red',
+      vertex.border='lightgrey',
+      edge.col=grey(sen.var/max(sen.var)),
+      vertex.cex=apply(sen.spc,2,mean) * 3 + 0.5,
+      displaylabels=TRUE)
+
+```
+
+Number of senescing leaves influences the order but not the centrality (eigen) of the networks or the network similarity of senescing leaves.
+
+```{r error=FALSE,message=FALSE,warning=FALSE , fig.height=5,fig.width=8}
+
+n.lfs <- tree.info$leaves[tree.info$leaf.type == 'sen']
+cor.test(n.lfs,I(liv.cen-sen.cen))
+cor.test(n.lfs,I(liv.ord-sen.ord))
+adonis(distNet(tree.nets[tree.info$leaf.type == 'sen'])~n.lfs)
+
+par(mfrow=c(1,2))
+plot(I(liv.cen-sen.cen),n.lfs)
+plot(I(liv.ord-sen.ord),n.lfs)
+abline(lm(n.lfs~I(liv.ord-sen.ord)))
+
+```
+
+How much variance in network structure does genotype explain?
+
+About 8\% of the variation in network structure was attributable to
+tree genotype. This was primarily due to genetic effects on re-wiring of the network rather than changes to the structure. Leaf senescence strongly impacted network modularity. 
+
+```{r error=FALSE,message=FALSE,warning=FALSE }
+
+library(BiodiversityR)
+library(ecodist)
+dn.tree <- distNet(tree.nets)
+adonis(dn.tree~factor(leaf.type)*factor(geno),data=tree.info, strata=tree.info$tree)
+
+ord.tree <- nmds.min(nmds(dn.tree,2,2),dims=2)
+spp.vectors <- envfit(ord.tree,spp.tot)
+spp.vectors <- envfit(ord.tree,spp.tot[,spp.vectors$vectors$pvals <= 0.05])
+
+plot(ord.tree,pch=19,
+     col=as.numeric(factor(tree.info$geno)))
+
+mu <- ch.plot(ord.tree,factor(tree.info$geno))
+points(mu,col=as.numeric(factor(unique(tree.info$geno))),pch=19,cex=1.5)
+plot(spp.vectors,col='darkgrey')
+legend('topright',legend=unique(tree.info$geno),
+     col=as.numeric(factor(unique(tree.info$geno))),
+     pch=19,bty='d',bg='white',box.col='lightgrey')
+
+```
+
+
+## ```{r }
+## adonis(distNet(liv.nets)~factor(geno),data=tree.info[tree.info$leaf.type == 'live',])
+## adonis(distNet(sen.nets)~factor(geno),data=tree.info[tree.info$leaf.type == 'sen',])
+
+## ```
+
+
+
+```{r error=FALSE,message=FALSE,warning=FALSE}
+
+library(bipartite)
+### centrality
+tree.cen <- unlist(lapply(tree.nets,function(x) centralization(x,FUN='degree')))
+tree.mod <- dget(file='../data/tree.mod') # see src/treeMods.R
+
+summary(aov(tree.cen~tree+factor(leaf.type)*factor(geno),data=tree.info))
+summary(aov(tree.mod~tree+factor(leaf.type)*factor(geno),data=tree.info))
+
+```
+
+Genotype does not directly influence senescence, but may indirectly
+influence senescence through pb.
+
+```{r error=FALSE,message=FALSE,warning=FALSE }
+
+summary(aov(I(leaves^0.5)~factor(geno)*pb,
+            data=data.frame(tree.info,spp.tot)[tree.info$leaf.type == 'sen',]))
+summary(aov(I(pb^0.5)  ~ factor(geno),
+            data=data.frame(tree.info,spp.tot)[tree.info$leaf.type == 'sen',]))
+
+par(mfrow=c(1,2))
+plot(pb~geno,
+     data=data.frame(tree.info,spp.tot)[tree.info$leaf.type == 'sen',],
+     xlab='Genotype',ylab=expression(italic('P. betae')),las=2)
+plot(leaves~pb,
+     data=data.frame(tree.info,spp.tot)[tree.info$leaf.type == 'sen',],
+     xlab=expression(italic('P. betae')),ylab='Senescing Leaves Surveyed')
+abline(lm(leaves~pb,data=data.frame(tree.info,spp.tot)[
+     tree.info$leaf.type == 'sen',]))
+
+```
+
+Stand level network modularity
+
+```{r error=FALSE,message=FALSE,warning=FALSE }
+
+liv.bpn <- spp.tot[tree.info$leaf.type == 'live',]
+sen.bpn <- spp.tot[tree.info$leaf.type == 'sen',]
+
+liv.modules <- dget('../data/liv.modules')
+sen.modules <- dget('../data/sen.modules')
+
+par(mfrow=c(1,2))
+plotweb(liv.bpn);title(main='Live')
+plotweb(sen.bpn);title(main='Senescent')
+
+```
+
+How does the mean interaction network compare to the bipartite to
+unipartite projection?
+
+```{r error=FALSE,message=FALSE,warning=FALSE, fig.height=8,fig.width=8}
+liv.b2u <- t(liv.bpn) %*% liv.bpn
+sen.b2u <- t(sen.bpn) %*% sen.bpn
+
+par(mfrow=c(2,2),mai=rep(0.1,4))
+liv.coo <- gplot(liv.mu,gmode='graph',displaylabels=TRUE)
+sen.coo <- gplot(sen.mu,gmode='graph',displaylabels=TRUE)
+gplot(liv.b2u,coord=liv.coo,gmode='graph',displaylabels=TRUE)
+gplot(sen.b2u,coord=sen.coo,gmode='graph',displaylabels=TRUE)
+
+```
+
+
+## This question isn't very interesting since the effect of genotype doesn't 
+## differ between live and senescing leaves.
+## What does the unipartite projection look like for the trees and genotypes?
+
+## ```{r error=FALSE,message=FALSE,warning=FALSE, fig.height=5,fig.width=8}
+
+## library(RColorBrewer)
+
+## liv.b2ut <- liv.bpn %*% t(liv.bpn) 
+## sen.b2ut <- sen.bpn %*% t(sen.bpn) 
+## liv.dn <- distNet(tree.nets[tree.info$leaf.type == 'live'],dist.obj=FALSE)
+## liv.dn <- liv.dn/max(liv.dn)
+## sen.dn <- distNet(tree.nets[tree.info$leaf.type == 'sen'],dist.obj=FALSE)
+## sen.dn <- sen.dn/max(sen.dn)
+
+## gc.liv <- as.numeric(factor(as.character(do.call(rbind,sapply(rownames(liv.b2ut),strsplit,split=' '))[,3])))
+## gc.liv <- brewer.pal(max(gc.liv),name='Set1')
+## gc.sen <- as.numeric(factor(as.character(do.call(rbind,sapply(rownames(sen.b2ut),strsplit,split=' '))[,3])))
+## gc.sen <- brewer.pal(max(gc.sen),name='Set1')
+
+## par(mfrow=c(2,2),mai=rep(0.1,4))
+## gplot(liv.b2ut,gmode='graph',
+##       edge.lwd=(liv.b2ut/max(liv.b2ut)) + 1,vertex.col=gc.liv,
+##       vertex.border='lightgrey',
+##       edge.col='grey')
+## gplot(sen.b2ut,gmode='graph',
+##       edge.lwd=(sen.b2ut/max(sen.b2ut)) + 1,vertex.col=gc.sen,
+##       vertex.border='lightgrey',
+##       edge.col='grey')
+## gplot(liv.dn,gmode='graph',
+##       edge.lwd=(liv.dn) + 1,vertex.col=gc.liv,
+##       vertex.border='lightgrey',
+##       edge.col='grey')
+## gplot(sen.dn,gmode='graph',
+##       edge.lwd=(sen.dn) + 1,vertex.col=gc.sen,
+##       vertex.border='lightgrey',
+##       edge.col='grey')
+      
+
+## ```
