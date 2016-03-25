@@ -201,43 +201,7 @@ gplot(sen.b2u,coord=sen.coo,gmode='graph',displaylabels=TRUE)
 ```
 
 
-## This question isn't very interesting since the effect of genotype doesn't 
-## differ between live and senescing leaves.
-## What does the unipartite projection look like for the trees and genotypes?
+This question isn't very interesting since the effect of genotype
+doesn't differ between live and senescing leaves.  What does the
+unipartite projection look like for the trees and genotypes?
 
-## ```{r error=FALSE,message=FALSE,warning=FALSE, fig.height=5,fig.width=8}
-
-## library(RColorBrewer)
-
-## liv.b2ut <- liv.bpn %*% t(liv.bpn) 
-## sen.b2ut <- sen.bpn %*% t(sen.bpn) 
-## liv.dn <- distNet(tree.nets[tree.info$leaf.type == 'live'],dist.obj=FALSE)
-## liv.dn <- liv.dn/max(liv.dn)
-## sen.dn <- distNet(tree.nets[tree.info$leaf.type == 'sen'],dist.obj=FALSE)
-## sen.dn <- sen.dn/max(sen.dn)
-
-## gc.liv <- as.numeric(factor(as.character(do.call(rbind,sapply(rownames(liv.b2ut),strsplit,split=' '))[,3])))
-## gc.liv <- brewer.pal(max(gc.liv),name='Set1')
-## gc.sen <- as.numeric(factor(as.character(do.call(rbind,sapply(rownames(sen.b2ut),strsplit,split=' '))[,3])))
-## gc.sen <- brewer.pal(max(gc.sen),name='Set1')
-
-## par(mfrow=c(2,2),mai=rep(0.1,4))
-## gplot(liv.b2ut,gmode='graph',
-##       edge.lwd=(liv.b2ut/max(liv.b2ut)) + 1,vertex.col=gc.liv,
-##       vertex.border='lightgrey',
-##       edge.col='grey')
-## gplot(sen.b2ut,gmode='graph',
-##       edge.lwd=(sen.b2ut/max(sen.b2ut)) + 1,vertex.col=gc.sen,
-##       vertex.border='lightgrey',
-##       edge.col='grey')
-## gplot(liv.dn,gmode='graph',
-##       edge.lwd=(liv.dn) + 1,vertex.col=gc.liv,
-##       vertex.border='lightgrey',
-##       edge.col='grey')
-## gplot(sen.dn,gmode='graph',
-##       edge.lwd=(sen.dn) + 1,vertex.col=gc.sen,
-##       vertex.border='lightgrey',
-##       edge.col='grey')
-      
-
-## ```
