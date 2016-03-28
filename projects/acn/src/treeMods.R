@@ -1,10 +1,12 @@
 
 tree.mod <- list()
-for (i in 45:length(tree.nets)){
-    if (sum(sign(apply(tree.nets[[i]],2,sum))) < 3){
+for (i in 1:length(tree.nets)){
+    x <- tree.nets[[i]]
+    diag(x) <- 0
+    if (sum(sign(apply(x,2,sum))) < 3){
         tree.mod[[i]] <- 0
     }else{
-        out <- computeModules(tree.nets[[i]])
+        out <- computeModules(x)
         tree.mod[[i]] <- slot(out,'likelihood')
     }
 }

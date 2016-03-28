@@ -1,5 +1,4 @@
-# Genotypic variation in a foundation tree species contributes to
-  arthropod interaction network structure
+# Genotypic variation in a foundation tree species contributes to arthropod interaction network structure
 
 ![Leaf Modifiers](https://uconnladybug.files.wordpress.com/2016/02/img_1658.jpg?w=510)
 
@@ -30,15 +29,17 @@ complex communities.
  3. Genetically based resistance to *Pemphigus betae* (a gall forming
  aphid), also played a major to a more diverse group of leaf chewing
  insects, including a gall boring insect that attacks *P. betae*.
-- These results demonstrate how genetic variance in foundation plant
-species can affect the structure of ecological networks though its
-interactions with a common herbivore, which adds further support to
-the interacting foundation species hypothesis in which the
-genetics-based interactions of a few highly interactive species can
-define whole communities of organisms. Together, these findings
-demonstrate how community-level genetic effects contribute to
-ecological patterns and provide a potential mechanism for evolutionary
-dynamics in complex ecosystems.
+- The results suggest that tree genotype can influence the structure
+  of associated arthropod interaction networks and demonstrate how
+  genetic variance in foundation plant species can affect the
+  structure of ecological networks though its interactions with a
+  common herbivore, which adds further support to the interacting
+  foundation species hypothesis in which the genetics-based
+  interactions of a few highly interactive species can define whole
+  communities of organisms. Together, these findings demonstrate how
+  community-level genetic effects contribute to ecological patterns
+  and provide a potential mechanism for evolutionary dynamics in
+  complex ecosystems.
 
 
 Weighted and probabilistic analyses:
@@ -121,7 +122,8 @@ gplot(sen.mu,gmode='graph',
 
 ```
 
-Number of senescing leaves influences the order but not the centrality (eigen) of the networks or the network similarity of senescing leaves.
+Number of senescing leaves influences the order but not the centrality
+(eigen) of the networks or the network similarity of senescing leaves.
 
 ```{r error=FALSE,message=FALSE,warning=FALSE , fig.height=5,fig.width=8}
 
@@ -137,10 +139,13 @@ abline(lm(n.lfs~I(liv.ord-sen.ord)))
 
 ```
 
+
+
 How much variance in network structure does genotype explain?
 
 About 8\% of the variation in network structure was attributable to
-tree genotype. This was primarily due to genetic effects on re-wiring of the network rather than changes to the structure. Leaf senescence strongly impacted network modularity. 
+tree genotype. This was primarily due to genetic effects on re-wiring
+of the network rather than changes to the structure.
 
 ```{r error=FALSE,message=FALSE,warning=FALSE }
 
