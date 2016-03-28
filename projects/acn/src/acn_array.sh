@@ -17,5 +17,5 @@
 
 ### outname="acn_mods"$(date +%Y%m%d)
 
-outname=$1
-Rscript acn_gmods.R $1 ${SLURM_ARRAY_TASK_ID}
+outname=acn_mods20160328
+Rscript acn_gmods.R ${SLURM_ARRAY_TASK_ID}
