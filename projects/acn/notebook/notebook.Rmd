@@ -1,10 +1,44 @@
-# ACN: Analysis of Leaf-Modifier Interaction Networks
+# Genotypic variation in a foundation tree species contributes to
+  arthropod interaction network structure
 
 ![Leaf Modifiers](https://uconnladybug.files.wordpress.com/2016/02/img_1658.jpg?w=510)
 
 Abstract
 
-- 
+- Multiple studies have demonstrated that genetic variation in a single
+species can structure entire communities and tri-trophic interactions;
+however, few studies have examined evolutionary dynamics in complex
+ecological networks. 
+
+- Here, we use a long-term experimental common garden to test for the
+effect that genotypic variation in a foundation species (Populus
+angustifolia James) in its interactions with a common insect
+(Pemphigus betae) can affect a larger community network of
+arthropods. 
+
+- While other studies have shown such effects on community richness,
+abundance and composition, this study aims to determine the inpact of
+genotypic variation on networks of interactions in multi-species,
+complex communities.
+
+- Three main results emerged: 
+ 1. Tree genotype significantly impacted the similarity of arthropod
+ interaction network by re-wiring network.
+ 2. Leaf senescence, a genetially based trait, also contributed to
+    interaction network structure, also altering the distribution of
+	interactions in the networks.
+ 3. Genetically based resistance to *Pemphigus betae* (a gall forming
+ aphid), also played a major to a more diverse group of leaf chewing
+ insects, including a gall boring insect that attacks *P. betae*.
+- These results demonstrate how genetic variance in foundation plant
+species can affect the structure of ecological networks though its
+interactions with a common herbivore, which adds further support to
+the interacting foundation species hypothesis in which the
+genetics-based interactions of a few highly interactive species can
+define whole communities of organisms. Together, these findings
+demonstrate how community-level genetic effects contribute to
+ecological patterns and provide a potential mechanism for evolutionary
+dynamics in complex ecosystems.
 
 
 Weighted and probabilistic analyses:
