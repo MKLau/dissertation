@@ -24,11 +24,11 @@ complex communities.
  1. Tree genotype significantly impacted the similarity of arthropod
  interaction network by re-wiring network.
  2. Leaf senescence, a genetially based trait, also contributed to
-    interaction network structure, also altering the distribution of
-	interactions in the networks.
- 3. Genetically based resistance to *Pemphigus betae* (a gall forming
- aphid), also played a major to a more diverse group of leaf chewing
- insects, including a gall boring insect that attacks *P. betae*.
+    interaction network similarity and had a marginal effect on
+    network centrality.
+ 3. Genetically based resistance to P. betae, also played a major to a
+ more diverse group of leaf chewing insects, including a gall boring
+ insect that attacks *P. betae*.
 - The results suggest that tree genotype can influence the structure
   of associated arthropod interaction networks and demonstrate how
   genetic variance in foundation plant species can affect the
@@ -178,16 +178,27 @@ legend('topright',legend=unique(tree.info$geno),
 ## ```
 
 
+Leaf-type has a marginal affect on the centrality of the network
 
 ```{r error=FALSE,message=FALSE,warning=FALSE}
 
+### Following the stats shown here: http://conjugateprior.org/2013/01/formulae-in-r-anova/
+
 library(bipartite)
+library(lme4)
 ### centrality
 tree.cen <- unlist(lapply(tree.nets,function(x) centralization(x,FUN='degree')))
 tree.mod <- dget(file='../data/tree.mod') # see src/treeMods.R
 
-summary(aov(tree.cen~tree+factor(leaf.type)*factor(geno),data=tree.info))
-summary(aov(tree.mod~tree+factor(leaf.type)*factor(geno),data=tree.info))
+tree.mod[tree.mod == 0] <- 0.5
+
+### incorrect handling of error from pairing with trees
+## summary(aov(tree.cen~tree+factor(leaf.type)*factor(geno),data=tree.info))
+## summary(aov(tree.mod~tree+factor(leaf.type)*factor(geno),data=tree.info))
+
+summary(aov(tree.mod~(factor(geno)*factor(leaf.type)) + Error(tree / (factor(geno) * factor(leaf.type))),data=tree.info))
+summary(aov(tree.cen~(factor(geno)*factor(leaf.type)) + Error(tree / (factor(geno) * factor(leaf.type))),data=tree.info))
+
 
 ```
 
