@@ -1,5 +1,18 @@
 <link href="css/avenir-white.css" rel="stylesheet"></link>
 
+# Selection simulations
+
+- shift the abundances of genotypes
+- assume constant population size
+- quantify network structure
+- could use the bipartite network robustness simulation as a model
+- could also use Savaedra's node importance as well
+
+# Indirect genetic effects at the community scale
+
+- couple networks together a la Poisot's paper
+- examine pathway proliferation
+
 # Genotype-Species Networks
 
 - Synthetic network analysis of the genotype level community data
