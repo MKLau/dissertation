@@ -34,8 +34,11 @@ tree.info <- tree.info[!(duplicated(tree.info)),]
 arth.mats <- lapply(tree.arth,data.frame)
 arth.mats <- lapply(arth.mats,as.matrix)
 
-### species totals for each tree
+### species totals for each tree + richness + total abundance
 spp.tot <- do.call(rbind,lapply(tree.arth,function(x) apply(x,2,sum)))
+R <- apply(sign(spp.tot),1,sum)
+A <- apply(spp.tot,1,sum)
+spp.tot <- cbind(spp.tot,R,A)
 
 ### tree level networks for arthropods
 tree.nets <- lapply(arth.mats,coNets)

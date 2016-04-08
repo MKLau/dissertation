@@ -253,7 +253,7 @@ plotweb(sen.bpn);title(main='Senescent')
 How does the mean interaction network compare to the bipartite to
 unipartite projection?
 
-```{r error=FALSE,message=FALSE,warning=FALSE, fig.height=8,fig.width=8}
+```{r eval=FALSE,error=FALSE,message=FALSE,warning=FALSE, fig.height=8,fig.width=8}
 liv.b2u <- t(liv.bpn) %*% liv.bpn
 sen.b2u <- t(sen.bpn) %*% sen.bpn
 
@@ -292,4 +292,5 @@ What does the unipartite projection look like for the trees and
 genotypes? This question
 isn't very interesting since the effect of genotype doesn't differ
 between live and senescing leaves.
+
 
