@@ -1,3 +1,14 @@
+---
+output: html_document
+
+---
+
+
+```{r reset, eval=FALSE,echo=FALSE}
+rm(list=ls())
+```
+
+
 # Genotypic variation in a foundation tree species contributes to arthropod interaction network structure
 
 ![Leaf Modifiers](https://uconnladybug.files.wordpress.com/2016/02/img_1658.jpg?w=510)
@@ -80,7 +91,8 @@ for (i in 1:length(nets.plot)){
 
 ```{r error=FALSE,message=FALSE,warning=FALSE}
 
-t.test(I(liv.cen-sen.cen))
+t.test(I(liv.evc-sen.evc))
+t.test(I(liv.dc-sen.dc))
 
 ```
 
@@ -128,12 +140,14 @@ Number of senescing leaves influences the order but not the centrality
 ```{r error=FALSE,message=FALSE,warning=FALSE , fig.height=5,fig.width=8}
 
 n.lfs <- tree.info$leaves[tree.info$leaf.type == 'sen']
-cor.test(n.lfs,I(liv.cen-sen.cen))
+cor.test(n.lfs,I(liv.dc-sen.dc))
+cor.test(n.lfs,I(liv.evc-sen.evc))
 cor.test(n.lfs,I(liv.ord-sen.ord))
 adonis(distNet(tree.nets[tree.info$leaf.type == 'sen'])~n.lfs)
 
-par(mfrow=c(1,2))
-plot(I(liv.cen-sen.cen),n.lfs)
+par(mfrow=c(1,3))
+plot(I(liv.dc-sen.dc),n.lfs)
+plot(I(liv.evc-sen.evc),n.lfs)
 plot(I(liv.ord-sen.ord),n.lfs)
 abline(lm(n.lfs~I(liv.ord-sen.ord)))
 
@@ -147,19 +161,16 @@ About 8\% of the variation in network structure was attributable to
 tree genotype. This was primarily due to genetic effects on re-wiring
 of the network rather than changes to the structure.
 
-```{r error=FALSE,message=FALSE,warning=FALSE }
+```{r error=FALSE,message=FALSE,warning=FALSE, width=7,height=7 }
 
 library(BiodiversityR)
 library(ecodist)
 dn.tree <- distNet(tree.nets)
 adonis(dn.tree~factor(leaf.type)*factor(geno),data=tree.info, strata=tree.info$tree)
 
-ord.tree <- nmds.min(nmds(dn.tree,2,2),dims=2)
+if (all(ls() != 'ord.tree')){ord.tree <- nmds.min(nmds(dn.tree,2,2),dims=2)}
 spp.vectors <- envfit(ord.tree,spp.tot)
 spp.vectors <- envfit(ord.tree,spp.tot[,spp.vectors$vectors$pvals <= 0.05])
-
-plot(ord.tree,pch=19,
-     col=as.numeric(factor(tree.info$geno)))
 
 mu <- ch.plot(ord.tree,factor(tree.info$geno))
 points(mu,col=as.numeric(factor(unique(tree.info$geno))),pch=19,cex=1.5)
@@ -171,11 +182,10 @@ legend('topright',legend=unique(tree.info$geno),
 ```
 
 
-## ```{r }
-## adonis(distNet(liv.nets)~factor(geno),data=tree.info[tree.info$leaf.type == 'live',])
-## adonis(distNet(sen.nets)~factor(geno),data=tree.info[tree.info$leaf.type == 'sen',])
-
-## ```
+```{r }
+adonis(distNet(liv.nets)~factor(geno),data=tree.info[tree.info$leaf.type == 'live',])
+adonis(distNet(sen.nets)~factor(geno),data=tree.info[tree.info$leaf.type == 'sen',])
+```
 
 
 Leaf-type has a marginal affect on the centrality of the network
@@ -190,7 +200,7 @@ library(lme4)
 tree.cen <- unlist(lapply(tree.nets,function(x) centralization(x,FUN='degree')))
 tree.mod <- dget(file='../data/tree.mod') # see src/treeMods.R
 
-tree.mod[tree.mod == 0] <- 0.5
+tree.mod[tree.mod == 0] <- 0
 
 ### incorrect handling of error from pairing with trees
 ## summary(aov(tree.cen~tree+factor(leaf.type)*factor(geno),data=tree.info))
@@ -256,7 +266,30 @@ gplot(sen.b2u,coord=sen.coo,gmode='graph',displaylabels=TRUE)
 ```
 
 
-This question isn't very interesting since the effect of genotype
-doesn't differ between live and senescing leaves.  What does the
-unipartite projection look like for the trees and genotypes?
+
+
+```{r sppcen, width=7,height=7}
+spp.cen <- rbind(liv.spc,sen.spc)
+
+adonis(spp.cen~factor(leaf.type)*factor(geno),data=tree.info, strata=tree.info$tree,method='euc')
+
+if (!(any(ls() == 'spc.ord'))){
+spc.ord <- nmds.min(nmds(dist(spp.cen),3,3))
+spc.env <- envfit(spc.ord,spp.cen,strata=tree.info$tree)
+spp.env <- envfit(spc.ord,spp.cen[,spc.env$vectors$pvals <= 0.05])
+}
+
+mu <- ch.plot(spc.ord,factor(tree.info$geno))
+points(mu,col=as.numeric(factor(unique(tree.info$geno))),pch=19,cex=1.5)
+plot(spp.env,col='darkgrey')
+legend('topright',legend=unique(tree.info$geno),
+     col=as.numeric(factor(unique(tree.info$geno))),
+     pch=19,bty='d',bg='white',box.col='lightgrey')
+
+```
+
+What does the unipartite projection look like for the trees and
+genotypes? This question
+isn't very interesting since the effect of genotype doesn't differ
+between live and senescing leaves.
 

@@ -40,6 +40,7 @@ spp.tot <- do.call(rbind,lapply(tree.arth,function(x) apply(x,2,sum)))
 ### tree level networks for arthropods
 tree.nets <- lapply(arth.mats,coNets)
 
+
 ## Genotype average network 
 ## within each 
 liv.nets <- tree.nets[tree.info[,1] == 'live']
@@ -49,26 +50,29 @@ for (i in 1:length(liv.nets)){
     diag(sen.nets[[i]]) <- 0
 }
 
-liv.cen <- unlist(lapply(liv.nets,function(x) centralization(x,FUN='degree')))
-sen.cen <- unlist(lapply(sen.nets,function(x) centralization(x,FUN='degree')))
+liv.evc <- unlist(lapply(liv.nets,function(x) centralization(x,FUN='evcent')))
+sen.evc <- unlist(lapply(sen.nets,function(x) centralization(x,FUN='evcent'))
+)
+
+liv.dc <- unlist(lapply(liv.nets,function(x) centralization(x,FUN='degree')))
+sen.dc <- unlist(lapply(sen.nets,function(x) centralization(x,FUN='degree')))
 
 ### species eigen centralities
 liv.spc <- list()
 for (i in 1:length(liv.nets)){
-    if (sum(sign(diag(liv.nets[[i]] %*% liv.nets[[i]]))) > 2){
-        liv.spc[[i]] <- evcent(liv.nets[[i]])
-    }else{liv.spc[[i]] <- rep(0,nrow(liv.nets[[i]]))}
+        liv.spc[[i]] <- evcent(liv.nets[[i]],gmode='graph')
 }
 liv.spc <- do.call(rbind,liv.spc)
-
+liv.spc[is.na(liv.spc)] <- 0
+colnames(liv.spc) <- colnames(liv.nets[[1]])
 
 sen.spc <- list()
 for (i in 1:length(sen.nets)){
-    if (sum(sign(diag(sen.nets[[i]] %*% sen.nets[[i]]))) > 2){
-        sen.spc[[i]] <- evcent(sen.nets[[i]])
-    }else{sen.spc[[i]] <- rep(0,nrow(sen.nets[[i]]))}
+        sen.spc[[i]] <- evcent(sen.nets[[i]],gmode='graph')
 }
 sen.spc <- do.call(rbind,sen.spc)
+sen.spc[is.na(sen.spc)] <- 0
+colnames(sen.spc) <- colnames(sen.nets[[1]])
 
 ### edge degree
 
