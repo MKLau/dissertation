@@ -1,0 +1,136 @@
+\documentclass[12pt]{article}
+\usepackage{color}
+\usepackage{cite}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+%\usepackage{pdflscape}        %single page landscape
+                                %mode \begin{landscape} \end{landscape}
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{multicol} % \begin{multicols}{number of columns} \end{multicols}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{Sweave}
+\newcommand{\etal}{\textit{et al.}}
+\usepackage{hyperref}  %\hyperref[label_name]{''link text''}
+                       %\hyperlink{label}{anchor caption}
+                       %\hypertarget{label}{link caption}
+\linespread{1.5}
+
+\title{Sunset Crater Lichen Co-occurrence Analyses}
+\author{M.K. Lau}
+%\date{}                                           % Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+
+\setcounter{tocdepth}{3}  %%activate to number sections
+\tableofcontents
+
+\section{Metadata}
+
+\begin{itemize}
+\item Data collected by Rikke, Cameron and Richard
+\item Lichen bryophytes and env variables collected in three quadrats
+  with nine cells in each
+\item Quadrat size?
+\item Near Sunset Crater National Monument
+\item Under pinyon pine (\textit{Pinus edulis})
+\item Collected in the fall of 2009?
+\end{itemize}
+
+\section{Data}
+
+<<>>=
+com <- read.csv('/Users/Aeolus/data/sunset_crater/rawdata\ Sunset\ Crater\ for\ Matt.csv')
+env <- read.csv('/Users/Aeolus/data/sunset_crater/rawdata\ Sunset\ Crater\ for\ Matt_env.csv')
+                                        #remove rows with totals
+rm.me <- as.logical(sapply(as.character(com$Tree.ID),function(x) any(unlist(strsplit(as.character(x),''))=='%')))
+com <- com[rm.me==FALSE,]
+                                        #remove mosses
+com <- com[,-(ncol(com)-1):-ncol(com)]
+                                        #remove tree ID, quadrat and cells
+tid <- com$Tree.ID
+com <- com[,-1:-3]
+                                        #isolate status info
+status <- as.character(sapply(as.character(tid),function(x) substr(x,(nchar(x)),(nchar(x)))))
+                                        #remove dead
+com <- com[status=='A',]
+tid <- tid[status=='A']
+
+                                        #split into trees
+com.l <- split(com,as.character(tid))
+test <- unlist(lapply(com.l,sum))
+                                        #isolate phenotype info
+pheno <- as.character(sapply(as.character(names(com.l)),function(x) substr(x,(nchar(x)-1),(nchar(x)-1))))
+
+@ 
+
+\section{Analyses}
+
+<<>>=
+source('~/cor_nets/CorNets.R')
+                                        #co-occurrence all data
+coa.all <- CA.results(do.call(rbind,com.l))
+coa.all$cat
+hist(coa.all$sim)
+abline(v=coa.all$cat[1],lty=2)
+                                        #gamnets
+gam.all <- gamNet(do.call(rbind,com.l))
+                                        #co-occurrence by phenotype
+com.p <- list(do.call(rbind,com.l[pheno=='R']),do.call(rbind,com.l[pheno=='S']))
+names(com.p) <- c('R','S')
+coa.p <- lapply(com.p,CA.results)
+lapply(coa.p,function(x) x$cat)
+                                        #gams for each phenotype
+gam.p <- lapply(com.p,gamNet)
+                                        #gams for each tree
+gam.t <- lapply(com.l,gamNet)
+gd <- netDist(gam.t)
+adonis(gd~pheno)
+mgn.r <- gam.t[pheno=='R'][[1]]*0
+mgn.s <- gam.t[pheno=='S'][[1]]*0
+for (i in 1:length(pheno)){
+  if (pheno[i] == 'R'){
+    mgn.r <- mgn.r + (gam.t[[i]])
+  }else if(pheno[i]=='S'){
+    mgn.s <- mgn.s + (gam.t[[i]])
+  }else{}
+}
+mgn.r <- mgn.r/length(pheno[pheno=='R'])
+mgn.s <- mgn.s/length(pheno[pheno=='S'])
+
+@ 
+
+\section{Results}
+
+<<>>=
+library(sna)
+                                        #
+gplot(abs(gam.all),gmode='graph',displaylabels=TRUE,mode='circle')
+par(mfrow=c(1,2))
+gplot(abs(gam.p[[1]]),gmode='graph',displaylabels=TRUE,mode='circle')
+gplot(abs(gam.p[[2]]),gmode='graph',displaylabels=TRUE,mode='circle')
+par(mfrow=c(1,2))
+gplot(abs(mgn.r),gmode='graph',displaylabels=TRUE,mode='circle',main='Resistant')
+gplot(abs(mgn.s),gmode='graph',displaylabels=TRUE,mode='circle',main='Susceptible')
+                                        #
+barplot(rbind(degree(abs(mgn.r)),degree(abs(mgn.s))),names=rownames(gam.p[[1]]),las=2,beside=TRUE,ylab='Degree Centrality')
+
+@ 
+
+\section{Take-home}
+
+\begin{itemize}
+\item Genetic variance contributes to the co-occurrence patterns of
+  rock lichen
+\end{itemize}
+
+%% %%Activate for bibtex vibliography
+%% \cite{goossens93}
+%% \bibliographystyle{plain}
+%% \bibliography{/Users/Aeolus/Documents/bibtex/biblib}
+
+
+\end{document}  
+
+

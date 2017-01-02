@@ -1,9 +1,0 @@
-digraph "sem.fit" {
-  rankdir=LR;
-  size="12,12";
-  node [fontname="Helvetica" fontsize=14 shape=box];
-  edge [fontname="Arial" fontsize=10];
-  center=1;
-  "tree.age" -> "prb" [label="0.54"];
-  "prb" -> "ses" [label="-0.59"];
-}

@@ -1,0 +1,14 @@
+Moth -> Light.average, g.1.2, NA
+Moth -> Litter, g.1.3, NA
+#Light.average -> Litter, b.2.3, NA
+#Light.average <-> Litter, b.2.3, NA
+Light.average -> Calare, b.2.5, NA
+Litter -> Big.rocks, b.3.4, NA
+Litter -> Calare, b.3.5, NA
+Big.rocks -> Calare, b.4.5,NA
+Moth <-> Moth, e.1,  NA
+Light.average <-> Light.average, e.2,  NA
+Litter <-> Litter, e.3,  NA
+Big.rocks <-> Big.rocks, e.4,  NA
+Calare <-> Calare, e.5,  NA	 
+

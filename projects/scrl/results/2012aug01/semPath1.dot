@@ -1,0 +1,26 @@
+digraph "sem.fit" {
+  rankdir=LR;
+  size="12,12";
+  node [fontname="Helvetica" fontsize=14 shape=box];
+  edge [fontname="Arial" fontsize=10];
+  center=1;
+  "Moth" -> "Light.average" [label="0.75"];
+  "Moth" -> "Litter" [label="-0.38"];
+  "Light.average" -> "X1" [label="-0.28"];
+  "Light.average" -> "X2" [label="0.21"];
+  "Light.average" -> "X3" [label="-0.11"];
+  "Litter" -> "Big.rocks" [label="-0.84"];
+  "Litter" -> "X1" [label="-0.57"];
+  "Litter" -> "X2" [label="0.26"];
+  "Litter" -> "X3" [label="0.32"];
+  "Big.rocks" -> "X1" [label="-0.94"];
+  "Big.rocks" -> "X2" [label="0.77"];
+  "Big.rocks" -> "X3" [label="0.24"];
+  "Moth" -> "Moth" [label="1" dir=both];
+  "Light.average" -> "Light.average" [label="0.44" dir=both];
+  "Litter" -> "Litter" [label="0.86" dir=both];
+  "Big.rocks" -> "Big.rocks" [label="0.3" dir=both];
+  "X1" -> "X1" [label="0.58" dir=both];
+  "X2" -> "X2" [label="0.59" dir=both];
+  "X3" -> "X3" [label="0.95" dir=both];
+}

@@ -1,7 +1,0 @@
-\contentsline {section}{\numberline {1}Summary}{1}
-\contentsline {section}{\numberline {2}Data}{2}
-\contentsline {section}{\numberline {3}Modeling}{2}
-\contentsline {section}{\numberline {4}Analyses}{3}
-\contentsline {section}{\numberline {5}Results}{4}
-\contentsline {section}{\numberline {6}Discussion}{7}
-\contentsline {section}{\numberline {7}References}{7}

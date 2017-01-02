@@ -1,0 +1,49 @@
+This is BibTeX, Version 0.99d (TeX Live 2011)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: meeting_notes_May2012.aux
+The style file: nar.bst
+Database file #1: /Users/Aeolus/Documents/bibtex/biblib.bib
+Warning--empty publisher in salasinprep
+Warning--empty publisher in lonsdorfinprep
+You've used 16 entries,
+            1855 wiz_defined-function locations,
+            551 strings with 6449 characters,
+and the built_in function-call counts, 3741 in all, are:
+= -- 375
+> -- 210
+< -- 0
++ -- 76
+- -- 60
+* -- 299
+:= -- 603
+add.period$ -- 16
+call.type$ -- 16
+change.case$ -- 0
+chr.to.int$ -- 0
+cite$ -- 18
+duplicate$ -- 143
+empty$ -- 334
+format.name$ -- 60
+if$ -- 872
+int.to.chr$ -- 0
+int.to.str$ -- 16
+missing$ -- 21
+newline$ -- 72
+num.names$ -- 16
+pop$ -- 45
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 47
+stack$ -- 0
+substring$ -- 241
+swap$ -- 11
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 2
+while$ -- 28
+width$ -- 18
+write$ -- 141
+(There were 2 warnings)

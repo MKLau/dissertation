@@ -1,0 +1,12 @@
+digraph "sem.fit" {
+  rankdir=LR;
+  size="12,12";
+  node [fontname="Helvetica" fontsize=14 shape=box];
+  edge [fontname="Helvetica" fontsize=10];
+  center=1;
+  "Light.average" -> "X1" [label="0.2"];
+  "Litter" -> "X1" [label="-0.44"];
+  "Light.average" -> "Light.average" [label="1" dir=both];
+  "Litter" -> "Litter" [label="1" dir=both];
+  "X1" -> "X1" [label="0.77" dir=both];
+}
